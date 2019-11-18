@@ -1,4 +1,6 @@
-package mss;
+package mss.command;
+
+import mss.Manager;
 
 public abstract class Command {
 

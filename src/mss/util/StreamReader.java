@@ -1,4 +1,4 @@
-package mss;
+package mss.util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

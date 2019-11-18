@@ -1,4 +1,6 @@
-package mss;
+package mss.command;
+
+import mss.Manager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,7 +36,12 @@ public class GiveRandomItemCommand extends Command {
         final int maxCount = Integer.parseInt(parameters[1]);
 
         if (player.equals("@a")){
-            //get all players
+            final List<String> players = manager.getAllPlayers();
+            for (String p : players){
+                final String result = give(p, maxCount, manager);
+                manager.sendCommand("say " + result);
+            }
+            return null;
         }
 
         return give(player, maxCount, manager);
