@@ -9,46 +9,80 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Manager {
+/**
+ * This is a custom shell that wraps around the standard Minecraft server. It can intercept player messages and execute custom commands.
+ */
+public class ServerShell {
 
-    enum State{
+    /**
+     * Possible states for the Minecraft server.
+     */
+    private enum State{
+        /**
+         * The server is starting but has not started yet. Players cannot connect until the server becomes online.
+         */
         STARTING,
+
+        /**
+         * The server is online and accepting new player connections.
+         */
         ONLINE,
+
+        /**
+         * The server is stopping.
+         */
         STOPPING,
+
+        /**
+         * The server is offline.
+         */
         OFFLINE
     }
 
-    private State state = State.OFFLINE;
-
-    private final String serverJar;
-
-    private BufferedWriter bufferedWriter;
-
+    /**
+     * If this prefix is found at the beginning of any player message, it will be interpreted as a command.
+     */
     private static final String COMMAND_PREFIX = "!";
 
+    //REGEX Patterns
     private static final Pattern CHAT_MESSAGE_PATTERN = Pattern.compile("<(?<player>.+?)> (?<message>.+)");
     private static final Pattern COMMAND_PATTERN = Pattern.compile("^" + COMMAND_PREFIX + "(?<command>[^ ].+)$");
-
     private static final Pattern SERVER_STARTED_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: Done \\(.+\\)!");
     private static final Pattern LIST_PLAYERS_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: There are 1 of a max 10 players online: (?<players>.+)");
 
-    public Manager(final String serverJar){
+    /**
+     * The vanilla Minecraft server.jar file.
+     */
+    private final File serverJar;
+
+    /**
+     * The current state of the Minecraft server.
+     */
+    private State state = State.OFFLINE;
+
+    /**
+     * This {@link BufferedWriter} is used to write inputs to the Minecraft server.
+     */
+    private BufferedWriter serverInputWriter;
+
+    /**
+     * The set of custom commands.
+     */
+    private final Set<Command> customCommands = new HashSet<>();
+
+    public ServerShell(final File serverJar){
         this.serverJar = serverJar;
         authorizedUsers.add("TychoTheTaco");
-
-        try {
-            customCommands.add(new GiveRandomItemCommand(new File("ids.txt")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private final Set<String> authorizedUsers = new HashSet<>();
 
-    private final Set<Command> customCommands = new HashSet<>();
-
     private final List<PendingResult> pendingResults = new ArrayList<>();
 
+    /**
+     * Start the Minecraft server with the specified launch options.
+     * @param options An optional list of Java launch options.
+     */
     public void startServer(final String... options){
         this.state = State.STARTING;
 
@@ -58,7 +92,7 @@ public class Manager {
             command.add("-" + option);
         }
         command.add("-jar");
-        command.add(this.serverJar);
+        command.add(this.serverJar.getAbsolutePath());
         command.add("nogui");
 
         final ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -67,7 +101,7 @@ public class Manager {
         try {
             final Process process = processBuilder.start();
 
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+            this.serverInputWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
             final StreamReader errorOutput = new StreamReader(process.getErrorStream());
             errorOutput.start();
 
@@ -107,17 +141,10 @@ public class Manager {
                             final String player = matcher.group("player");
                             final String message = matcher.group("message");
 
-                            System.out.println("PLAYER: " + player);
-                            System.out.println("MESSAGE: " + message);
-
                             //Check if this is a command
                             matcher = COMMAND_PATTERN.matcher(message);
                             if (matcher.find()){
                                 final String cmd = matcher.group("command");
-
-                                System.out.println("COMMAND: " + cmd);
-                                System.out.println("AUTH: " + authorizedUsers.contains(player));
-
                                 onCommand(player, cmd);
                             }
                         }
@@ -143,11 +170,17 @@ public class Manager {
 
             try {
                 process.waitFor();
-            }catch (InterruptedException e){}
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
             System.out.println("Process ended.");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addCustomCommand(final Command command){
+        this.customCommands.add(command);
     }
 
     private void onServerStarted(){
@@ -167,7 +200,7 @@ public class Manager {
                     public void run() {
                         try {
                             System.out.println("COMMAND: " + command);
-                            final String result = cmd.execute(Manager.this, command.replace(cmd.getCommand(), "").trim().split(" "));
+                            final String result = cmd.execute(ServerShell.this, command.replace(cmd.getCommand(), "").trim().split(" "));
                             if (result != null) sendCommand("say " + result);
                         }catch (Exception e){
                             System.out.println("ERROR: " + e.getMessage());
@@ -188,9 +221,9 @@ public class Manager {
     }
 
     public void sendCommand(final String command) throws IOException{
-        this.bufferedWriter.write(command);
-        this.bufferedWriter.write("\n");
-        this.bufferedWriter.flush();
+        this.serverInputWriter.write(command);
+        this.serverInputWriter.write("\n");
+        this.serverInputWriter.flush();
     }
 
     public Matcher awaitResult(final String command, final Pattern pattern) throws InterruptedException {

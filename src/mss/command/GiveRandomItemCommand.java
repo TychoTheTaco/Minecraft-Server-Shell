@@ -1,6 +1,6 @@
 package mss.command;
 
-import mss.Manager;
+import mss.ServerShell;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,7 +26,7 @@ public class GiveRandomItemCommand extends Command {
     }
 
     @Override
-    public String execute(Manager manager, String... parameters) throws Exception {
+    public String execute(ServerShell serverShell, String... parameters) throws Exception {
         for (String string : parameters){
             System.out.println(string);
         }
@@ -36,15 +36,15 @@ public class GiveRandomItemCommand extends Command {
         final int maxCount = Integer.parseInt(parameters[1]);
 
         if (player.equals("@a")){
-            final List<String> players = manager.getAllPlayers();
+            final List<String> players = serverShell.getAllPlayers();
             for (String p : players){
-                final String result = give(p, maxCount, manager);
-                manager.sendCommand("say " + result);
+                final String result = give(p, maxCount, serverShell);
+                serverShell.sendCommand("say " + result);
             }
             return null;
         }
 
-        return give(player, maxCount, manager);
+        return give(player, maxCount, serverShell);
     }
 
     @Override
@@ -52,10 +52,10 @@ public class GiveRandomItemCommand extends Command {
         return "mcrandom";
     }
 
-    private String give(final String player, final int maxCount, final Manager manager) throws IOException {
+    private String give(final String player, final int maxCount, final ServerShell serverShell) throws IOException {
         final String item = this.ids.get(RANDOM.nextInt(ids.size()));
         final int count = RANDOM.nextInt(maxCount) + 1;
-        manager.sendCommand("give " + player + " " + item + " " + count);
+        serverShell.sendCommand("give " + player + " " + item + " " + count);
         return "Gave §2" + count + " §e" + item + "§r to §d" + player + "§r!";
     }
 }

@@ -1,0 +1,36 @@
+package mss.command;
+
+import mss.ServerShell;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class HereCommand extends Command {
+
+    private static final Pattern POSITION_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>\\d+)\\.\\d+d, (?<y>\\d+)\\.\\d+d, (?<z>\\d+)\\.\\d+d]");
+
+    @Override
+    public String execute(ServerShell serverShell, String... parameters) throws Exception {
+        //Get player position
+        final Matcher matcher = serverShell.awaitResult("data get entity " + "TychoTheTaco" + " Pos", POSITION_PATTERN);
+        final int x = Integer.parseInt(matcher.group("x"));
+        final int y = Integer.parseInt(matcher.group("y"));
+        final int z = Integer.parseInt(matcher.group("z"));
+
+        serverShell.sendCommand("summon minecraft:firework_rocket " + x + " " + (y + 3) + " " + z + " {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,15435844,15790320],FadeColors:[I;8073150,12801229]}]}}}}");
+
+        return null;
+    }
+
+    @Override
+    public String getCommand() {
+        return "here";
+    }
+}
