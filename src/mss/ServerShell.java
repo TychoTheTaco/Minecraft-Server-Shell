@@ -183,11 +183,16 @@ public class ServerShell {
         this.customCommands.add(command);
     }
 
+    public void msg(final String player, final String message) throws IOException {
+        this.execute("msg " + player + " " + message);
+    }
+
     private void onServerStarted(){
         System.out.println("SERVER STARTED!");
         try {
-            sendCommand("time set 0");
-            sendCommand("weather clear");
+            execute("time set 0");
+            execute("weather clear");
+            execute("difficulty peaceful");
         }catch (IOException e){}
     }
 
@@ -200,12 +205,18 @@ public class ServerShell {
                     public void run() {
                         try {
                             System.out.println("COMMAND: " + command);
-                            final String result = cmd.execute(ServerShell.this, command.replace(cmd.getCommand(), "").trim().split(" "));
-                            if (result != null) sendCommand("say " + result);
-                        }catch (Exception e){
-                            System.out.println("ERROR: " + e.getMessage());
+                            final String result = cmd.execute(player, ServerShell.this, command.replace(cmd.getCommand(), "").trim().split(" "));
+                            if (result != null) execute("say " + result);
+                        }catch (Command.InvalidParametersException e){
                             try {
-                                sendCommand("msg " + player + " " + e.getMessage());
+                                execute("msg " + player + " " + e.getMessage());
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            try {
+                                execute("msg " + player + " " + e.getMessage());
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
@@ -217,10 +228,10 @@ public class ServerShell {
         }
 
         //It was not a custom command, pass it to the server
-        sendCommand(command);
+        execute(command);
     }
 
-    public void sendCommand(final String command) throws IOException{
+    public void execute(final String command) throws IOException{
         this.serverInputWriter.write(command);
         this.serverInputWriter.write("\n");
         this.serverInputWriter.flush();
@@ -244,7 +255,7 @@ public class ServerShell {
         synchronized (LOCK){
             System.out.println("WAITING...");
             try {
-                sendCommand(command);
+                execute(command);
             }catch (IOException e){
                 e.printStackTrace();
             }
@@ -288,5 +299,9 @@ public class ServerShell {
         public Pattern getPattern() {
             return pattern;
         }
+    }
+
+    public Set<Command> getCustomCommands() {
+        return customCommands;
     }
 }

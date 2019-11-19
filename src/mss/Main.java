@@ -1,6 +1,7 @@
 package mss;
 
 import mss.command.GiveRandomItemCommand;
+import mss.command.HelpCommand;
 import mss.command.HereCommand;
 
 import java.io.File;
@@ -15,6 +16,7 @@ public class Main {
         try {
             serverShell.addCustomCommand(new GiveRandomItemCommand(new File("ids.txt")));
             serverShell.addCustomCommand(new HereCommand());
+            serverShell.addCustomCommand(new HelpCommand());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -14,23 +14,33 @@ import java.util.regex.Pattern;
 
 public class HereCommand extends Command {
 
-    private static final Pattern POSITION_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>\\d+)\\.\\d+d, (?<y>\\d+)\\.\\d+d, (?<z>\\d+)\\.\\d+d]");
+    private static final Pattern POSITION_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+)\\.\\d+d, (?<y>-?\\d+)\\.\\d+d, (?<z>-?\\d+)\\.\\d+d]");
 
     @Override
-    public String execute(ServerShell serverShell, String... parameters) throws Exception {
+    public String execute(String player, ServerShell serverShell, String... parameters) throws Exception {
         //Get player position
-        final Matcher matcher = serverShell.awaitResult("data get entity " + "TychoTheTaco" + " Pos", POSITION_PATTERN);
+        final Matcher matcher = serverShell.awaitResult("data get entity " + player + " Pos", POSITION_PATTERN);
         final int x = Integer.parseInt(matcher.group("x"));
         final int y = Integer.parseInt(matcher.group("y"));
         final int z = Integer.parseInt(matcher.group("z"));
 
-        serverShell.sendCommand("summon minecraft:firework_rocket " + x + " " + (y + 3) + " " + z + " {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,15435844,15790320],FadeColors:[I;8073150,12801229]}]}}}}");
+        serverShell.execute("summon minecraft:firework_rocket " + x + " " + (y + 3) + " " + z + " {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,15435844,15790320],FadeColors:[I;8073150,12801229]}]}}}}");
 
-        return null;
+        return player + " is at (§e" + x + "§r, §e" + y + "§r, §e" + z + "§r)";
     }
 
     @Override
     public String getCommand() {
         return "here";
+    }
+
+    @Override
+    public String getFormat() {
+        return "";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Spawn a firework at your location and print your coordinates in chat.";
     }
 }

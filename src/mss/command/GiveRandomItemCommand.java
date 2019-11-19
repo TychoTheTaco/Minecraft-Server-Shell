@@ -26,25 +26,25 @@ public class GiveRandomItemCommand extends Command {
     }
 
     @Override
-    public String execute(ServerShell serverShell, String... parameters) throws Exception {
+    public String execute(String player, ServerShell serverShell, String... parameters) throws Exception {
         for (String string : parameters){
             System.out.println(string);
         }
-        if (parameters.length < 2) throw new RuntimeException("Invalid parameters!");
+        if (parameters.length < 2) throw new InvalidParametersException();
 
-        final String player = parameters[0];
+        final String targetPlayer = parameters[0];
         final int maxCount = Integer.parseInt(parameters[1]);
 
-        if (player.equals("@a")){
+        if (targetPlayer.equals("@a")){
             final List<String> players = serverShell.getAllPlayers();
             for (String p : players){
                 final String result = give(p, maxCount, serverShell);
-                serverShell.sendCommand("say " + result);
+                serverShell.execute("say " + result);
             }
             return null;
         }
 
-        return give(player, maxCount, serverShell);
+        return give(targetPlayer, maxCount, serverShell);
     }
 
     @Override
@@ -52,10 +52,20 @@ public class GiveRandomItemCommand extends Command {
         return "mcrandom";
     }
 
+    @Override
+    public String getFormat() {
+        return "<player> <maxCount>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Gives <player> up to <maxCount> random items.";
+    }
+
     private String give(final String player, final int maxCount, final ServerShell serverShell) throws IOException {
         final String item = this.ids.get(RANDOM.nextInt(ids.size()));
         final int count = RANDOM.nextInt(maxCount) + 1;
-        serverShell.sendCommand("give " + player + " " + item + " " + count);
+        serverShell.execute("give " + player + " " + item + " " + count);
         return "Gave §2" + count + " §e" + item + "§r to §d" + player + "§r!";
     }
 }
