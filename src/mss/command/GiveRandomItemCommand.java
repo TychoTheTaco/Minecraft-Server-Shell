@@ -1,6 +1,9 @@
 package mss.command;
 
 import mss.ServerShell;
+import mss.util.Utils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,25 +29,22 @@ public class GiveRandomItemCommand extends Command {
     }
 
     @Override
-    public String execute(String player, ServerShell serverShell, String... parameters) throws Exception {
-        for (String string : parameters){
-            System.out.println(string);
-        }
+    public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
         if (parameters.length < 2) throw new InvalidParametersException();
 
         final String targetPlayer = parameters[0];
         final int maxCount = Integer.parseInt(parameters[1]);
 
+        //Check for player selectors
         if (targetPlayer.equals("@a")){
             final List<String> players = serverShell.getAllPlayers();
             for (String p : players){
-                final String result = give(p, maxCount, serverShell);
-                serverShell.execute("say " + result);
+                serverShell.tellraw("@a", give(p, maxCount, serverShell));
             }
-            return null;
+            return;
         }
 
-        return give(targetPlayer, maxCount, serverShell);
+        serverShell.tellraw("@a", give(targetPlayer, maxCount, serverShell));
     }
 
     @Override
@@ -62,10 +62,19 @@ public class GiveRandomItemCommand extends Command {
         return "Gives <player> up to <maxCount> random items.";
     }
 
-    private String give(final String player, final int maxCount, final ServerShell serverShell) throws IOException {
+    private JSONObject give(final String player, final int maxCount, final ServerShell serverShell) throws IOException {
         final String item = this.ids.get(RANDOM.nextInt(ids.size()));
         final int count = RANDOM.nextInt(maxCount) + 1;
         serverShell.execute("give " + player + " " + item + " " + count);
-        return "Gave §2" + count + " §e" + item + "§r to §d" + player + "§r!";
+
+        //Create message
+        final JSONObject root = Utils.createText("Gave ", "white");
+        final JSONArray extra = new JSONArray();
+        extra.add(Utils.createText(String.valueOf(count), "dark_green"));
+        extra.add(Utils.createText(" " + item, "yellow"));
+        extra.add(Utils.createText(" to ", ""));
+        extra.add(Utils.createText(player, "light_purple"));
+        root.put("extra", extra);
+        return root;
     }
 }

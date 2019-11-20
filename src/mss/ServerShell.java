@@ -3,6 +3,9 @@ package mss;
 import mss.command.Command;
 import mss.command.GiveRandomItemCommand;
 import mss.util.StreamReader;
+import mss.util.Utils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.util.*;
@@ -17,7 +20,7 @@ public class ServerShell {
     /**
      * Possible states for the Minecraft server.
      */
-    private enum State{
+    private enum State {
         /**
          * The server is starting but has not started yet. Players cannot connect until the server becomes online.
          */
@@ -46,7 +49,7 @@ public class ServerShell {
 
     //REGEX Patterns
     private static final Pattern CHAT_MESSAGE_PATTERN = Pattern.compile("<(?<player>.+?)> (?<message>.+)");
-    private static final Pattern COMMAND_PATTERN = Pattern.compile("^" + COMMAND_PREFIX + "(?<command>[^ ].+)$");
+    private static final Pattern COMMAND_PATTERN = Pattern.compile("^" + COMMAND_PREFIX + "(?<command>[^ ].*?)(?: (?<parameters>[^ ].*))?$");
     private static final Pattern SERVER_STARTED_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: Done \\(.+\\)!");
     private static final Pattern LIST_PLAYERS_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: There are 1 of a max 10 players online: (?<players>.+)");
 
@@ -70,25 +73,61 @@ public class ServerShell {
      */
     private final Set<Command> customCommands = new HashSet<>();
 
-    public ServerShell(final File serverJar){
+    public ServerShell(final File serverJar) {
         this.serverJar = serverJar;
-        authorizedUsers.add("TychoTheTaco");
+        this.authorize("TychoTheTaco", "help");
+        this.authorize("TychoTheTaco", "here");
+        this.authorize("TychoTheTaco", "mcrandom");
     }
 
-    private final Set<String> authorizedUsers = new HashSet<>();
+    private final Map<String, Set<String>> permissions = new HashMap<>();
 
     private final List<PendingResult> pendingResults = new ArrayList<>();
 
+    public void authorize(final String player, final String command) {
+        Set<String> commands = permissions.get(player);
+        if (commands == null) {
+            commands = new HashSet<>();
+
+            if (command.equals("@a")) {
+                for (Command customCommand : customCommands) {
+                    commands.add(customCommand.getCommand());
+                }
+            } else {
+                commands.add(command);
+            }
+
+            this.permissions.put(player, commands);
+        } else {
+            if (command.equals("@a")) {
+                for (Command customCommand : customCommands) {
+                    commands.add(customCommand.getCommand());
+                }
+            } else {
+                commands.add(command);
+            }
+        }
+    }
+
+    public void deauthorize(final String player, final String command) {
+
+    }
+
+    public boolean isAuthorized(final String player, final String command) {
+        return this.permissions.containsKey(player) && this.permissions.get(player).contains(command);
+    }
+
     /**
      * Start the Minecraft server with the specified launch options.
+     *
      * @param options An optional list of Java launch options.
      */
-    public void startServer(final String... options){
+    public void startServer(final String... options) {
         this.state = State.STARTING;
 
         final List<String> command = new ArrayList<>();
         command.add("java");
-        for (String option : options){
+        for (String option : options) {
             command.add("-" + option);
         }
         command.add("-jar");
@@ -110,13 +149,13 @@ public class ServerShell {
                 try {
                     final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;
-                    while ((line = bufferedReader.readLine()) != null){
+                    while ((line = bufferedReader.readLine()) != null) {
                         System.out.println(line);
 
                         //Check if server is done starting
-                        if (this.state == State.STARTING){
+                        if (this.state == State.STARTING) {
                             final Matcher matcher = SERVER_STARTED_PATTERN.matcher(line);
-                            if (matcher.find()){
+                            if (matcher.find()) {
                                 onServerStarted();
                                 continue;
                             }
@@ -125,10 +164,10 @@ public class ServerShell {
                         //Check for pending results
                         boolean handled = false;
                         final Iterator<PendingResult> iterator = this.pendingResults.iterator();
-                        while (iterator.hasNext()){
+                        while (iterator.hasNext()) {
                             final PendingResult pendingResult = iterator.next();
                             final Matcher matcher = pendingResult.getPattern().matcher(line);
-                            if (matcher.find()){
+                            if (matcher.find()) {
                                 handled |= pendingResult.onResult(matcher);
                                 iterator.remove();
                             }
@@ -137,19 +176,20 @@ public class ServerShell {
 
                         //Check if this is a chat message
                         Matcher matcher = CHAT_MESSAGE_PATTERN.matcher(line);
-                        if (matcher.find()){
+                        if (matcher.find()) {
                             final String player = matcher.group("player");
                             final String message = matcher.group("message");
 
                             //Check if this is a command
                             matcher = COMMAND_PATTERN.matcher(message);
-                            if (matcher.find()){
+                            if (matcher.find()) {
                                 final String cmd = matcher.group("command");
-                                onCommand(player, cmd);
+                                final String parameters = matcher.group("parameters") == null ? "" : matcher.group("parameters");
+                                onCommand(player, cmd, parameters.split(" "));
                             }
                         }
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }).start();
@@ -159,18 +199,18 @@ public class ServerShell {
                 try {
                     final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
                     String line;
-                    while ((line = bufferedReader.readLine()) != null){
+                    while ((line = bufferedReader.readLine()) != null) {
                         System.out.println(line);
                         onCommand("server", line);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }).start();
 
             try {
                 process.waitFor();
-            }catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             System.out.println("Process ended.");
@@ -179,47 +219,57 @@ public class ServerShell {
         }
     }
 
-    public void addCustomCommand(final Command command){
+    public void addCustomCommand(final Command command) {
         this.customCommands.add(command);
     }
 
-    public void msg(final String player, final String message) throws IOException {
-        this.execute("msg " + player + " " + message);
+    public void tellraw(final String player, final JSONObject jsonObject) throws IOException {
+        this.execute("tellraw " + player + " " + jsonObject.toString());
     }
 
-    private void onServerStarted(){
+    private void onServerStarted() {
         System.out.println("SERVER STARTED!");
+        this.state = State.ONLINE;
         try {
             execute("time set 0");
             execute("weather clear");
             execute("difficulty peaceful");
-        }catch (IOException e){}
+        } catch (IOException e) {
+        }
     }
 
-    private void onCommand(final String player, final String command) throws IOException {
+    private void onCommand(final String player, final String command, final String... parameters) throws IOException {
         //Check if this is a custom command
-        for (Command cmd : customCommands){
-            if (command.startsWith(cmd.getCommand())){
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+        for (Command cmd : customCommands) {
+            if (command.equals(cmd.getCommand())) {
+
+                //Make sure the player is authorized to use this command
+                if (!isAuthorized(player, command.split(" ")[0])) {
+                    final JSONObject root = Utils.createText("Unauthorized: ", "red");
+                    final JSONArray extra = new JSONArray();
+                    extra.add(Utils.createText("You are not authorized to use this command!", "gray"));
+                    root.put("extra", extra);
+                    this.tellraw(player, root);
+                    return;
+                }
+
+                new Thread(() -> {
+                    try {
+                        System.out.println("COMMAND: " + command);
+                        System.out.println("PRAMS: " + parameters.length);
+                        cmd.execute(player, ServerShell.this, parameters);
+                    } catch (Command.InvalidParametersException e) {
                         try {
-                            System.out.println("COMMAND: " + command);
-                            final String result = cmd.execute(player, ServerShell.this, command.replace(cmd.getCommand(), "").trim().split(" "));
-                            if (result != null) execute("say " + result);
-                        }catch (Command.InvalidParametersException e){
-                            try {
-                                execute("msg " + player + " " + e.getMessage());
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            try {
-                                execute("msg " + player + " " + e.getMessage());
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
+                            tellraw(player, e.getJson());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        try {
+                            this.tellraw(player, Utils.createText("Error executing command: " + e.toString(), "red"));
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     }
                 }).start();
@@ -231,7 +281,7 @@ public class ServerShell {
         execute(command);
     }
 
-    public void execute(final String command) throws IOException{
+    public void execute(final String command) throws IOException {
         this.serverInputWriter.write(command);
         this.serverInputWriter.write("\n");
         this.serverInputWriter.flush();
@@ -245,18 +295,18 @@ public class ServerShell {
             boolean onResult(Matcher matcher) {
                 System.out.println("RESULT FOUND: " + matcher.group());
                 container.matcher = matcher;
-                synchronized (LOCK){
+                synchronized (LOCK) {
                     LOCK.notify();
                 }
                 return false;
             }
         });
 
-        synchronized (LOCK){
+        synchronized (LOCK) {
             System.out.println("WAITING...");
             try {
                 execute(command);
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             LOCK.wait();
@@ -266,22 +316,22 @@ public class ServerShell {
         return container.matcher;
     }
 
-    class Container{
+    class Container {
         Matcher matcher;
     }
 
-    public List<String> getAllPlayers(){
+    public List<String> getAllPlayers() {
         final List<String> players = new ArrayList<>();
         try {
             final Matcher matcher = awaitResult("list", LIST_PLAYERS_PATTERN);
             players.addAll(Arrays.asList(matcher.group("players").replace(" ", "").split(",")));
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return players;
     }
 
-    abstract class PendingResult{
+    abstract class PendingResult {
         private final String command;
         private final Pattern pattern;
 

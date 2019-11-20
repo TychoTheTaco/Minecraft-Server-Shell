@@ -1,6 +1,9 @@
 package mss.command;
 
 import mss.ServerShell;
+import mss.util.Utils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public abstract class Command {
 
@@ -12,7 +15,7 @@ public abstract class Command {
      * @return A string that will be printed to the chat. If this is {@code null}, no message will be printed.
      * @throws Exception Commands may throw any exceptions to indicate an error. The error message will be whispered to the user who executed this command.
      */
-    public abstract String execute(final String player, final ServerShell serverShell, final String... parameters) throws Exception;
+    public abstract void execute(final String player, final ServerShell serverShell, final String... parameters) throws Exception;
 
     public abstract String getCommand();
 
@@ -21,9 +24,15 @@ public abstract class Command {
     public abstract String getDescription();
 
     public class InvalidParametersException extends Exception{
-        @Override
-        public String getMessage() {
-            return "§cInvalid parameters!§7 Expected format: !" + getCommand() + " " + getFormat();
+
+        public JSONObject getJson(){
+            final JSONObject root = Utils.createText("Invalid Parameters! ", "red");
+            final JSONArray extra = new JSONArray();
+            extra.add(Utils.createText("Expected format:\n", "gray"));
+            extra.add(Utils.createText("!" + getCommand(), "green"));
+            extra.add(Utils.createText(" " + getFormat(), "white"));
+            root.put("extra", extra);
+            return root;
         }
     }
 }
