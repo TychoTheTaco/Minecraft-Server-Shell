@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,10 +49,11 @@ public class ServerShell {
     private static final String COMMAND_PREFIX = "!";
 
     //REGEX Patterns
-    private static final Pattern CHAT_MESSAGE_PATTERN = Pattern.compile("<(?<player>.+?)> (?<message>.+)");
+    private static final Pattern CHAT_MESSAGE_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: <(?<player>.+?)> (?<message>.+)$");
     private static final Pattern COMMAND_PATTERN = Pattern.compile("^" + COMMAND_PREFIX + "(?<command>[^ ].*?)(?: (?<parameters>[^ ].*))?$");
     private static final Pattern SERVER_STARTED_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: Done \\(.+\\)!");
-    private static final Pattern LIST_PLAYERS_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: There are 1 of a max 10 players online: (?<players>.+)");
+    private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
+    private static final Pattern PLAYER_DISCONNECTED_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) lost connection: (?<reason>.+)$");
 
     /**
      * The vanilla Minecraft server.jar file.
@@ -72,6 +74,8 @@ public class ServerShell {
      * The set of custom commands.
      */
     private final Set<Command> customCommands = new HashSet<>();
+
+    private final List<Player> players = new ArrayList<>();
 
     public ServerShell(final File serverJar) {
         this.serverJar = serverJar;
@@ -124,6 +128,7 @@ public class ServerShell {
      */
     public void startServer(final String... options) {
         this.state = State.STARTING;
+        notifyOnServerStarting();
 
         final List<String> command = new ArrayList<>();
         command.add("java");
@@ -152,15 +157,6 @@ public class ServerShell {
                     while ((line = bufferedReader.readLine()) != null) {
                         System.out.println(line);
 
-                        //Check if server is done starting
-                        if (this.state == State.STARTING) {
-                            final Matcher matcher = SERVER_STARTED_PATTERN.matcher(line);
-                            if (matcher.find()) {
-                                onServerStarted();
-                                continue;
-                            }
-                        }
-
                         //Check for pending results
                         boolean handled = false;
                         final Iterator<PendingResult> iterator = this.pendingResults.iterator();
@@ -186,6 +182,39 @@ public class ServerShell {
                                 final String cmd = matcher.group("command");
                                 final String parameters = matcher.group("parameters") == null ? "" : matcher.group("parameters");
                                 onCommand(player, cmd, parameters.split(" "));
+                            }
+                        }else{
+                            //Check if server is done starting
+                            if (this.state == State.STARTING) {
+                                matcher = SERVER_STARTED_PATTERN.matcher(line);
+                                if (matcher.find()) {
+                                    onServerStarted();
+                                    continue;
+                                }
+                            }
+
+                            //Check if a player connected
+                            matcher = PLAYER_CONNECTED_PATTERN.matcher(line);
+                            if (matcher.find()) {
+                                final String username = matcher.group("player");
+                                final String ipAddress = matcher.group("ip");
+                                final Player player = new Player(username, ipAddress);
+                                this.players.add(player);
+                                this.notifyOnPlayerConnected(player);
+
+                                //Send welcome message
+                                final JSONObject root = Utils.createText("Welcome to the server, " + player.getUsername() + "!", "aqua");
+                                this.tellraw("@a", root);
+                            }
+
+                            //Check if a player disconnected
+                            matcher = PLAYER_DISCONNECTED_PATTERN.matcher(line);
+                            if (matcher.find()) {
+                                final String username = matcher.group("player");
+                                final String reason = matcher.group("reason");
+                                final Player player = getPlayer(username);
+                                notifyOnPlayerDisconnected(player);
+                                this.players.remove(player);
                             }
                         }
                     }
@@ -213,7 +242,8 @@ public class ServerShell {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Process ended.");
+
+            notifyOnServerStopped();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -320,14 +350,7 @@ public class ServerShell {
         Matcher matcher;
     }
 
-    public List<String> getAllPlayers() {
-        final List<String> players = new ArrayList<>();
-        try {
-            final Matcher matcher = awaitResult("list", LIST_PLAYERS_PATTERN);
-            players.addAll(Arrays.asList(matcher.group("players").replace(" ", "").split(",")));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public List<Player> getPlayers() {
         return players;
     }
 
@@ -353,5 +376,64 @@ public class ServerShell {
 
     public Set<Command> getCustomCommands() {
         return customCommands;
+    }
+
+    public Player getPlayer(final String username){
+        for (Player player : this.players){
+            if (player.getUsername().equals(username)) return player;
+        }
+        return null;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Event listener
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public interface EventListener{
+        void onServerStarting();
+        void onServerStarted();
+        void onServerStopped();
+        void onPlayerConnected(final Player player);
+        void onPlayerDisconnected(final Player player);
+    }
+
+    private final CopyOnWriteArrayList<EventListener> eventListeners = new CopyOnWriteArrayList<>();
+
+    public void addEventListener(final EventListener listener){
+        this.eventListeners.add(listener);
+    }
+
+    public void removeEventListener(final EventListener listener){
+        this.eventListeners.remove(listener);
+    }
+
+    private void notifyOnServerStarting(){
+        for (EventListener listener : this.eventListeners){
+            listener.onServerStarting();
+        }
+    }
+
+    private void notifyOnServerStarted(){
+        for (EventListener listener : this.eventListeners){
+            listener.onServerStarted();
+        }
+    }
+
+    private void notifyOnServerStopped(){
+        for (EventListener listener : this.eventListeners){
+            listener.onServerStopped();
+        }
+    }
+
+    private void notifyOnPlayerConnected(final Player player){
+        for (EventListener listener : this.eventListeners){
+            listener.onPlayerConnected(player);
+        }
+    }
+
+    private void notifyOnPlayerDisconnected(final Player player){
+        for (EventListener listener : this.eventListeners){
+            listener.onPlayerDisconnected(player);
+        }
     }
 }

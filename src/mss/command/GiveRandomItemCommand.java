@@ -1,5 +1,6 @@
 package mss.command;
 
+import mss.Player;
 import mss.ServerShell;
 import mss.util.Utils;
 import org.json.simple.JSONArray;
@@ -37,9 +38,9 @@ public class GiveRandomItemCommand extends Command {
 
         //Check for player selectors
         if (targetPlayer.equals("@a")){
-            final List<String> players = serverShell.getAllPlayers();
-            for (String p : players){
-                serverShell.tellraw("@a", give(p, maxCount, serverShell));
+            final List<Player> players = serverShell.getPlayers();
+            for (Player p : players){
+                serverShell.tellraw("@a", give(p.getUsername(), maxCount, serverShell));
             }
             return;
         }

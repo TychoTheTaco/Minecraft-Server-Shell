@@ -29,7 +29,7 @@ public abstract class Command {
             final JSONObject root = Utils.createText("Invalid Parameters! ", "red");
             final JSONArray extra = new JSONArray();
             extra.add(Utils.createText("Expected format:\n", "gray"));
-            extra.add(Utils.createText("!" + getCommand(), "green"));
+            extra.add(Utils.createText(getCommand(), "green"));
             extra.add(Utils.createText(" " + getFormat(), "white"));
             root.put("extra", extra);
             return root;
