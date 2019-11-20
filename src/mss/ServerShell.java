@@ -73,7 +73,7 @@ public class ServerShell {
     /**
      * The set of custom commands.
      */
-    private final Set<Command> customCommands = new HashSet<>();
+    private final List<Command> customCommands = new ArrayList<>();
 
     private final List<Player> players = new ArrayList<>();
 
@@ -203,7 +203,7 @@ public class ServerShell {
                                 this.notifyOnPlayerConnected(player);
 
                                 //Send welcome message
-                                final JSONObject root = Utils.createText("Welcome to the server, " + player.getUsername() + "!", "aqua");
+                                final JSONObject root = Utils.createText("Welcome to the server " + player.getUsername() + "! Type \"!help\" for a list of commands.", "aqua");
                                 this.tellraw("@a", root);
                             }
 
@@ -374,7 +374,7 @@ public class ServerShell {
         }
     }
 
-    public Set<Command> getCustomCommands() {
+    public List<Command> getCustomCommands() {
         return customCommands;
     }
 

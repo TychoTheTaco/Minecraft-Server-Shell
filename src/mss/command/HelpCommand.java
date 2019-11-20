@@ -4,6 +4,11 @@ import mss.ServerShell;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import static mss.util.Utils.createText;
 
 public class HelpCommand extends Command {
@@ -19,8 +24,12 @@ public class HelpCommand extends Command {
         title.put("bold", false);
         extras.add(title);
 
+        //Sort commands alphabetically
+        final List<Command> commands = serverShell.getCustomCommands();
+        commands.sort(Comparator.comparing(Command::getCommand));
+
         //List commands and descriptions
-        for (Command command : serverShell.getCustomCommands()){
+        for (Command command : commands){
             extras.add(createText(command.getCommand(), "green"));
             extras.add(createText(": " + command.getDescription(), ""));
             extras.add(createText("\n", ""));
