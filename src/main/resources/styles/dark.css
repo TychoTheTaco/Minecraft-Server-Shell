@@ -47,8 +47,30 @@
 
 /* T R B L */
 
+/* --------------------------------------------------------------------------------- Main Layout -------------------------------------------------------------------------------- */
+
+#module_list_view{
+    -fx-padding: 8px 0px 0px 0px;
+    -fx-focus-traversable: false;
+}
+
+#module_list_view .list-cell:filled {
+    -fx-padding: 4px 8px 4px 8px;
+}
+
+#module_list_view .list-cell:filled:hover {
+    -fx-background-color: #4fb4ff;
+}
+
+#module_list_view .list-cell:filled:selected {
+    -fx-background-color: #0093ff;
+}
+
+/* ---------------------------------------------------------------------------------- Dashboard --------------------------------------------------------------------------------- */
+
 #players_list{
     -fx-padding: 0px 5px 5px 5px;
+    -fx-focus-traversable: false;
 }
 
 #left_pane{
@@ -59,15 +81,29 @@
     -fx-font-family: Consolas;
     -fx-highlight-fill: #00ff00;
     -fx-highlight-text-fill: #000000;
-    -fx-text-fill: #00ff00;
+    -fx-text-fill: white;
     -fx-background-color: #000000;
     -fx-focus-color: transparent;
     -fx-border-style: none;
     -fx-background-radius: 0.0px;
+    -fx-focus-traversable: false;
 }
 
 #console .content{
     -fx-background-color: black;
     -fx-background-radius: 0.0px;
     -fx-border-radius: 0.0px;
+}
+
+#console_input{
+    -fx-font-family: Consolas;
+    -fx-background-color: #525252;
+    -fx-border-style: none;
+    -fx-text-fill: white;
+    -fx-background-radius: 0.0px;
+    -fx-focus-color: transparent;
+}
+
+#console_input .content{
+
 }

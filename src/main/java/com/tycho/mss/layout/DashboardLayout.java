@@ -1,6 +1,8 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.*;
+import com.tycho.mss.Player;
+import com.tycho.mss.PlayerListCell;
+import com.tycho.mss.ServerShell;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -9,10 +11,10 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-public class MainLayout {
+public class DashboardLayout {
 
     @FXML
-    private ListView<Module> module_list_view;
+    private ListView<Player> players_list;
 
     @FXML
     private TextArea console;
@@ -24,12 +26,8 @@ public class MainLayout {
 
     @FXML
     private void initialize() {
-        //Modules
-        module_list_view.setCellFactory(param -> new ModuleListCell());
-        module_list_view.getItems().add(new Module("Dashboard"));
-        module_list_view.getItems().add(new Module("Players"));
-        module_list_view.getItems().add(new Module("Console"));
-        module_list_view.getItems().add(new Module("Configuration"));
+        //Player list
+        players_list.setCellFactory(param -> new PlayerListCell());
 
         //Console output
         console.setEditable(false);
@@ -72,12 +70,12 @@ public class MainLayout {
 
             @Override
             public void onPlayerConnected(Player player) {
-
+                Platform.runLater(() -> players_list.getItems().add(player));
             }
 
             @Override
             public void onPlayerDisconnected(Player player) {
-
+                Platform.runLater(() -> players_list.getItems().remove(player));
             }
 
             @Override

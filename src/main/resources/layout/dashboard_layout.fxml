@@ -8,11 +8,16 @@
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.layout.MainLayout">
+          fx:controller="com.tycho.mss.layout.DashboardLayout">
 
     <!-- Left Pane -->
-    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="180" GridPane.vgrow="ALWAYS">
-        <ListView fx:id="module_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="150" GridPane.vgrow="ALWAYS">
+        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Players">
+            <padding>
+                <Insets top="6" left="8" right="8"/>
+            </padding>
+        </Label>
+        <ListView fx:id="players_list" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
     </GridPane>
 
     <!-- Console and Chat Area -->
