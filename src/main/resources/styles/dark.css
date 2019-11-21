@@ -1,0 +1,73 @@
+.label{
+    -fx-font-size: 12pt;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+.check-box{
+    -fx-font-size: 12pt;
+    -fx-text-fill: white;
+}
+
+.menu .label{
+    -fx-font-size: 10pt;
+}
+
+.menu-item .label {
+    -fx-font-size: 10pt;
+}
+
+.list-view{
+    -fx-padding: 0px;
+    -fx-background-color: transparent;
+}
+
+.list-cell{
+    -fx-padding: 4px 0px 4px 0px;
+    -fx-background-color: transparent;
+}
+
+/*.text-area {
+  -fx-font-family: Consolas;
+  -fx-highlight-fill: #00ff00;
+  -fx-highlight-text-fill: #000000;
+  -fx-text-fill: #00ff00;
+  -fx-background-color: #000000;
+  -fx-focus-color: transparent;
+  -fx-border-style: none;
+  -fx-background-radius: 0.0px;
+  -fx-border-radius: 0.0px;
+}
+
+.text-area .content{
+  -fx-background-color: black;
+  -fx-background-radius: 0.0px;
+  -fx-border-radius: 0.0px;
+}*/
+
+/* T R B L */
+
+#players_list{
+    -fx-padding: 0px 5px 5px 5px;
+}
+
+#left_pane{
+    -fx-background-color: #404040;
+}
+
+#console{
+    -fx-font-family: Consolas;
+    -fx-highlight-fill: #00ff00;
+    -fx-highlight-text-fill: #000000;
+    -fx-text-fill: #00ff00;
+    -fx-background-color: #000000;
+    -fx-focus-color: transparent;
+    -fx-border-style: none;
+    -fx-background-radius: 0.0px;
+}
+
+#console .content{
+    -fx-background-color: black;
+    -fx-background-radius: 0.0px;
+    -fx-border-radius: 0.0px;
+}

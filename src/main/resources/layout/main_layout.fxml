@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Label?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.MainLayout">
 
-    <Canvas fx:id="video_canvas" GridPane.columnIndex="0" GridPane.rowIndex="0" width="1280" height="720"/>
+    <!-- Left Pane -->
+    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="150" GridPane.vgrow="ALWAYS">
+        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Players">
+            <padding>
+                <Insets top="6" left="8" right="8"/>
+            </padding>
+        </Label>
+        <ListView fx:id="players_list" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+    </GridPane>
+
+    <!-- Console and Chat Area -->
+    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800" prefHeight="500">
+        <TextArea fx:id="console" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+        <TextField fx:id="console_input" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS"/>
+    </GridPane>
+
+    <!--<Canvas fx:id="video_canvas" GridPane.columnIndex="0" GridPane.rowIndex="0" width="1280" height="720"/>
 
     <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1" hgap="15">
         <padding>
@@ -29,7 +45,7 @@
             <Insets left="10" right="10"/>
         </padding>
 
-        <!-- Frame / Processing details -->
+        &lt;!&ndash; Frame / Processing details &ndash;&gt;
         <Label fx:id="frame_count_label" text="Frame: ?" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
         <Label fx:id="processing_time_label" text="Processed in ? ms." GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
@@ -39,7 +55,7 @@
             </GridPane.margin>
         </Separator>
 
-        <!-- Frame / Processing details -->
+        &lt;!&ndash; Frame / Processing details &ndash;&gt;
         <Label fx:id="source_file_label" text="Source: ?" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
         <Label fx:id="source_size_label" text="Size: unknown." GridPane.columnIndex="0" GridPane.rowIndex="4"/>
 
@@ -49,7 +65,7 @@
             </GridPane.margin>
         </Separator>
 
-        <!-- Content size -->
+        &lt;!&ndash; Content size &ndash;&gt;
         <GridPane GridPane.columnIndex="0" GridPane.rowIndex="6" hgap="10">
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER"/>
@@ -63,7 +79,7 @@
             </GridPane.margin>
         </Separator>
 
-        <!-- Algorithm details -->
+        &lt;!&ndash; Algorithm details &ndash;&gt;
         <Label fx:id="content_finder_label" text="Algorithm: ?" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
         <CheckBox fx:id="overlay_checkbox" text="Overlay" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
         <CheckBox fx:id="debug_checkbox" text="Debug" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
@@ -76,5 +92,5 @@
 
         <VBox fx:id="properties" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
 
-    </GridPane>
+    </GridPane>-->
 </GridPane>

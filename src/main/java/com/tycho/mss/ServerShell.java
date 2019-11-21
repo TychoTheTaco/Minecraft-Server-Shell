@@ -123,6 +123,17 @@ public class ServerShell {
         return this.permissions.containsKey(player) && this.permissions.get(player).contains(command);
     }
 
+    private OutputStream inputStream;
+    private InputStream outputStream;
+
+    public OutputStream getInputStream() {
+        return inputStream;
+    }
+
+    public InputStream getOutputStream() {
+        return outputStream;
+    }
+
     /**
      * Start the Minecraft server with the specified launch options.
      *
@@ -147,6 +158,10 @@ public class ServerShell {
         try {
             final Process process = processBuilder.start();
 
+            this.inputStream = process.getOutputStream();
+            this.outputStream = process.getInputStream();
+            notifyOnServerIOready();
+
             this.serverInputWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
             final StreamReader errorOutput = new StreamReader(process.getErrorStream());
             errorOutput.start();
@@ -158,6 +173,7 @@ public class ServerShell {
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         System.out.println(line);
+                        notifyOnOutput(line);
 
                         //Check for pending results
                         boolean handled = false;
@@ -393,10 +409,12 @@ public class ServerShell {
 
     public interface EventListener{
         void onServerStarting();
+        void onServerIOready();
         void onServerStarted();
         void onServerStopped();
         void onPlayerConnected(final Player player);
         void onPlayerDisconnected(final Player player);
+        void onOutput(final String message);
     }
 
     private final CopyOnWriteArrayList<EventListener> eventListeners = new CopyOnWriteArrayList<>();
@@ -412,6 +430,18 @@ public class ServerShell {
     private void notifyOnServerStarting(){
         for (EventListener listener : this.eventListeners){
             listener.onServerStarting();
+        }
+    }
+
+    private void notifyOnServerIOready(){
+        for (EventListener listener : this.eventListeners){
+            listener.onServerIOready();
+        }
+    }
+
+    private void notifyOnOutput(final String message){
+        for (EventListener listener : this.eventListeners){
+            listener.onOutput(message);
         }
     }
 
