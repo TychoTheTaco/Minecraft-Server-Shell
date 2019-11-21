@@ -1,7 +1,6 @@
 package mss;
 
 import mss.command.Command;
-import mss.command.GiveRandomItemCommand;
 import mss.util.StreamReader;
 import mss.util.Utils;
 import org.json.simple.JSONArray;
@@ -75,6 +74,9 @@ public class ServerShell {
      */
     private final List<Command> customCommands = new ArrayList<>();
 
+    /**
+     * List of players currently connected to the server.
+     */
     private final List<Player> players = new ArrayList<>();
 
     public ServerShell(final File serverJar) {
