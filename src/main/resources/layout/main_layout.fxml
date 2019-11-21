@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.CheckBox?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.tycho.mss.layout.MainLayout">
+
+    <Canvas fx:id="video_canvas" GridPane.columnIndex="0" GridPane.rowIndex="0" width="1280" height="720"/>
+
+    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1" hgap="15">
+        <padding>
+            <Insets left="5" right="5"/>
+        </padding>
+        <Label fx:id="cursor_position_label" text="Position: (x, y)" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"/>
+        <Label text="[E] Toggle Overlay" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label text="[Q] Toggle Debug" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+        <Label text="[R] Reset" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+        <Label text="[S] Previous Frame" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+        <Label text="[D] Next Frame" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+    </GridPane>
+
+    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2">
+        <padding>
+            <Insets left="10" right="10"/>
+        </padding>
+
+        <!-- Frame / Processing details -->
+        <Label fx:id="frame_count_label" text="Frame: ?" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label fx:id="processing_time_label" text="Processed in ? ms." GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+        <Separator GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <GridPane.margin>
+                <Insets top="5" bottom="5"/>
+            </GridPane.margin>
+        </Separator>
+
+        <!-- Frame / Processing details -->
+        <Label fx:id="source_file_label" text="Source: ?" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <Label fx:id="source_size_label" text="Size: unknown." GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+
+        <Separator GridPane.columnIndex="0" GridPane.rowIndex="5">
+            <GridPane.margin>
+                <Insets top="5" bottom="5"/>
+            </GridPane.margin>
+        </Separator>
+
+        <!-- Content size -->
+        <GridPane GridPane.columnIndex="0" GridPane.rowIndex="6" hgap="10">
+            <columnConstraints>
+                <ColumnConstraints halignment="CENTER"/>
+                <ColumnConstraints halignment="CENTER"/>
+            </columnConstraints>
+        </GridPane>
+
+        <Separator GridPane.columnIndex="0" GridPane.rowIndex="7">
+            <GridPane.margin>
+                <Insets top="10" bottom="5"/>
+            </GridPane.margin>
+        </Separator>
+
+        <!-- Algorithm details -->
+        <Label fx:id="content_finder_label" text="Algorithm: ?" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+        <CheckBox fx:id="overlay_checkbox" text="Overlay" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+        <CheckBox fx:id="debug_checkbox" text="Debug" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+
+        <Label text="Properties" GridPane.columnIndex="0" GridPane.rowIndex="11" underline="true">
+            <GridPane.margin>
+                <Insets top="15" bottom="5"/>
+            </GridPane.margin>
+        </Label>
+
+        <VBox fx:id="properties" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+
+    </GridPane>
+</GridPane>

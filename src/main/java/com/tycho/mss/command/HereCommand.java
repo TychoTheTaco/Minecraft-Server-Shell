@@ -1,7 +1,7 @@
-package mss.command;
+package com.tycho.mss.command;
 
-import mss.ServerShell;
-import mss.util.Utils;
+import com.tycho.mss.ServerShell;
+import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

@@ -1,4 +1,4 @@
-package mss;
+package com.tycho.mss;
 
 import java.util.UUID;
 

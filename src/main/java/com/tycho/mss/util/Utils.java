@@ -1,4 +1,4 @@
-package mss.util;
+package com.tycho.mss.util;
 
 import org.json.simple.JSONObject;
 

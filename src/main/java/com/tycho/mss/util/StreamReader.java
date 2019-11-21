@@ -1,4 +1,4 @@
-package mss.util;
+package com.tycho.mss.util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

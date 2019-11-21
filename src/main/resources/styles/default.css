@@ -1,0 +1,18 @@
+.label{
+    -fx-font-size: 12pt;
+    -fx-text-fill: black;
+    -fx-text-alignment: center;
+}
+
+.check-box{
+    -fx-font-size: 12pt;
+    -fx-text-fill: black;
+}
+
+.menu .label{
+    -fx-font-size: 10pt;
+}
+
+.menu-item .label {
+    -fx-font-size: 10pt;
+}

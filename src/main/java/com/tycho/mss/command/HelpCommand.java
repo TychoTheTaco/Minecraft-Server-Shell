@@ -1,24 +1,24 @@
-package mss.command;
+package com.tycho.mss.command;
 
-import mss.ServerShell;
+
+import com.tycho.mss.ServerShell;
+import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.Comparator;
 import java.util.List;
 
-import static mss.util.Utils.createText;
-
 public class HelpCommand extends Command {
 
     @Override
     public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
         //Create root object with standard formatting. All extras will inherit these properties.
-        final JSONObject root = createText("", "gray");
+        final JSONObject root = Utils.createText("", "gray");
         final JSONArray extras = new JSONArray();
 
         //Create title text
-        final JSONObject title = createText("The server accepts the following commands:\n", "");
+        final JSONObject title = Utils.createText("The server accepts the following commands:\n", "");
         title.put("bold", false);
         extras.add(title);
 
@@ -28,9 +28,9 @@ public class HelpCommand extends Command {
 
         //List commands and descriptions
         for (Command command : commands){
-            extras.add(createText(command.getCommand(), "green"));
-            extras.add(createText(": " + command.getDescription(), ""));
-            extras.add(createText("\n", ""));
+            extras.add(Utils.createText(command.getCommand(), "green"));
+            extras.add(Utils.createText(": " + command.getDescription(), ""));
+            extras.add(Utils.createText("\n", ""));
         }
         extras.remove(extras.size() - 1);
 

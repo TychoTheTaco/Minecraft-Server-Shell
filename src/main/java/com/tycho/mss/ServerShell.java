@@ -1,8 +1,8 @@
-package mss;
+package com.tycho.mss;
 
-import mss.command.Command;
-import mss.util.StreamReader;
-import mss.util.Utils;
+import com.tycho.mss.command.Command;
+import com.tycho.mss.util.StreamReader;
+import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
