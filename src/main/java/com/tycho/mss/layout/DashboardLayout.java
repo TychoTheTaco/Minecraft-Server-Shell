@@ -3,6 +3,7 @@ package com.tycho.mss.layout;
 import com.tycho.mss.Player;
 import com.tycho.mss.PlayerListCell;
 import com.tycho.mss.ServerShell;
+import com.tycho.mss.ServerShellUser;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -11,12 +12,10 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-public class DashboardLayout {
+public class DashboardLayout extends ServerShellUser {
 
     @FXML
     private ListView<Player> players_list;
-
-    private ServerShell serverShell;
 
     @FXML
     private void initialize() {
@@ -24,9 +23,10 @@ public class DashboardLayout {
         players_list.setCellFactory(param -> new PlayerListCell());
     }
 
+    @Override
     public void setServerShell(ServerShell serverShell) {
-        this.serverShell = serverShell;
-        this.serverShell.addEventListener(new ServerShell.EventListener() {
+        super.setServerShell(serverShell);
+        serverShell.addEventListener(new ServerShell.EventListener() {
             @Override
             public void onServerStarting() {
 

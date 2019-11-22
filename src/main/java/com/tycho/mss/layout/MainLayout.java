@@ -40,6 +40,7 @@ public class MainLayout {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/" + ids[i] + ".fxml"));
             try {
                 nodes[i] = loader.load();
+                module_list_view.getItems().get(i).setController(loader.getController());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -69,40 +70,8 @@ public class MainLayout {
 
     public void setServerShell(ServerShell serverShell) {
         this.serverShell = serverShell;
-        this.serverShell.addEventListener(new ServerShell.EventListener() {
-            @Override
-            public void onServerStarting() {
-
-            }
-
-            @Override
-            public void onServerIOready() {
-
-            }
-
-            @Override
-            public void onServerStarted() {
-
-            }
-
-            @Override
-            public void onServerStopped() {
-
-            }
-
-            @Override
-            public void onPlayerConnected(Player player) {
-
-            }
-
-            @Override
-            public void onPlayerDisconnected(Player player) {
-
-            }
-
-            @Override
-            public void onOutput(String message) {
-            }
-        });
+        for (Module module : module_list_view.getItems()){
+            module.getController().setServerShell(serverShell);
+        }
     }
 }

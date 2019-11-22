@@ -12,10 +12,10 @@
     <graphic>
         <HBox alignment="CENTER">
             <padding>
-                <Insets left="4" right="8"/>
+                <Insets left="8" right="8"/>
             </padding>
             <VBox HBox.hgrow="ALWAYS">
-                <Label fx:id="username" style="-fx-font-size: 11pt; -fx-font-weight: bold;"/>
+                <Label fx:id="username" style="-fx-font-weight: bold;"/>
             </VBox>
         </HBox>
     </graphic>
