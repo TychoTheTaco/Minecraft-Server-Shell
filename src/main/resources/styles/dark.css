@@ -151,3 +151,37 @@
 }
 
 /* --------------------------------------------------------------------------------- Configuration ------------------------------------------------------------------------------ */
+
+#server_properties_table_view{
+    -fx-background-color: transparent;
+}
+
+#server_properties_table_view .filler{
+    -fx-background-color: transparent;
+}
+
+.server_properties_table_view .table-cell{
+    -fx-text-fill: white;
+    -fx-font-size: 12pt;
+}
+
+#server_properties_table_view .table-row-cell{
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: #FFFFFF20;
+}
+
+#server_properties_table_view .table-row-cell:even{
+    -fx-background-color: #4a4a4a80;
+}
+
+#server_properties_table_view .column-header{
+    -fx-background-color: transparent;
+}
+
+#server_properties_table_view .column-header-background{
+    -fx-background-color: transparent;
+}
+
+#server_properties_table_view .column-header .arrow {
+    -fx-background-color: white;
+}

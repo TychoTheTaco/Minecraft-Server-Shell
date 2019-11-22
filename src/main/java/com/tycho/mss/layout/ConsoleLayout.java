@@ -77,9 +77,4 @@ public class ConsoleLayout extends MenuPage {
             }
         });
     }
-
-    @Override
-    public String getTitle() {
-        return "Console";
-    }
 }

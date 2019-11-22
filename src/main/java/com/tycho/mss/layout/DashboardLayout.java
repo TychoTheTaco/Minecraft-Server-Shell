@@ -85,9 +85,4 @@ public class DashboardLayout extends MenuPage {
     private void updatePlayerCount(){
         this.player_count_label.setText(getServerShell().getPlayers().size() + " / MAX Players connected");
     }
-
-    @Override
-    public String getTitle() {
-        return "Dashboard";
-    }
 }

@@ -22,6 +22,8 @@ public class PlayersLayout extends MenuPage {
 
     @FXML
     private void initialize() {
+        players_table_view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         //Username
         final TableColumn<Player, String> usernameColumn = new TableColumn<>("Username");
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -141,10 +143,5 @@ public class PlayersLayout extends MenuPage {
         public void stop(){
             this.isRunning = false;
         }
-    }
-
-    @Override
-    public String getTitle() {
-        return "Players";
     }
 }
