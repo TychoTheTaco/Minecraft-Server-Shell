@@ -20,7 +20,7 @@ public class ServerShell {
     /**
      * Possible states for the Minecraft server.
      */
-    private enum State {
+    public enum State {
         /**
          * The server is starting but has not started yet. Players cannot connect until the server becomes online.
          */
@@ -278,6 +278,7 @@ public class ServerShell {
     private void onServerStarted() {
         System.out.println("SERVER STARTED!");
         this.state = State.ONLINE;
+        notifyOnServerStarted();
         try {
             execute("time set 0");
             execute("weather clear");
@@ -401,6 +402,10 @@ public class ServerShell {
             if (player.getUsername().equals(username)) return player;
         }
         return null;
+    }
+
+    public State getState() {
+        return state;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

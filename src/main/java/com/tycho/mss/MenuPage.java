@@ -1,6 +1,6 @@
 package com.tycho.mss;
 
-public class ServerShellUser {
+public abstract class MenuPage {
 
     private ServerShell serverShell;
 
@@ -11,4 +11,6 @@ public class ServerShellUser {
     public void setServerShell(ServerShell serverShell) {
         this.serverShell = serverShell;
     }
+
+    public abstract String getTitle();
 }

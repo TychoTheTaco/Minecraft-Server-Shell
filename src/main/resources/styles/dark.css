@@ -27,6 +27,17 @@
     -fx-background-color: transparent;
 }
 
+.button{
+    -fx-background-color: purple;
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.button:pressed{
+    -fx-background-color: blue;
+}
+
 /* T R B L */
 
 /* --------------------------------------------------------------------------------- Main Layout -------------------------------------------------------------------------------- */
@@ -53,7 +64,7 @@
 }
 
 #container{
-    -fx-background-color: #808080;
+    -fx-background-color: #575757;
 }
 
 /* ---------------------------------------------------------------------------------- Dashboard --------------------------------------------------------------------------------- */
@@ -73,8 +84,18 @@
     -fx-background-color: transparent;
 }
 
+.table-view .table-cell{
+    -fx-text-fill: white;
+    -fx-font-size: 12pt;
+}
+
 #players_table_view .table-row-cell{
     -fx-background-color: transparent;
+    -fx-table-cell-border-color: #FFFFFF20;
+}
+
+#players_table_view .table-row-cell:even{
+    -fx-background-color: #4a4a4a80;
 }
 
 #players_table_view .column-header{
@@ -85,8 +106,8 @@
     -fx-background-color: transparent;
 }
 
-#players_table_view .column-header-background .label{
-    -fx-background-color: transparent;
+#players_table_view .column-header .arrow {
+    -fx-background-color: white;
 }
 
 /* ----------------------------------------------------------------------------------- misc- --------------------------------------------------------------------------------- */

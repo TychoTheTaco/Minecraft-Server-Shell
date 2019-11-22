@@ -8,12 +8,12 @@ import javafx.scene.control.ListCell;
 
 import java.io.IOException;
 
-public class ModuleListCell extends ListCell<Module> {
+public class MenuListCell extends ListCell<MenuPage> {
 
     @FXML
     private Label title;
 
-    public ModuleListCell() {
+    public MenuListCell() {
         try {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/module_list_cell.fxml"));
             loader.setController(this);
@@ -25,7 +25,7 @@ public class ModuleListCell extends ListCell<Module> {
     }
 
     @Override
-    protected void updateItem(Module item, boolean empty) {
+    protected void updateItem(MenuPage item, boolean empty) {
         super.updateItem(item, empty);
         if (empty){
             setText(null);

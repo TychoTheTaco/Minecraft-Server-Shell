@@ -1,90 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.DashboardLayout">
 
-    <!-- Left Pane -->
-    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="150" GridPane.vgrow="ALWAYS">
-        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Players">
-            <padding>
-                <Insets top="6" left="8" right="8"/>
-            </padding>
-        </Label>
-        <ListView fx:id="players_list" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
-    </GridPane>
-
-    <!--<Canvas fx:id="video_canvas" GridPane.columnIndex="0" GridPane.rowIndex="0" width="1280" height="720"/>
-
-    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1" hgap="15">
+    <Label fx:id="status_label" GridPane.columnIndex="0" GridPane.rowIndex="0" text="Status" style="-fx-font-size: 20pt;">
         <padding>
-            <Insets left="5" right="5"/>
+            <Insets top="4" left="8" right="8"/>
         </padding>
-        <Label fx:id="cursor_position_label" text="Position: (x, y)" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"/>
-        <Label text="[E] Toggle Overlay" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-        <Label text="[Q] Toggle Debug" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-        <Label text="[R] Reset" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-        <Label text="[S] Previous Frame" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
-        <Label text="[D] Next Frame" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
-    </GridPane>
+    </Label>
 
-    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2">
+    <Label fx:id="player_count_label" GridPane.columnIndex="0" GridPane.rowIndex="1" text="0 / 10 Players connected">
         <padding>
-            <Insets left="10" right="10"/>
+            <Insets top="4" left="8" right="8"/>
         </padding>
+    </Label>
 
-        &lt;!&ndash; Frame / Processing details &ndash;&gt;
-        <Label fx:id="frame_count_label" text="Frame: ?" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <Label fx:id="processing_time_label" text="Processed in ? ms." GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" alignment="BOTTOM_CENTER" spacing="10">
+        <padding>
+            <Insets top="10" right="8" bottom="8" left="10"/>
+        </padding>
+        <Button fx:id="start_button" text="Start"/>
+        <Button fx:id="restart_button" text="Restart"/>
+        <Button fx:id="stop_button" text="Stop"/>
+    </HBox>
 
-        <Separator GridPane.columnIndex="0" GridPane.rowIndex="2">
-            <GridPane.margin>
-                <Insets top="5" bottom="5"/>
-            </GridPane.margin>
-        </Separator>
 
-        &lt;!&ndash; Frame / Processing details &ndash;&gt;
-        <Label fx:id="source_file_label" text="Source: ?" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <Label fx:id="source_size_label" text="Size: unknown." GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-
-        <Separator GridPane.columnIndex="0" GridPane.rowIndex="5">
-            <GridPane.margin>
-                <Insets top="5" bottom="5"/>
-            </GridPane.margin>
-        </Separator>
-
-        &lt;!&ndash; Content size &ndash;&gt;
-        <GridPane GridPane.columnIndex="0" GridPane.rowIndex="6" hgap="10">
-            <columnConstraints>
-                <ColumnConstraints halignment="CENTER"/>
-                <ColumnConstraints halignment="CENTER"/>
-            </columnConstraints>
-        </GridPane>
-
-        <Separator GridPane.columnIndex="0" GridPane.rowIndex="7">
-            <GridPane.margin>
-                <Insets top="10" bottom="5"/>
-            </GridPane.margin>
-        </Separator>
-
-        &lt;!&ndash; Algorithm details &ndash;&gt;
-        <Label fx:id="content_finder_label" text="Algorithm: ?" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-        <CheckBox fx:id="overlay_checkbox" text="Overlay" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
-        <CheckBox fx:id="debug_checkbox" text="Debug" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
-
-        <Label text="Properties" GridPane.columnIndex="0" GridPane.rowIndex="11" underline="true">
-            <GridPane.margin>
-                <Insets top="15" bottom="5"/>
-            </GridPane.margin>
-        </Label>
-
-        <VBox fx:id="properties" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
-
-    </GridPane>-->
 </GridPane>

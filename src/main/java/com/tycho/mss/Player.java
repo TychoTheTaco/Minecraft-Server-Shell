@@ -10,9 +10,12 @@ public class Player {
 
     private final String ipAddress;
 
+    private long onConnectTime;
+
     public Player(final String username, final String ipAddress) {
         this.username = username;
         this.ipAddress = ipAddress;
+        this.onConnectTime = System.currentTimeMillis();
     }
 
     public String getUsername() {
@@ -21,5 +24,9 @@ public class Player {
 
     public String getIpAddress() {
         return ipAddress;
+    }
+
+    public long getOnConnectTime() {
+        return onConnectTime;
     }
 }

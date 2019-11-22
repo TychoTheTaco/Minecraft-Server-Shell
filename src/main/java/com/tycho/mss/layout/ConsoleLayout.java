@@ -3,13 +3,12 @@ package com.tycho.mss.layout;
 import com.tycho.mss.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-public class ConsoleLayout extends ServerShellUser {
+public class ConsoleLayout extends MenuPage {
 
     @FXML
     private TextArea console;
@@ -77,5 +76,10 @@ public class ConsoleLayout extends ServerShellUser {
                 });
             }
         });
+    }
+
+    @Override
+    public String getTitle() {
+        return "Console";
     }
 }
