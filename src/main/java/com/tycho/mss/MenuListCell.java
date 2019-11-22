@@ -1,5 +1,6 @@
 package com.tycho.mss;
 
+import com.tycho.mss.layout.MainLayout;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -8,7 +9,7 @@ import javafx.scene.control.ListCell;
 
 import java.io.IOException;
 
-public class MenuListCell extends ListCell<MenuPage> {
+public class MenuListCell extends ListCell<MainLayout.MenuItem> {
 
     @FXML
     private Label title;
@@ -25,7 +26,7 @@ public class MenuListCell extends ListCell<MenuPage> {
     }
 
     @Override
-    protected void updateItem(MenuPage item, boolean empty) {
+    protected void updateItem(MainLayout.MenuItem item, boolean empty) {
         super.updateItem(item, empty);
         if (empty){
             setText(null);

@@ -3,8 +3,6 @@ package com.tycho.mss.layout;
 import com.tycho.mss.MenuListCell;
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.ServerShell;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,65 +10,75 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
+import java.util.Comparator;
 
 public class MainLayout {
 
     @FXML
-    private ListView<MenuPage> module_list_view;
+    private ListView<MenuItem> module_list_view;
 
     @FXML
     private BorderPane container;
 
     private ServerShell serverShell;
 
+    public class MenuItem{
+
+        private final String title;
+
+        private final FXMLLoader loader;
+
+        private final Node node;
+
+        public MenuItem(final String title, final String layout) throws IOException {
+            this.title = title;
+            this.loader = new FXMLLoader(getClass().getResource("/layout/" + layout + ".fxml"));
+            this.node = this.loader.load();
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public FXMLLoader getLoader() {
+            return loader;
+        }
+
+        public Node getNode() {
+            return node;
+        }
+    }
+
     @FXML
     private void initialize() {
         //Modules
         module_list_view.setCellFactory(param -> new MenuListCell());
-
-        final Node[] nodes = new Node[4];
-        final String[] ids = new String[]{"dashboard_layout", "players_layout", "console_module_layout", "configuration_layout"};
-        for (int i = 0; i < ids.length; i++){
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/" + ids[i] + ".fxml"));
-            try {
-                nodes[i] = loader.load();
-                module_list_view.getItems().add(loader.getController());
-                //module_list_view.getItems().get(i).setController(loader.getController());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            module_list_view.getItems().add(new MenuItem("Dashboard", "dashboard_layout"));
+            module_list_view.getItems().add(new MenuItem("Players", "players_layout"));
+            module_list_view.getItems().add(new MenuItem("Console", "console_module_layout"));
+            module_list_view.getItems().add(new MenuItem("Configuration", "configuration_layout"));
+            module_list_view.getItems().sort(Comparator.comparing(MenuItem::getTitle));
+        }catch (IOException e){
+            e.printStackTrace();
         }
 
-        module_list_view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MenuPage>() {
-            @Override
-            public void changed(ObservableValue<? extends MenuPage> observable, MenuPage oldValue, MenuPage newValue) {
-                switch (newValue.getTitle()){
-                    case "Dashboard":
-                        container.setCenter(nodes[0]);
-                        break;
+        module_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> container.setCenter(newValue.getNode()));
 
-                    case "Players":
-                        container.setCenter(nodes[1]);
-                        break;
+        module_list_view.getSelectionModel().select(getMenuItemIndex("Dashboard"));
+    }
 
-                    case "Console":
-                        container.setCenter(nodes[2]);
-                        break;
-
-                    case "Configuration":
-                        container.setCenter(nodes[3]);
-                        break;
-                }
-            }
-        });
-
-        module_list_view.getSelectionModel().select(0);
+    private int getMenuItemIndex(final String title){
+        for (MenuItem menuItem : module_list_view.getItems()){
+            if (menuItem.getTitle().equals(title)) return module_list_view.getItems().indexOf(menuItem);
+        }
+        return -1;
     }
 
     public void setServerShell(ServerShell serverShell) {
         this.serverShell = serverShell;
-        for (MenuPage menuPage : module_list_view.getItems()){
-            menuPage.setServerShell(serverShell);
+        for (MenuItem menuItem : module_list_view.getItems()){
+            ((MenuPage) menuItem.getLoader().getController()).setServerShell(serverShell);
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.tycho.mss;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.UUID;
 
 public class Player {
@@ -28,5 +30,16 @@ public class Player {
 
     public long getOnConnectTime() {
         return onConnectTime;
+    }
+
+    public long getPing(){
+        try {
+            final long start = System.nanoTime();
+            final boolean isReachable = InetAddress.getByName(this.ipAddress).isReachable(3000);
+            return isReachable ? (System.nanoTime() - start) / 1000000 : -1;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
