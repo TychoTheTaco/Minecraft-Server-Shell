@@ -11,6 +11,6 @@
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.PlayersLayout">
 
-    <ListView fx:id="players_list" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+    <TableView fx:id="players_table_view" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
 
 </GridPane>

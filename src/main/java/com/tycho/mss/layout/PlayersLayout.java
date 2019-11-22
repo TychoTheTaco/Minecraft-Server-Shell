@@ -5,19 +5,32 @@ import com.tycho.mss.PlayerListCell;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.ServerShellUser;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 public class PlayersLayout extends ServerShellUser {
 
     @FXML
-    private ListView<Player> players_list;
+    private TableView players_table_view;
 
     @FXML
     private void initialize() {
-        //Player list
-        players_list.setCellFactory(param -> new PlayerListCell());
-        players_list.getItems().add(new Player("test", "address"));
+        //Username
+        final TableColumn<String, Player> usernameColumn = new TableColumn<>("Username");
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        players_table_view.getColumns().add(usernameColumn);
+
+        //IP Address
+        final TableColumn<String, Player> ipAddressColumn = new TableColumn<>("IP Address");
+        ipAddressColumn.setCellValueFactory(new PropertyValueFactory<>("ipAddress"));
+        players_table_view.getColumns().add(ipAddressColumn);
+
+        players_table_view.getItems().add(new Player("test", "address"));
     }
 
     @Override
@@ -46,12 +59,12 @@ public class PlayersLayout extends ServerShellUser {
 
             @Override
             public void onPlayerConnected(Player player) {
-                Platform.runLater(() -> players_list.getItems().add(player));
+                Platform.runLater(() -> players_table_view.getItems().add(player));
             }
 
             @Override
             public void onPlayerDisconnected(Player player) {
-                Platform.runLater(() -> players_list.getItems().remove(player));
+                Platform.runLater(() -> players_table_view.getItems().remove(player));
             }
 
             @Override

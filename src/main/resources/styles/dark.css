@@ -27,27 +27,13 @@
     -fx-background-color: transparent;
 }
 
-/*.text-area {
-  -fx-font-family: Consolas;
-  -fx-highlight-fill: #00ff00;
-  -fx-highlight-text-fill: #000000;
-  -fx-text-fill: #00ff00;
-  -fx-background-color: #000000;
-  -fx-focus-color: transparent;
-  -fx-border-style: none;
-  -fx-background-radius: 0.0px;
-  -fx-border-radius: 0.0px;
-}
-
-.text-area .content{
-  -fx-background-color: black;
-  -fx-background-radius: 0.0px;
-  -fx-border-radius: 0.0px;
-}*/
-
 /* T R B L */
 
 /* --------------------------------------------------------------------------------- Main Layout -------------------------------------------------------------------------------- */
+
+#left_pane{
+    -fx-background-color: #404040;
+}
 
 #module_list_view{
     -fx-padding: 8px 0px 0px 0px;
@@ -77,9 +63,33 @@
     -fx-focus-traversable: false;
 }
 
-#left_pane{
-    -fx-background-color: #404040;
+/* ----------------------------------------------------------------------------------- Players- --------------------------------------------------------------------------------- */
+
+#players_table_view{
+    -fx-background-color: transparent;
 }
+
+#players_table_view .filler{
+    -fx-background-color: transparent;
+}
+
+#players_table_view .table-row-cell{
+    -fx-background-color: transparent;
+}
+
+#players_table_view .column-header{
+    -fx-background-color: transparent;
+}
+
+#players_table_view .column-header-background{
+    -fx-background-color: transparent;
+}
+
+#players_table_view .column-header-background .label{
+    -fx-background-color: transparent;
+}
+
+/* ----------------------------------------------------------------------------------- misc- --------------------------------------------------------------------------------- */
 
 #console{
     -fx-font-family: Consolas;
