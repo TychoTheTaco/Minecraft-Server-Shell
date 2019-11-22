@@ -6,15 +6,49 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.ConfigurationLayout">
 
-    <!-- Left Pane -->
-    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="150" GridPane.vgrow="ALWAYS">
-        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Config">
+    <!-- Configuration -->
+    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Configuration" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
             <padding>
-                <Insets top="6" left="8" right="8"/>
+                <Insets top="6" right="8" bottom="12" left="8"/>
+            </padding>
+        </Label>
+
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="10">
+            <padding>
+                <Insets top="5" right="8" left="8"/>
+            </padding>
+            <Label text="Server JAR:"/>
+            <TextField HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" spacing="10">
+            <padding>
+                <Insets top="5" right="8" left="8"/>
+            </padding>
+            <Label text="Launch Options:"/>
+            <TextField HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="3" spacing="10" alignment="BOTTOM_CENTER">
+            <padding>
+                <Insets top="5" right="8" left="8"/>
+            </padding>
+            <Button text="Save"/>
+        </HBox>
+
+    </GridPane>
+
+    <!-- Configuration -->
+    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Properties" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
+            <padding>
+                <Insets top="6" right="8" bottom="12" left="8"/>
             </padding>
         </Label>
     </GridPane>
