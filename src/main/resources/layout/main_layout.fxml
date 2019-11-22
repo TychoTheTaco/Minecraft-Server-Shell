@@ -15,11 +15,7 @@
         <ListView fx:id="module_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
     </GridPane>
 
-    <!-- Console and Chat Area -->
-    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800" prefHeight="500">
-        <TextArea fx:id="console" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
-        <TextField fx:id="console_input" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS"/>
-    </GridPane>
+    <BorderPane fx:id="container" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800" prefHeight="500"/>
 
     <!--<Canvas fx:id="video_canvas" GridPane.columnIndex="0" GridPane.rowIndex="0" width="1280" height="720"/>
 

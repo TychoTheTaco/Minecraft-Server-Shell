@@ -16,33 +16,12 @@ public class DashboardLayout {
     @FXML
     private ListView<Player> players_list;
 
-    @FXML
-    private TextArea console;
-
-    @FXML
-    private TextField console_input;
-
     private ServerShell serverShell;
 
     @FXML
     private void initialize() {
         //Player list
         players_list.setCellFactory(param -> new PlayerListCell());
-
-        //Console output
-        console.setEditable(false);
-
-        //Console input
-        console_input.setOnAction(event -> {
-            if (serverShell != null) {
-                try {
-                    serverShell.execute(console_input.getText());
-                    console_input.clear();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     public void setServerShell(ServerShell serverShell) {
@@ -80,10 +59,6 @@ public class DashboardLayout {
 
             @Override
             public void onOutput(String message) {
-                Platform.runLater(() -> {
-                    console.appendText(message);
-                    console.appendText("\n");
-                });
             }
         });
     }

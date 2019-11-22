@@ -2,10 +2,16 @@ package com.tycho.mss.layout;
 
 import com.tycho.mss.*;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
@@ -15,10 +21,7 @@ public class MainLayout {
     private ListView<Module> module_list_view;
 
     @FXML
-    private TextArea console;
-
-    @FXML
-    private TextField console_input;
+    private BorderPane container;
 
     private ServerShell serverShell;
 
@@ -31,18 +34,35 @@ public class MainLayout {
         module_list_view.getItems().add(new Module("Console"));
         module_list_view.getItems().add(new Module("Configuration"));
 
-        //Console output
-        console.setEditable(false);
+        final Node[] nodes = new Node[4];
+        final String[] ids = new String[]{"dashboard_layout", "players_layout", "console_module_layout", "configuration_layout"};
+        for (int i = 0; i < nodes.length; i++){
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/" + ids[i] + ".fxml"));
+            try {
+                nodes[i] = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-        //Console input
-        console_input.setOnAction(event -> {
-            if (serverShell != null) {
-                try {
-                    serverShell.execute(console_input.getText());
-                    console_input.clear();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        module_list_view.setOnMouseClicked(event -> {
+            final Module module = module_list_view.getSelectionModel().getSelectedItem();
+            switch (module.getTitle()){
+                case "Dashboard":
+                    container.setCenter(nodes[0]);
+                    break;
+
+                case "Players":
+                    container.setCenter(nodes[1]);
+                    break;
+
+                case "Console":
+                    container.setCenter(nodes[2]);
+                    break;
+
+                case "Configuration":
+                    container.setCenter(nodes[3]);
+                    break;
             }
         });
     }
@@ -82,10 +102,6 @@ public class MainLayout {
 
             @Override
             public void onOutput(String message) {
-                Platform.runLater(() -> {
-                    console.appendText(message);
-                    console.appendText("\n");
-                });
             }
         });
     }
