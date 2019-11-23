@@ -83,27 +83,7 @@ public class PlayersLayout extends MenuPage {
     @Override
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
-        serverShell.addEventListener(new ServerShell.EventListener() {
-            @Override
-            public void onServerStarting() {
-
-            }
-
-            @Override
-            public void onServerIOready() {
-
-            }
-
-            @Override
-            public void onServerStarted() {
-
-            }
-
-            @Override
-            public void onServerStopped() {
-
-            }
-
+        serverShell.addEventListener(new ServerShell.EventAdapter() {
             @Override
             public void onPlayerConnected(Player player) {
                 Platform.runLater(() -> players_table_view.getItems().add(player));
@@ -112,10 +92,6 @@ public class PlayersLayout extends MenuPage {
             @Override
             public void onPlayerDisconnected(Player player) {
                 Platform.runLater(() -> players_table_view.getItems().remove(player));
-            }
-
-            @Override
-            public void onOutput(String message) {
             }
         });
     }

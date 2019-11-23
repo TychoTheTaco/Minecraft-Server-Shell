@@ -25,7 +25,7 @@
 
         <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" spacing="10">
             <padding>
-                <Insets top="5" right="8" left="8"/>
+                <Insets top="8" right="8" left="8"/>
             </padding>
             <Label text="Launch Options:"/>
             <TextField fx:id="launch_options_text_field" HBox.hgrow="ALWAYS"/>
@@ -33,9 +33,9 @@
 
         <HBox GridPane.columnIndex="0" GridPane.rowIndex="3" spacing="10" alignment="BOTTOM_CENTER">
             <padding>
-                <Insets top="5" right="8" left="8"/>
+                <Insets top="8" right="8" left="8"/>
             </padding>
-            <Button text="Save"/>
+            <Button fx:id="save_button" text="Save"/>
         </HBox>
 
     </GridPane>

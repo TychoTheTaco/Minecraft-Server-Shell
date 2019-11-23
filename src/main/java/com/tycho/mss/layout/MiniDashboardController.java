@@ -3,42 +3,41 @@ package com.tycho.mss.layout;
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.Player;
 import com.tycho.mss.ServerShell;
+import com.tycho.mss.util.Utils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 
-public class DashboardLayout extends MenuPage {
+public class MiniDashboardController extends MenuPage{
 
     @FXML
     private Label status_label;
 
     @FXML
+    private Label uptime_label;
+
+    @FXML
     private Label player_count_label;
 
     @FXML
-    private Button start_button;
-
-    @FXML
-    private Button restart_button;
-
-    @FXML
-    private Button stop_button;
+    private Button start_stop_button;
 
     @FXML
     private void initialize() {
-        start_button.setOnAction(event -> getServerShell().startOnNewThread());
-        restart_button.setOnAction(event -> {
-
-        });
-        stop_button.setOnAction(event -> getServerShell().stop());
+        start_stop_button.setOnAction(event -> getServerShell().stop());
     }
 
     @Override
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
-        serverShell.addEventListener(new ServerShell.EventAdapter() {
+
+        updateStatus();
+        updateUptime();
+        updatePlayerCount();
+
+        serverShell.addEventListener(new ServerShell.EventAdapter(){
             @Override
             public void onServerStarting() {
                 Platform.runLater(() -> updateStatus());
@@ -69,8 +68,7 @@ public class DashboardLayout extends MenuPage {
                 Platform.runLater(() -> updatePlayerCount());
             }
         });
-        updatePlayerCount();
-        updateStatus();
+        new Thread(new UiUpdater()).start();
     }
 
     private void updateStatus(){
@@ -98,6 +96,35 @@ public class DashboardLayout extends MenuPage {
     }
 
     private void updatePlayerCount(){
-        this.player_count_label.setText(getServerShell().getPlayers().size() + " / " + getServerShell().getProperties().get("max-players") + " Players connected");
+        this.player_count_label.setText(getServerShell().getPlayers().size() + " / " + getServerShell().getProperties().get("max-players") + " Players");
+    }
+
+    private void updateUptime(){
+        uptime_label.setText(Utils.formatTimeStopwatch(getServerShell().getUptime(), 2));
+    }
+
+    private class UiUpdater implements Runnable{
+
+        private boolean isRunning = false;
+
+        @Override
+        public void run() {
+            this.isRunning = true;
+            while (isRunning){
+                //Update UI
+                Platform.runLater(MiniDashboardController.this::updateUptime);
+
+                //Sleep
+                try {
+                    Thread.sleep(1000);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public void stop(){
+            this.isRunning = false;
+        }
     }
 }

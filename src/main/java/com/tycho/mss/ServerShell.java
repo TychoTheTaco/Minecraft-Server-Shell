@@ -48,16 +48,16 @@ public class ServerShell {
     private static final String COMMAND_PREFIX = "!";
 
     //REGEX Patterns
-    private static final Pattern CHAT_MESSAGE_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: <(?<player>.+?)> (?<message>.+)$");
+    private static final String SERVER_LOG_PREFIX = "^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: ";
+    private static final Pattern CHAT_MESSAGE_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "<(?<player>.+?)> (?<message>.+)$");
     private static final Pattern COMMAND_PATTERN = Pattern.compile("^" + COMMAND_PREFIX + "(?<command>[^ ].*?)(?: (?<parameters>[^ ].*))?$");
     private static final Pattern SERVER_STARTED_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: Done \\(.+\\)!");
-    private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
-    private static final Pattern PLAYER_DISCONNECTED_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) lost connection: (?<reason>.+)$");
+    private static final Pattern SERVER_STOPPING_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "Stopping the server$");
+    private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
+    private static final Pattern PLAYER_DISCONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>.+) lost connection: (?<reason>.+)$");
 
-    /**
-     * The vanilla Minecraft server.jar file.
-     */
-    private final File serverJar;
+    private final LaunchConfiguration launchConfiguration;
+    private final Object STATE_LOCK = new Object();
 
     /**
      * The current state of the Minecraft server.
@@ -79,11 +79,44 @@ public class ServerShell {
      */
     private final List<Player> players = new ArrayList<>();
 
-    public ServerShell(final File serverJar) {
-        this.serverJar = serverJar;
+    private Process process;
+
+    private long startTime;
+
+    public ServerShell(final LaunchConfiguration launchConfiguration) {
+        this.launchConfiguration = launchConfiguration;
         this.authorize("TychoTheTaco", "help");
         this.authorize("TychoTheTaco", "here");
         this.authorize("TychoTheTaco", "mcrandom");
+
+        this.authorize("Metroscorpio", "help");
+        this.authorize("Metroscorpio", "here");
+
+        this.authorize("Assassin_Actual7", "help");
+        this.authorize("Assassin_Actual7", "here");
+    }
+
+    public static class LaunchConfiguration{
+
+        private File serverJar;
+
+        private String[] launchOptions;
+
+        public File getServerJar() {
+            return serverJar;
+        }
+
+        public void setServerJar(File serverJar) {
+            this.serverJar = serverJar;
+        }
+
+        public String[] getLaunchOptions() {
+            return launchOptions;
+        }
+
+        public void setLaunchOptions(String[] launchOptions) {
+            this.launchOptions = launchOptions;
+        }
     }
 
     private final Map<String, Set<String>> permissions = new HashMap<>();
@@ -123,43 +156,49 @@ public class ServerShell {
         return this.permissions.containsKey(player) && this.permissions.get(player).contains(command);
     }
 
-    private OutputStream inputStream;
-    private InputStream outputStream;
-
-    public OutputStream getInputStream() {
-        return inputStream;
+    public Map<String, String> getProperties(){
+        final Map<String, String> properties = new HashMap<>();
+        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader("server.properties"))){
+            String line;
+            while ((line = bufferedReader.readLine()) != null){
+                final String[] split = line.split("=");
+                if (split.length == 2){
+                    properties.put(split[0], split[1]);
+                }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return properties;
     }
 
-    public InputStream getOutputStream() {
-        return outputStream;
+    public Thread startOnNewThread(){
+        if (this.state != State.OFFLINE){
+            throw new RuntimeException("Server is already started!");
+        }
+        final Thread thread = new Thread(this::startServer);
+        thread.start();
+        return thread;
     }
 
-    /**
-     * Start the Minecraft server with the specified launch options.
-     *
-     * @param options An optional list of Java launch options.
-     */
-    public void startServer(final String... options) {
-        this.state = State.STARTING;
-        notifyOnServerStarting();
+    public void startServer() {
+        this.onServerStarting();
 
         final List<String> command = new ArrayList<>();
         command.add("java");
-        for (String option : options) {
+        for (String option : this.launchConfiguration.getLaunchOptions()) {
             command.add("-" + option);
         }
         command.add("-jar");
-        command.add(this.serverJar.getAbsolutePath());
+        command.add(this.launchConfiguration.getServerJar().getAbsolutePath());
         command.add("nogui");
 
         final ProcessBuilder processBuilder = new ProcessBuilder(command);
         System.out.println(processBuilder.command());
 
         try {
-            final Process process = processBuilder.start();
+            this.process = processBuilder.start();
 
-            this.inputStream = process.getOutputStream();
-            this.outputStream = process.getInputStream();
             notifyOnServerIOready();
 
             this.serverInputWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
@@ -167,79 +206,9 @@ public class ServerShell {
             errorOutput.start();
 
             //Read server output
-            new Thread(() -> {
-                try {
-                    final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        System.out.println(line);
-                        notifyOnOutput(line);
-
-                        //Check for pending results
-                        boolean handled = false;
-                        final Iterator<PendingResult> iterator = this.pendingResults.iterator();
-                        while (iterator.hasNext()) {
-                            final PendingResult pendingResult = iterator.next();
-                            final Matcher matcher = pendingResult.getPattern().matcher(line);
-                            if (matcher.find()) {
-                                handled |= pendingResult.onResult(matcher);
-                                iterator.remove();
-                            }
-                        }
-                        if (handled) continue;
-
-                        //Check if this is a chat message
-                        Matcher matcher = CHAT_MESSAGE_PATTERN.matcher(line);
-                        if (matcher.find()) {
-                            final String player = matcher.group("player");
-                            final String message = matcher.group("message");
-
-                            //Check if this is a command
-                            matcher = COMMAND_PATTERN.matcher(message);
-                            if (matcher.find()) {
-                                final String cmd = matcher.group("command");
-                                final String parameters = matcher.group("parameters") == null ? "" : matcher.group("parameters");
-                                onCommand(player, cmd, parameters.split(" "));
-                            }
-                        }else{
-                            //Check if server is done starting
-                            if (this.state == State.STARTING) {
-                                matcher = SERVER_STARTED_PATTERN.matcher(line);
-                                if (matcher.find()) {
-                                    onServerStarted();
-                                    continue;
-                                }
-                            }
-
-                            //Check if a player connected
-                            matcher = PLAYER_CONNECTED_PATTERN.matcher(line);
-                            if (matcher.find()) {
-                                final String username = matcher.group("player");
-                                final String ipAddress = matcher.group("ip");
-                                final Player player = new Player(username, ipAddress);
-                                this.players.add(player);
-                                this.notifyOnPlayerConnected(player);
-
-                                //Send welcome message
-                                final JSONObject root = Utils.createText("Welcome to the server " + player.getUsername() + "! Type \"!help\" for a list of commands.", "aqua");
-                                this.tellraw("@a", root);
-                            }
-
-                            //Check if a player disconnected
-                            matcher = PLAYER_DISCONNECTED_PATTERN.matcher(line);
-                            if (matcher.find()) {
-                                final String username = matcher.group("player");
-                                final String reason = matcher.group("reason");
-                                final Player player = getPlayer(username);
-                                notifyOnPlayerDisconnected(player);
-                                this.players.remove(player);
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
+            final InputStreamInterceptor inputStreamInterceptor = new InputStreamInterceptor(process);
+            final Thread interceptor = new Thread(inputStreamInterceptor);
+            interceptor.start();
 
             //Read this program's input stream
             new Thread(() -> {
@@ -260,10 +229,111 @@ public class ServerShell {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            notifyOnServerStopped();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        this.onServerStopped();
+    }
+
+    public void stop(){
+        try {
+            execute("stop");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class InputStreamInterceptor implements Runnable{
+
+        private final Process process;
+
+        public InputStreamInterceptor(Process process) {
+            this.process = process;
+        }
+
+        @Override
+        public void run() {
+            try {
+                final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.process.getInputStream()));
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    System.out.println(line);
+                    notifyOnOutput(line);
+
+                    //Check for pending results
+                    boolean handled = false;
+                    final Iterator<PendingResult> iterator = pendingResults.iterator();
+                    while (iterator.hasNext()) {
+                        final PendingResult pendingResult = iterator.next();
+                        final Matcher matcher = pendingResult.getPattern().matcher(line);
+                        if (matcher.find()) {
+                            handled |= pendingResult.onResult(matcher);
+                            iterator.remove();
+                        }
+                    }
+                    if (handled) continue;
+
+                    //Check if this is a chat message
+                    Matcher matcher = CHAT_MESSAGE_PATTERN.matcher(line);
+                    if (matcher.find()) {
+                        final String player = matcher.group("player");
+                        final String message = matcher.group("message");
+
+                        //Check if this is a command
+                        matcher = COMMAND_PATTERN.matcher(message);
+                        if (matcher.find()) {
+                            final String cmd = matcher.group("command");
+                            final String parameters = matcher.group("parameters") == null ? "" : matcher.group("parameters");
+                            onCommand(player, cmd, parameters.split(" "));
+                        }
+                    }else{
+                        //Check if server is done starting
+                        if (state == State.STARTING) {
+                            matcher = SERVER_STARTED_PATTERN.matcher(line);
+                            if (matcher.find()) {
+                                onServerStarted();
+                                continue;
+                            }
+                        }
+
+                        //Check if server is stopping
+                        if (state == State.ONLINE) {
+                            matcher = SERVER_STOPPING_PATTERN.matcher(line);
+                            if (matcher.find()) {
+                                onServerStopping();
+                                continue;
+                            }
+                        }
+
+                        //Check if a player connected
+                        matcher = PLAYER_CONNECTED_PATTERN.matcher(line);
+                        if (matcher.find()) {
+                            final String username = matcher.group("player");
+                            final String ipAddress = matcher.group("ip");
+                            final Player player = new Player(username, ipAddress);
+                            players.add(player);
+                            notifyOnPlayerConnected(player);
+
+                            //Send welcome message
+                            final JSONObject root = Utils.createText("Welcome to the server " + player.getUsername() + "! Type \"!help\" for a list of commands.", "aqua");
+                            tellraw("@a", root);
+                        }
+
+                        //Check if a player disconnected
+                        matcher = PLAYER_DISCONNECTED_PATTERN.matcher(line);
+                        if (matcher.find()) {
+                            final String username = matcher.group("player");
+                            final String reason = matcher.group("reason");
+                            final Player player = getPlayer(username);
+                            notifyOnPlayerDisconnected(player);
+                            players.remove(player);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("STOPPED INTERCEPTOR");
         }
     }
 
@@ -273,18 +343,6 @@ public class ServerShell {
 
     public void tellraw(final String player, final JSONObject jsonObject) throws IOException {
         this.execute("tellraw " + player + " " + jsonObject.toString());
-    }
-
-    private void onServerStarted() {
-        System.out.println("SERVER STARTED!");
-        this.state = State.ONLINE;
-        notifyOnServerStarted();
-        try {
-            execute("time set 0");
-            execute("weather clear");
-            execute("difficulty peaceful");
-        } catch (IOException e) {
-        }
     }
 
     private void onCommand(final String player, final String command, final String... parameters) throws IOException {
@@ -408,6 +466,42 @@ public class ServerShell {
         return state;
     }
 
+    public long getUptime(){
+        if (this.state == State.ONLINE){
+            return System.currentTimeMillis() - this.startTime;
+        }
+        return 0;
+    }
+
+    private void onServerStarting(){
+        synchronized (STATE_LOCK){
+            this.state = State.STARTING;
+            notifyOnServerStarting();
+        }
+    }
+
+    private void onServerStarted(){
+        synchronized (STATE_LOCK){
+            this.state = State.ONLINE;
+            this.startTime = System.currentTimeMillis();
+            notifyOnServerStarted();
+        }
+    }
+
+    private void onServerStopping(){
+        synchronized (STATE_LOCK){
+            this.state = State.STOPPING;
+            notifyOnServerStopping();
+        }
+    }
+
+    private void onServerStopped(){
+        synchronized (STATE_LOCK){
+            this.state = State.OFFLINE;
+            notifyOnServerStopped();
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Event listener
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -416,10 +510,53 @@ public class ServerShell {
         void onServerStarting();
         void onServerIOready();
         void onServerStarted();
+        void onServerStopping();
         void onServerStopped();
         void onPlayerConnected(final Player player);
         void onPlayerDisconnected(final Player player);
         void onOutput(final String message);
+    }
+
+    public static class EventAdapter implements EventListener{
+        @Override
+        public void onServerStarting() {
+
+        }
+
+        @Override
+        public void onServerIOready() {
+
+        }
+
+        @Override
+        public void onServerStarted() {
+
+        }
+
+        @Override
+        public void onServerStopping() {
+
+        }
+
+        @Override
+        public void onServerStopped() {
+
+        }
+
+        @Override
+        public void onPlayerConnected(Player player) {
+
+        }
+
+        @Override
+        public void onPlayerDisconnected(Player player) {
+
+        }
+
+        @Override
+        public void onOutput(String message) {
+
+        }
     }
 
     private final CopyOnWriteArrayList<EventListener> eventListeners = new CopyOnWriteArrayList<>();
@@ -453,6 +590,12 @@ public class ServerShell {
     private void notifyOnServerStarted(){
         for (EventListener listener : this.eventListeners){
             listener.onServerStarted();
+        }
+    }
+
+    private void notifyOnServerStopping(){
+        for (EventListener listener : this.eventListeners){
+            listener.onServerStopping();
         }
     }
 

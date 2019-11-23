@@ -1,41 +1,36 @@
-[18:45:22] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18:45:22] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18:45:22] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18:45:22] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18:45:22] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18:45:22] [Server thread/INFO]: Starting minecraft server version 1.14.4
-[18:45:22] [Server thread/INFO]: Loading properties
-[18:45:22] [Server thread/INFO]: Default game type: SURVIVAL
-[18:45:22] [Server thread/INFO]: Generating keypair
-[18:45:23] [Server thread/INFO]: Starting Minecraft server on *:25565
-[18:45:23] [Server thread/INFO]: Using default channel type
-[18:45:24] [Server thread/INFO]: Preparing level "world"
-[18:45:24] [Server thread/INFO]: Reloading ResourceManager: Default
-[18:45:25] [Server thread/INFO]: Loaded 6 recipes
-[18:45:26] [Server thread/INFO]: Loaded 811 advancements
-[18:45:27] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[18:45:28] [Server thread/INFO]: Preparing spawn area: 0%
-[18:45:28] [Server thread/INFO]: Preparing spawn area: 0%
-[18:45:28] [Server thread/INFO]: Preparing spawn area: 0%
-[18:45:28] [Server thread/INFO]: Preparing spawn area: 0%
-[18:45:29] [Server-Worker-4/INFO]: Preparing spawn area: 0%
-[18:45:29] [Server-Worker-4/INFO]: Preparing spawn area: 0%
-[18:45:30] [Server thread/INFO]: Preparing spawn area: 0%
-[18:45:32] [Server-Worker-4/INFO]: Preparing spawn area: 83%
-[18:45:32] [Server-Worker-4/INFO]: Preparing spawn area: 83%
-[18:45:32] [Server-Worker-7/INFO]: Preparing spawn area: 83%
-[18:45:32] [Server-Worker-1/INFO]: Preparing spawn area: 83%
-[18:45:32] [Server-Worker-7/INFO]: Preparing spawn area: 83%
-[18:45:33] [Server-Worker-1/INFO]: Preparing spawn area: 83%
-[18:45:33] [Server-Worker-1/INFO]: Preparing spawn area: 83%
-[18:45:34] [Server-Worker-2/INFO]: Preparing spawn area: 83%
-[18:45:34] [Server-Worker-5/INFO]: Preparing spawn area: 83%
-[18:45:35] [Server-Worker-2/INFO]: Preparing spawn area: 85%
-[18:45:35] [Server-Worker-2/INFO]: Preparing spawn area: 89%
-[18:45:36] [Server-Worker-7/INFO]: Preparing spawn area: 94%
-[18:45:36] [Server-Worker-3/INFO]: Preparing spawn area: 98%
-[18:45:36] [Server thread/INFO]: Time elapsed: 9723 ms
-[18:45:36] [Server thread/INFO]: Done (11.959s)! For help, type "help"
-[18:45:36] [Server thread/INFO]: Set the time to 0
-[18:45:36] [Server thread/INFO]: Set the weather to clear
-[18:45:36] [Server thread/INFO]: The difficulty has been set to Peaceful
+[19:26:30] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[19:26:30] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[19:26:30] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[19:26:30] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[19:26:30] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[19:26:30] [Server thread/INFO]: Starting minecraft server version 1.14.4
+[19:26:30] [Server thread/INFO]: Loading properties
+[19:26:30] [Server thread/INFO]: Default game type: SURVIVAL
+[19:26:30] [Server thread/INFO]: Generating keypair
+[19:26:30] [Server thread/INFO]: Starting Minecraft server on *:25565
+[19:26:30] [Server thread/INFO]: Using default channel type
+[19:26:31] [Server thread/INFO]: Preparing level "world"
+[19:26:31] [Server thread/INFO]: Reloading ResourceManager: Default
+[19:26:32] [Server thread/INFO]: Loaded 6 recipes
+[19:26:32] [Server thread/INFO]: Loaded 811 advancements
+[19:26:33] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[19:26:35] [Server thread/INFO]: Preparing spawn area: 0%
+[19:26:35] [Server thread/INFO]: Preparing spawn area: 0%
+[19:26:35] [Server thread/INFO]: Preparing spawn area: 0%
+[19:26:35] [Server thread/INFO]: Preparing spawn area: 0%
+[19:26:36] [Server-Worker-6/INFO]: Preparing spawn area: 0%
+[19:26:36] [Server-Worker-5/INFO]: Preparing spawn area: 0%
+[19:26:38] [Server-Worker-2/INFO]: Preparing spawn area: 83%
+[19:26:38] [Server-Worker-7/INFO]: Preparing spawn area: 83%
+[19:26:38] [Server-Worker-7/INFO]: Preparing spawn area: 83%
+[19:26:38] [Server-Worker-7/INFO]: Preparing spawn area: 83%
+[19:26:38] [Server-Worker-1/INFO]: Preparing spawn area: 83%
+[19:26:39] [Server-Worker-7/INFO]: Preparing spawn area: 83%
+[19:26:39] [Server-Worker-3/INFO]: Preparing spawn area: 83%
+[19:26:40] [Server-Worker-7/INFO]: Preparing spawn area: 87%
+[19:26:40] [Server-Worker-2/INFO]: Preparing spawn area: 95%
+[19:26:40] [Server thread/INFO]: Time elapsed: 7328 ms
+[19:26:40] [Server thread/INFO]: Done (9.157s)! For help, type "help"
+[19:26:40] [Server thread/INFO]: Set the time to 0
+[19:26:40] [Server thread/INFO]: Set the weather to clear
+[19:26:40] [Server thread/INFO]: The difficulty has been set to Peaceful

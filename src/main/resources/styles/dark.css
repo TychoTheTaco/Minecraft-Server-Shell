@@ -43,6 +43,7 @@
 .text-field{
     -fx-background-color: gray;
     -fx-text-fill: white;
+    -fx-font-size: 10pt;
 }
 
 /* T R B L */
@@ -139,6 +140,7 @@
 
 #console_input{
     -fx-font-family: Consolas;
+    -fx-font-size: 12pt;
     -fx-background-color: #525252;
     -fx-border-style: none;
     -fx-text-fill: white;

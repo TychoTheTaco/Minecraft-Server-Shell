@@ -19,7 +19,24 @@ public class MinecraftServerShell extends Application{
     private static ServerShell serverShell;
 
     public static void main(String... args){
-        serverShell = new ServerShell(new File(args[0]));
+        final ServerShell.LaunchConfiguration launchConfiguration = new ServerShell.LaunchConfiguration();
+        launchConfiguration.setServerJar(new File(args[0]));
+        launchConfiguration.setLaunchOptions(new String[]{"Xms3G", "Xmx4G"});
+        serverShell = new ServerShell(launchConfiguration);
+
+        serverShell.addEventListener(new ServerShell.EventAdapter(){
+            @Override
+            public void onServerStarted() {
+                try {
+                    serverShell.execute("time set 0");
+                    serverShell.execute("weather clear");
+                    serverShell.execute("difficulty peaceful");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         launch(args);
     }
 
@@ -44,7 +61,7 @@ public class MinecraftServerShell extends Application{
         final MainLayout mainLayout = loader.getController();
         mainLayout.setServerShell(serverShell);
 
-        new Thread(() -> serverShell.startServer("Xms3G", "Xmx4G")).start();
+        serverShell.startOnNewThread();
 
         primaryStage.sizeToScene();
         primaryStage.show();

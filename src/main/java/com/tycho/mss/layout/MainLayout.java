@@ -18,6 +18,9 @@ public class MainLayout {
     private ListView<MenuItem> module_list_view;
 
     @FXML
+    private MiniDashboardController miniDashboardController;
+
+    @FXML
     private BorderPane container;
 
     private ServerShell serverShell;
@@ -80,5 +83,6 @@ public class MainLayout {
         for (MenuItem menuItem : module_list_view.getItems()){
             ((MenuPage) menuItem.getLoader().getController()).setServerShell(serverShell);
         }
+        miniDashboardController.setServerShell(serverShell);
     }
 }

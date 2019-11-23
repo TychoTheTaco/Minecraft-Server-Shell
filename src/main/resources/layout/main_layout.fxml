@@ -11,10 +11,13 @@
           fx:controller="com.tycho.mss.layout.MainLayout">
 
     <!-- Left Pane -->
-    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="160" GridPane.vgrow="ALWAYS">
+    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="160" prefWidth="160" GridPane.vgrow="ALWAYS">
         <ListView fx:id="module_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
     </GridPane>
 
-    <BorderPane fx:id="container" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800" prefHeight="500"/>
+    <fx:include fx:id="miniDashboard" source="mini_dashboard.fxml" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-background-color: #3d3d3d"/>
+
+    <!-- Layout Container -->
+    <BorderPane fx:id="container" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800" prefHeight="500"/>
 
 </GridPane>

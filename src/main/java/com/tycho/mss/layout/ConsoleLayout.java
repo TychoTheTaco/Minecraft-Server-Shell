@@ -37,37 +37,7 @@ public class ConsoleLayout extends MenuPage {
     @Override
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
-        serverShell.addEventListener(new ServerShell.EventListener() {
-            @Override
-            public void onServerStarting() {
-
-            }
-
-            @Override
-            public void onServerIOready() {
-
-            }
-
-            @Override
-            public void onServerStarted() {
-
-            }
-
-            @Override
-            public void onServerStopped() {
-
-            }
-
-            @Override
-            public void onPlayerConnected(Player player) {
-
-            }
-
-            @Override
-            public void onPlayerDisconnected(Player player) {
-
-            }
-
+        serverShell.addEventListener(new ServerShell.EventAdapter() {
             @Override
             public void onOutput(String message) {
                 Platform.runLater(() -> {

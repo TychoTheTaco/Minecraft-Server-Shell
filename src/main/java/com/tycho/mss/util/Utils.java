@@ -54,4 +54,40 @@ public class Utils {
 
         return stringBuilder.toString().trim();
     }
+
+    public static String formatTimeStopwatch(final long millis, final int precision) {
+
+        if (millis == -1) {
+            return "infinite time";
+        }
+
+        if (precision < 1) {
+            return "";
+        }
+
+        final int milliseconds = (int) (millis % 1000);
+        final int seconds = (int) ((millis / 1000) % 60);
+        final int minutes = (int) ((millis / (1000 * 60)) % 60);
+        final int hours = (int) ((millis / (1000 * 60 * 60)) % 24);
+        final int days = (int) ((millis / (1000 * 60 * 60 * 24)) % 7);
+
+        final int[] times = new int[]{seconds, minutes, hours, days};
+
+        final StringBuilder stringBuilder = new StringBuilder();
+        int count = 0;
+        for (int i = times.length - 1; i >= 0; i--) {
+            if (times[i] > 0 || i < precision) {
+                stringBuilder.append(times[i]);
+                stringBuilder.append(':');
+                count++;
+                if (count == precision) {
+                    break;
+                }
+            } else if (stringBuilder.length() > 0) {
+                break;
+            }
+        }
+
+        return stringBuilder.toString().substring(0, stringBuilder.length() - 1).trim();
+    }
 }

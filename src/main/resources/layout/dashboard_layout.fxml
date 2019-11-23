@@ -8,7 +8,7 @@
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.DashboardLayout">
 
-    <Label fx:id="status_label" GridPane.columnIndex="0" GridPane.rowIndex="0" text="Status" style="-fx-font-size: 20pt;">
+    <Label fx:id="status_label" GridPane.columnIndex="0" GridPane.rowIndex="0" text="Status" style="-fx-font-size: 20pt; -fx-font-weight: bold;">
         <padding>
             <Insets top="4" left="8" right="8"/>
         </padding>
