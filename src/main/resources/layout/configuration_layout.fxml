@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.ConfigurationLayout">
@@ -48,7 +49,9 @@
                 <Insets right="8" left="8"/>
             </padding>
             <Label text="Server Backup Directory:"/>
-            <TextField fx:id="backup_directory" HBox.hgrow="ALWAYS"/>
+
+            <fx:include fx:id="backupDirectoryLayout" source="file_input_layout.fxml" HBox.hgrow="ALWAYS"/>
+
         </HBox>
 
     </GridPane>
@@ -68,7 +71,7 @@
             <padding>
                 <Insets top="8" right="8" bottom="8" left="8"/>
             </padding>
-            <Button fx:id="save_button" text="Save"/>
+            <Button fx:id="save_button" styleClass="default_button" text="Save"/>
         </HBox>
     </GridPane>
 

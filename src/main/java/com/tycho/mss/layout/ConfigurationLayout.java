@@ -33,6 +33,9 @@ public class ConfigurationLayout extends MenuPage {
     private TextField launch_options_text_field;
 
     @FXML
+    private FileInputLayout fileInputLayoutController;
+
+    @FXML
     private TableView<Property<?>> server_properties_table_view;
 
     @FXML

@@ -29,15 +29,28 @@
     -fx-background-color: transparent;
 }
 
-.button{
+
+.default_button{
     -fx-background-color: purple;
     -fx-font-size: 10pt;
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
 
-.button:pressed{
+.default_button:pressed{
     -fx-background-color: blue;
+}
+
+.folder_button{
+    -fx-background-image: url('/icons/round_folder_black_24dp.png');
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+.folder_button:hover{
+    -fx-cursor: hand;
 }
 
 .text-field{
