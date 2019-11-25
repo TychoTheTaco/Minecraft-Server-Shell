@@ -56,16 +56,6 @@ public class Utils {
     }
 
     public static String formatTimeStopwatch(final long millis, final int precision) {
-
-        if (millis == -1) {
-            return "infinite time";
-        }
-
-        if (precision < 1) {
-            return "";
-        }
-
-        final int milliseconds = (int) (millis % 1000);
         final int seconds = (int) ((millis / 1000) % 60);
         final int minutes = (int) ((millis / (1000 * 60)) % 60);
         final int hours = (int) ((millis / (1000 * 60 * 60)) % 24);
@@ -77,7 +67,7 @@ public class Utils {
         int count = 0;
         for (int i = times.length - 1; i >= 0; i--) {
             if (times[i] > 0 || i < precision) {
-                stringBuilder.append(times[i]);
+                stringBuilder.append(String.format("%02d", times[i]));
                 stringBuilder.append(':');
                 count++;
                 if (count == precision) {

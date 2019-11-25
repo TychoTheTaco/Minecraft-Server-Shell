@@ -24,9 +24,22 @@ public class MiniDashboardController extends MenuPage{
     @FXML
     private Button start_stop_button;
 
+    private final com.tycho.mss.util.UiUpdater uiUpdater = new com.tycho.mss.util.UiUpdater(1000) {
+        @Override
+        protected void onUiUpdate() {
+
+        }
+    };
+
     @FXML
     private void initialize() {
-        start_stop_button.setOnAction(event -> getServerShell().stop());
+        start_stop_button.setOnAction(event -> {
+            if (getServerShell().getState() == ServerShell.State.ONLINE){
+                getServerShell().stop();
+            }else if (getServerShell().getState() == ServerShell.State.OFFLINE){
+                getServerShell().startOnNewThread();
+            }
+        });
     }
 
     @Override
@@ -36,26 +49,43 @@ public class MiniDashboardController extends MenuPage{
         updateStatus();
         updateUptime();
         updatePlayerCount();
+        updateStartStopButton();
 
         serverShell.addEventListener(new ServerShell.EventAdapter(){
             @Override
             public void onServerStarting() {
-                Platform.runLater(() -> updateStatus());
+                Platform.runLater(() -> {
+                    updateStatus();
+                    updateStartStopButton();
+                });
             }
 
             @Override
             public void onServerStarted() {
-                Platform.runLater(() -> updateStatus());
+                Platform.runLater(() -> {
+                    updateStatus();
+                    updateStartStopButton();
+                    updateUptime();
+                });
             }
 
             @Override
             public void onServerStopping() {
-                Platform.runLater(() -> updateStatus());
+                Platform.runLater(() -> {
+                    updateStatus();
+                    updateUptime();
+                    updateStartStopButton();
+                });
             }
 
             @Override
             public void onServerStopped() {
-                Platform.runLater(() -> updateStatus());
+                Platform.runLater(() -> {
+                    updateStatus();
+                    updatePlayerCount();
+                    updateUptime();
+                    updateStartStopButton();
+                });
             }
 
             @Override
@@ -100,7 +130,37 @@ public class MiniDashboardController extends MenuPage{
     }
 
     private void updateUptime(){
-        uptime_label.setText(Utils.formatTimeStopwatch(getServerShell().getUptime(), 2));
+        if (getServerShell().getState() == ServerShell.State.ONLINE){
+            uptime_label.setText(Utils.formatTimeStopwatch(getServerShell().getUptime(), 2));
+        }else{
+            uptime_label.setText("");
+        }
+    }
+
+    private void updateStartStopButton(){
+        switch (getServerShell().getState()){
+            case OFFLINE:
+                start_stop_button.setDisable(false);
+                start_stop_button.setText("Start");
+                start_stop_button.getStyleClass().remove("stop_button");
+                start_stop_button.getStyleClass().add("start_button");
+                break;
+
+            case STARTING:
+                start_stop_button.setDisable(true);
+                break;
+
+            case ONLINE:
+                start_stop_button.setDisable(false);
+                start_stop_button.setText("Stop");
+                start_stop_button.getStyleClass().remove("start_button");
+                start_stop_button.getStyleClass().add("stop_button");
+                break;
+
+            case STOPPING:
+                start_stop_button.setDisable(true);
+                break;
+        }
     }
 
     private class UiUpdater implements Runnable{

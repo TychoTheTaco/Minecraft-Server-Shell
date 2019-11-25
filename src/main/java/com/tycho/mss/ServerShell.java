@@ -497,6 +497,8 @@ public class ServerShell {
 
     private void onServerStopped(){
         synchronized (STATE_LOCK){
+            this.players.clear();
+            System.out.println("SERVER PROCESS STOPPED");
             this.state = State.OFFLINE;
             notifyOnServerStopped();
         }

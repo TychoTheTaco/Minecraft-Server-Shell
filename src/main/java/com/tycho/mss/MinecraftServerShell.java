@@ -18,13 +18,19 @@ public class MinecraftServerShell extends Application{
 
     private static ServerShell serverShell;
 
+    /*
+    TODO:
+    - Custom commands page
+    - Backup server button
+     */
+
     public static void main(String... args){
         final ServerShell.LaunchConfiguration launchConfiguration = new ServerShell.LaunchConfiguration();
         launchConfiguration.setServerJar(new File(args[0]));
         launchConfiguration.setLaunchOptions(new String[]{"Xms3G", "Xmx4G"});
         serverShell = new ServerShell(launchConfiguration);
 
-        serverShell.addEventListener(new ServerShell.EventAdapter(){
+        /*serverShell.addEventListener(new ServerShell.EventAdapter(){
             @Override
             public void onServerStarted() {
                 try {
@@ -35,7 +41,7 @@ public class MinecraftServerShell extends Application{
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
         launch(args);
     }

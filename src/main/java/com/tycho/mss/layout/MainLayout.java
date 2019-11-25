@@ -59,7 +59,7 @@ public class MainLayout {
         try {
             module_list_view.getItems().add(new MenuItem("Dashboard", "dashboard_layout"));
             module_list_view.getItems().add(new MenuItem("Players", "players_layout"));
-            module_list_view.getItems().add(new MenuItem("Console", "console_module_layout"));
+            module_list_view.getItems().add(new MenuItem("Console", "console_layout"));
             module_list_view.getItems().add(new MenuItem("Configuration", "configuration_layout"));
             module_list_view.getItems().sort(Comparator.comparing(MenuItem::getTitle));
         }catch (IOException e){

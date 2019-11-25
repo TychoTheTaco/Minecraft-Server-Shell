@@ -21,7 +21,7 @@
             <Label fx:id="uptime_label" GridPane.columnIndex="1" GridPane.rowIndex="0" text="00:00" style="-fx-font-size: 10pt;"/>
         </GridPane>
         <Label fx:id="player_count_label" text="0 / 10 Players" style="-fx-font-size: 10pt;"/>
-        <Button fx:id="start_stop_button" text="Stop" style="-fx-font-size: 9pt;">
+        <Button styleClass="stop_button" fx:id="start_stop_button" text="Stop" style="-fx-font-size: 9pt;">
             <VBox.margin>
                 <Insets top="6"/>
             </VBox.margin>

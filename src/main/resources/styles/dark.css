@@ -75,6 +75,16 @@
     -fx-background-color: #575757;
 }
 
+/* ------------------------------------------------------------------------------- Mini Dashboard ------------------------------------------------------------------------------- */
+
+.start_button{
+    -fx-background-color: #45d151;
+}
+
+.stop_button{
+    -fx-background-color: #d14545;
+}
+
 /* ---------------------------------------------------------------------------------- Dashboard --------------------------------------------------------------------------------- */
 
 #players_list{
@@ -122,10 +132,10 @@
 
 #console{
     -fx-font-family: Consolas;
-    -fx-highlight-fill: #00ff00;
+    -fx-highlight-fill: #e6e6e6;
     -fx-highlight-text-fill: #000000;
     -fx-text-fill: white;
-    -fx-background-color: #000000;
+    -fx-background-color: #171717;
     -fx-focus-color: transparent;
     -fx-border-style: none;
     -fx-background-radius: 0.0px;
@@ -133,7 +143,7 @@
 }
 
 #console .content{
-    -fx-background-color: black;
+    -fx-background-color: #171717;
     -fx-background-radius: 0.0px;
     -fx-border-radius: 0.0px;
 }

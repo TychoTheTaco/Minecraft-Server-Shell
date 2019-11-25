@@ -65,7 +65,7 @@ public class PlayersLayout extends MenuPage {
         pingColumn.setPrefWidth(100);
         players_table_view.getColumns().add(pingColumn);
 
-        players_table_view.getItems().add(new Player("TychoTheTaco", "192.168.1.7"));
+        //players_table_view.getItems().add(new Player("TychoTheTaco", "192.168.1.7"));
 
         new Thread(this.uiUpdater).start();
     }
@@ -84,6 +84,14 @@ public class PlayersLayout extends MenuPage {
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
         serverShell.addEventListener(new ServerShell.EventAdapter() {
+
+            @Override
+            public void onServerStopped() {
+                Platform.runLater(() -> {
+                    players_table_view.getItems().clear();
+                });
+            }
+
             @Override
             public void onPlayerConnected(Player player) {
                 Platform.runLater(() -> players_table_view.getItems().add(player));
