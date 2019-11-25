@@ -284,7 +284,18 @@ public class ServerShell {
                         if (matcher.find()) {
                             final String cmd = matcher.group("command");
                             final String parameters = matcher.group("parameters") == null ? "" : matcher.group("parameters");
-                            onCommand(player, cmd, parameters.split(" "));
+
+                            //Remove empty space and empty parameters
+                            final String[] split = parameters.split(" +");
+                            int end;
+                            for (end = 0; end < split.length; end++){
+                                if (split[end].length() == 0) break;
+                            }
+                            final String[] params = new String[end];
+                            System.arraycopy(split, 0, params, 0, end);
+
+                            //Execute command
+                            onCommand(player, cmd, params);
                         }
                     }else{
                         //Check if server is done starting

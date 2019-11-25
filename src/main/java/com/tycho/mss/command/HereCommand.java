@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class HereCommand extends Command {
 
-    private static final Pattern POSITION_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+)\\.\\d+d, (?<y>-?\\d+)\\.\\d+d, (?<z>-?\\d+)\\.\\d+d]");
+    private static final Pattern POSITION_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+)\\.\\d+d, (?<y>-?\\d+)\\.\\d+d, (?<z>-?\\d+)\\.\\d+d]");
 
     @Override
     public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
@@ -21,17 +21,31 @@ public class HereCommand extends Command {
         final int z = Integer.parseInt(matcher.group("z"));
 
         //Spawn firework rocket
-        serverShell.execute("summon minecraft:firework_rocket " + x + " " + (y + 3) + " " + z + " {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,15435844,15790320],FadeColors:[I;8073150,12801229]}]}}}}");
+        serverShell.execute("execute at " + player + " run summon minecraft:firework_rocket ~ ~3 ~ {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,15435844,15790320],FadeColors:[I;8073150,12801229]}]}}}}");
 
         //Display player's position
-        final JSONObject root = Utils.createText(player + " is at (", "white");
+        final JSONObject root = Utils.createText(player, "light_purple");
         final JSONArray extra = new JSONArray();
+        extra.add(Utils.createText(" is at (", "white"));
+
+        //Player position
         extra.add(Utils.createText(String.valueOf(x), "yellow"));
-        extra.add(Utils.createText(", ", ""));
+        extra.add(Utils.createText(", ", "white"));
         extra.add(Utils.createText(String.valueOf(y), "yellow"));
-        extra.add(Utils.createText(", ", ""));
+        extra.add(Utils.createText(", ", "white"));
         extra.add(Utils.createText(String.valueOf(z), "yellow"));
-        extra.add(Utils.createText(")", ""));
+        extra.add(Utils.createText(")", "white"));
+
+        //Notes
+        if (parameters.length > 0){
+            extra.add(Utils.createText(" Notes:", "white"));
+            for (String string : parameters){
+                System.out.println("PARAM: " + string);
+                System.out.println("LEN: " + string.length());
+                extra.add(Utils.createText(' ' + string, "green"));
+            }
+        }
+
         root.put("extra", extra);
         serverShell.tellraw("@a", root);
     }
@@ -43,7 +57,7 @@ public class HereCommand extends Command {
 
     @Override
     public String getFormat() {
-        return "";
+        return "[<notes>]";
     }
 
     @Override
