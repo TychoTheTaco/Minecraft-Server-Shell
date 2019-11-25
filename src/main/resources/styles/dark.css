@@ -31,7 +31,7 @@
 
 .button{
     -fx-background-color: purple;
-    -fx-font-size: 11pt;
+    -fx-font-size: 10pt;
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
@@ -47,6 +47,42 @@
 }
 
 /* T R B L */
+
+/* ---------------------------------------------------------------------------------- TABLE VIEW -------------------------------------------------------------------------------- */
+
+.table-view{
+    -fx-background-color: transparent;
+}
+
+.table-view .filler{
+    -fx-background-color: transparent;
+}
+
+.table-view .table-cell{
+    -fx-text-fill: white;
+    -fx-font-size: 12pt;
+}
+
+.table-view .table-row-cell{
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: #FFFFFF20;
+}
+
+.table-view .table-row-cell:even{
+    -fx-background-color: #4a4a4a80;
+}
+
+.table-view .column-header{
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background{
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .arrow {
+    -fx-background-color: white;
+}
 
 /* --------------------------------------------------------------------------------- Main Layout -------------------------------------------------------------------------------- */
 
@@ -94,39 +130,7 @@
 
 /* ----------------------------------------------------------------------------------- Players ---------------------------------------------------------------------------------- */
 
-#players_table_view{
-    -fx-background-color: transparent;
-}
 
-#players_table_view .filler{
-    -fx-background-color: transparent;
-}
-
-.table-view .table-cell{
-    -fx-text-fill: white;
-    -fx-font-size: 12pt;
-}
-
-#players_table_view .table-row-cell{
-    -fx-background-color: transparent;
-    -fx-table-cell-border-color: #FFFFFF20;
-}
-
-#players_table_view .table-row-cell:even{
-    -fx-background-color: #4a4a4a80;
-}
-
-#players_table_view .column-header{
-    -fx-background-color: transparent;
-}
-
-#players_table_view .column-header-background{
-    -fx-background-color: transparent;
-}
-
-#players_table_view .column-header .arrow {
-    -fx-background-color: white;
-}
 
 /* ----------------------------------------------------------------------------------- Console ---------------------------------------------------------------------------------- */
 
