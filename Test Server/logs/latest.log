@@ -1,54 +1,34 @@
-[21:26:43] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[21:26:43] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[21:26:43] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[21:26:43] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[21:26:43] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[21:26:43] [Server thread/INFO]: Starting minecraft server version 1.14.4
-[21:26:43] [Server thread/INFO]: Loading properties
-[21:26:43] [Server thread/INFO]: Default game type: SPECTATOR
-[21:26:43] [Server thread/INFO]: Generating keypair
-[21:26:43] [Server thread/INFO]: Starting Minecraft server on *:25565
-[21:26:44] [Server thread/INFO]: Using default channel type
-[21:26:45] [Server thread/INFO]: Preparing level "world"
-[21:26:45] [Server thread/INFO]: Reloading ResourceManager: Default
-[21:26:46] [Server thread/INFO]: Loaded 6 recipes
-[21:26:46] [Server thread/INFO]: Loaded 811 advancements
-[21:26:47] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[21:26:48] [Server thread/INFO]: Preparing spawn area: 0%
-[21:26:48] [Server thread/INFO]: Preparing spawn area: 0%
-[21:26:48] [Server thread/INFO]: Preparing spawn area: 0%
-[21:26:48] [Server thread/INFO]: Preparing spawn area: 0%
-[21:26:49] [Server-Worker-1/INFO]: Preparing spawn area: 0%
-[21:26:49] [Server-Worker-7/INFO]: Preparing spawn area: 0%
-[21:26:50] [Server thread/INFO]: Time elapsed: 2964 ms
-[21:26:50] [Server thread/INFO]: Done (4.737s)! For help, type "help"
-[21:26:53] [User Authenticator #1/INFO]: UUID of player TychoTheTaco is ade89a5f-46f6-4d74-88bf-174ff1e917e8
-[21:26:53] [Server thread/INFO]: TychoTheTaco[/127.0.0.1:57324] logged in with entity id 125 at (-217.26999177586185, 71.0, -54.97216386216569)
-[21:26:53] [Server thread/INFO]: TychoTheTaco joined the game
-[21:26:55] [Server thread/INFO]: <TychoTheTaco> !here
-[21:26:55] [Server thread/INFO]: TychoTheTaco has the following entity data: [-217.26999177586185d, 71.0d, -54.97216386216569d]
-[21:26:55] [Server thread/INFO]: Summoned new Firework Rocket
-[21:26:57] [Server thread/INFO]: <TychoTheTaco> !here
-[21:26:58] [Server thread/INFO]: TychoTheTaco has the following entity data: [-216.86018944618132d, 71.0d, -55.03865884206315d]
-[21:26:58] [Server thread/INFO]: Summoned new Firework Rocket
-[21:27:01] [Server thread/INFO]: <TychoTheTaco> !here Jungle
-[21:27:01] [Server thread/INFO]: TychoTheTaco has the following entity data: [-216.84897994428493d, 71.0d, -55.03865884206315d]
-[21:27:01] [Server thread/INFO]: Summoned new Firework Rocket
-[21:27:05] [Server thread/INFO]: <TychoTheTaco> !here Jungle is here
-[21:27:05] [Server thread/INFO]: TychoTheTaco has the following entity data: [-216.84897994428493d, 71.0d, -55.03865884206315d]
-[21:27:05] [Server thread/INFO]: Summoned new Firework Rocket
-[21:27:13] [Server thread/INFO]: <TychoTheTaco> !here Jungle is here owow thats finally cool
-[21:27:13] [Server thread/INFO]: TychoTheTaco has the following entity data: [-216.84897994428493d, 71.0d, -55.03865884206315d]
-[21:27:13] [Server thread/INFO]: Summoned new Firework Rocket
-[21:27:15] [Server thread/INFO]: <TychoTheTaco> !here Jungle is here owow thats finally cool
-[21:27:15] [Server thread/INFO]: TychoTheTaco has the following entity data: [-216.84897994428493d, 71.0d, -55.03865884206315d]
-[21:27:15] [Server thread/INFO]: Summoned new Firework Rocket
-[21:27:23] [Server thread/INFO]: <TychoTheTaco> !here
-[21:27:23] [Server thread/INFO]: TychoTheTaco has the following entity data: [-216.84897994428493d, 71.0d, -55.03865884206315d]
-[21:27:23] [Server thread/INFO]: Summoned new Firework Rocket
-[21:27:26] [Server thread/INFO]: <TychoTheTaco> !here .
-[21:27:26] [Server thread/INFO]: TychoTheTaco has the following entity data: [-216.84897994428493d, 71.0d, -55.03865884206315d]
-[21:27:26] [Server thread/INFO]: Summoned new Firework Rocket
-[21:27:28] [Server thread/INFO]: <TychoTheTaco> !here
-[21:27:28] [Server thread/INFO]: TychoTheTaco has the following entity data: [-216.84897994428493d, 71.0d, -55.03865884206315d]
-[21:27:28] [Server thread/INFO]: Summoned new Firework Rocket
+[22:02:14] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[22:02:14] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22:02:14] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22:02:14] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[22:02:14] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22:02:14] [Server thread/INFO]: Starting minecraft server version 1.14.4
+[22:02:14] [Server thread/INFO]: Loading properties
+[22:02:14] [Server thread/INFO]: Default game type: SPECTATOR
+[22:02:14] [Server thread/INFO]: Generating keypair
+[22:02:15] [Server thread/INFO]: Starting Minecraft server on *:25565
+[22:02:15] [Server thread/INFO]: Using default channel type
+[22:02:16] [Server thread/INFO]: Preparing level "world"
+[22:02:16] [Server thread/INFO]: Reloading ResourceManager: Default
+[22:02:16] [Server thread/INFO]: Loaded 6 recipes
+[22:02:17] [Server thread/INFO]: Loaded 811 advancements
+[22:02:19] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[22:02:19] [Server thread/INFO]: Preparing spawn area: 0%
+[22:02:19] [Server thread/INFO]: Preparing spawn area: 0%
+[22:02:20] [Server thread/INFO]: Preparing spawn area: 85%
+[22:02:20] [Server thread/INFO]: Time elapsed: 1034 ms
+[22:02:20] [Server thread/INFO]: Done (3.939s)! For help, type "help"
+[22:02:22] [Server thread/INFO]: Stopping the server
+[22:02:22] [Server thread/INFO]: Stopping server
+[22:02:22] [Server thread/INFO]: Saving players
+[22:02:22] [Server thread/INFO]: Saving worlds
+[22:02:22] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:the_nether
+[22:02:22] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[22:02:22] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:overworld
+[22:02:23] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[22:02:23] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:the_end
+[22:02:23] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[22:02:23] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[22:02:23] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[22:02:23] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved

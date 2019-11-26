@@ -2,24 +2,14 @@ package com.tycho.mss.layout;
 
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.ServerShell;
-import javafx.beans.property.ReadOnlyObjectWrapper;
+import com.tycho.mss.util.Preferences;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,43 +17,54 @@ import java.util.Map;
 public class ConfigurationLayout extends MenuPage {
 
     @FXML
-    private TextField server_jar_text_field;
+    private FileInputLayout serverJarInputController;
 
     @FXML
     private TextField launch_options_text_field;
 
     @FXML
-    private FileInputLayout fileInputLayoutController;
+    private FileInputLayout backupDirectoryInputController;
 
-    @FXML
-    private TableView<Property<?>> server_properties_table_view;
+   /* @FXML
+    private TableView<Property<?>> server_properties_table_view;*/
 
     @FXML
     private Button save_button;
 
-    private static final File CONFIG_FILE = new File(System.getProperty("user.dir") + File.separator + "mss_config.json");
+    //private List<Property<?>> properties = new ArrayList<>();
 
-    private List<Property<?>> properties = new ArrayList<>();
+    private Preferences preferences = new Preferences();
 
     @FXML
     private void initialize() {
+        preferences.load();
+
+        backupDirectoryInputController.setIsDirectory(true);
         //Load the saved configuration
-        final ServerShell.LaunchConfiguration configuration = loadConfiguration();
+        //final ServerShell.LaunchConfiguration configuration = loadConfiguration();
 
-        if (configuration.getServerJar() != null) server_jar_text_field.setText(configuration.getServerJar().getPath());
-        launch_options_text_field.setText(String.join(" ", configuration.getLaunchOptions()));
+        try {
+            serverJarInputController.setFile(new File((String) preferences.getPreferences().get("server_jar")));
+            launch_options_text_field.setText(String.join(" ", (String) preferences.getPreferences().get("launch_options")));
+            backupDirectoryInputController.setFile(new File((String) preferences.getPreferences().get("backup_directory")));
+        }catch (NullPointerException e){
 
-        server_properties_table_view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        }
+
+        //server_properties_table_view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         save_button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                saveConfiguration(configuration);
+                preferences.getPreferences().put("server_jar", serverJarInputController.getFile().getAbsolutePath());
+                preferences.getPreferences().put("launch_options", launch_options_text_field.getText());
+                preferences.getPreferences().put("backup_directory", backupDirectoryInputController.getFile().getAbsolutePath());
+                preferences.save();
             }
         });
 
         //Key
-        final TableColumn<Property<?>, String> keyColumn = new TableColumn<>("Key");
+       /* final TableColumn<Property<?>, String> keyColumn = new TableColumn<>("Key");
         keyColumn.setSortable(false);
         keyColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getKey()));
         server_properties_table_view.getColumns().add(keyColumn);
@@ -71,7 +72,7 @@ public class ConfigurationLayout extends MenuPage {
         //Key
         final TableColumn<Property<?>, String> valueColumn = new TableColumn<>("Value");
         valueColumn.setSortable(false);
-        valueColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(String.valueOf(param.getValue().getValue())));
+        valueColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(String.valueOf(param.getValue().getValue())));*/
         /*valueColumn.setCellFactory(new Callback<TableColumn<Property<?>, String>, TableCell<Property<?>, String>>() {
             @Override
             public TableCell<Property<?>, String> call(TableColumn<Property<?>, String> param) {
@@ -83,10 +84,10 @@ public class ConfigurationLayout extends MenuPage {
                 };
             }
         });*/
-        server_properties_table_view.getColumns().add(valueColumn);
+        //server_properties_table_view.getColumns().add(valueColumn);
     }
 
-    private ServerShell.LaunchConfiguration loadConfiguration(){
+    /*private ServerShell.LaunchConfiguration loadConfiguration(){
         if (CONFIG_FILE.exists()){
             try {
                 final String string = new String(Files.readAllBytes(Paths.get(CONFIG_FILE.getAbsolutePath())));
@@ -119,29 +120,17 @@ public class ConfigurationLayout extends MenuPage {
         }
 
         return null;
-    }
-
-    private void saveConfiguration(final ServerShell.LaunchConfiguration launchConfiguration){
-        try (final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(CONFIG_FILE))){
-            final JSONObject root = new JSONObject();
-            root.put("server_jar", launchConfiguration.getServerJar().getAbsolutePath());
-            root.put("launch_options", String.join(" ", launchConfiguration.getLaunchOptions()));
-            bufferedWriter.write(root.toString());
-           // System.out.println("Saved");
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
+    }*/
 
     @Override
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
-        this.properties = getProperties();
+        //this.properties = getProperties();
 
-        server_properties_table_view.getItems().clear();
+        /*server_properties_table_view.getItems().clear();
         for (Property<?> property : this.properties){
             server_properties_table_view.getItems().add(property);
-        }
+        }*/
     }
 
     private List<Property<?>> getProperties(){

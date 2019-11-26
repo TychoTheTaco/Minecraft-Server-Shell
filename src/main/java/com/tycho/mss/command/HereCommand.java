@@ -40,8 +40,6 @@ public class HereCommand extends Command {
         if (parameters.length > 0){
             extra.add(Utils.createText(" Notes:", "white"));
             for (String string : parameters){
-                System.out.println("PARAM: " + string);
-                System.out.println("LEN: " + string.length());
                 extra.add(Utils.createText(' ' + string, "green"));
             }
         }

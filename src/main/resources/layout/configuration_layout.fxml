@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<GridPane xmlns="http://javafx.com/javafx"
+<GridPane fx:id="root" xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.ConfigurationLayout">
 
@@ -16,15 +16,15 @@
             </padding>
         </Label>
 
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="10">
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="10" alignment="CENTER_LEFT">
             <padding>
                 <Insets right="8" left="8"/>
             </padding>
             <Label text="Server JAR:"/>
-            <TextField fx:id="server_jar_text_field" HBox.hgrow="ALWAYS"/>
+            <fx:include fx:id="serverJarInput" source="file_input_layout.fxml" HBox.hgrow="ALWAYS"/>
         </HBox>
 
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" spacing="10">
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" spacing="10" alignment="CENTER_LEFT">
             <padding>
                 <Insets top="8" right="8" left="8"/>
             </padding>
@@ -38,33 +38,31 @@
         <GridPane.margin>
             <Insets top="10"/>
         </GridPane.margin>
-        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Settings" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
+        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Backup Settings" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
             <padding>
                 <Insets top="6" right="8" bottom="6" left="8"/>
             </padding>
         </Label>
 
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="10">
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="10" alignment="CENTER_LEFT">
             <padding>
                 <Insets right="8" left="8"/>
             </padding>
             <Label text="Server Backup Directory:"/>
-
-            <fx:include fx:id="backupDirectoryLayout" source="file_input_layout.fxml" HBox.hgrow="ALWAYS"/>
-
+            <fx:include fx:id="backupDirectoryInput" source="file_input_layout.fxml" HBox.hgrow="ALWAYS"/>
         </HBox>
 
     </GridPane>
 
     <!-- Server Properties -->
-    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+    <!--<GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Properties" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
             <padding>
                 <Insets top="6" right="8" bottom="12" left="8"/>
             </padding>
         </Label>
         <TableView fx:id="server_properties_table_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS"/>
-    </GridPane>
+    </GridPane>-->
 
     <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" alignment="CENTER">
         <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10" alignment="BOTTOM_CENTER">
