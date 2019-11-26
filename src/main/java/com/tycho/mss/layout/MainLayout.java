@@ -62,6 +62,7 @@ public class MainLayout {
             module_list_view.getItems().add(new MenuItem("Console", "console_layout"));
             module_list_view.getItems().add(new MenuItem("Configuration", "configuration_layout"));
             module_list_view.getItems().add(new MenuItem("Custom Commands", "custom_commands_layout"));
+            module_list_view.getItems().add(new MenuItem("Backups", "backups_layout"));
             module_list_view.getItems().sort(Comparator.comparing(MenuItem::getTitle));
         }catch (IOException e){
             e.printStackTrace();

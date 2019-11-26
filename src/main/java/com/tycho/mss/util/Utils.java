@@ -2,6 +2,8 @@ package com.tycho.mss.util;
 
 import org.json.simple.JSONObject;
 
+import java.util.Locale;
+
 public class Utils {
 
     public static JSONObject createText(final String text, final String color){
@@ -79,5 +81,13 @@ public class Utils {
         }
 
         return stringBuilder.toString().substring(0, stringBuilder.length() - 1).trim();
+    }
+
+    public static String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "KMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+        return String.format(Locale.getDefault(), "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 }

@@ -38,4 +38,10 @@ public class Preferences {
     public JSONObject getPreferences() {
         return preferences;
     }
+
+    public File getBackupDirectory(){
+        final String string = (String) this.preferences.get("backup_directory");
+        if (string == null) return null;
+        return new File(string);
+    }
 }
