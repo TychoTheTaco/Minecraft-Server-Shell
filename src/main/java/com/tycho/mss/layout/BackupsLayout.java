@@ -9,7 +9,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -37,9 +36,11 @@ public class BackupsLayout extends MenuPage {
         final Preferences preferences = new Preferences();
         preferences.load();
         final File backupsDirectory = preferences.getBackupDirectory();
-        if (backupsDirectory != null && backupsDirectory.exists()){
-            for (File file : backupsDirectory.listFiles((dir, name) -> name.endsWith("zip"))){
-                backups_table_view.getItems().add(file);
+        if (backupsDirectory != null){
+            for (File file : backupsDirectory.listFiles()){
+                if (file.getName().endsWith("zip")){
+                    backups_table_view.getItems().add(file);
+                }
             }
         }
     }

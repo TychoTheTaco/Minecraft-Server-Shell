@@ -13,34 +13,34 @@ import java.nio.file.Paths;
 
 public class Preferences {
 
-    private JSONObject preferences = new JSONObject();
+    private static JSONObject preferences = new JSONObject();
 
     private static final File PREFERENCES_FILE = new File(System.getProperty("user.dir") + File.separator + "mss_config.json");
 
-    public void load(){
+    public static void load(){
         try {
             final String string = new String(Files.readAllBytes(Paths.get(PREFERENCES_FILE.getAbsolutePath())));
             final JSONObject root = (JSONObject) new JSONParser().parse(string);
-            this.preferences = root;
+            preferences = root;
         }catch (IOException | ParseException e){
             e.printStackTrace();
         }
     }
 
-    public void save(){
+    public static void save(){
         try (final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(PREFERENCES_FILE))){
-            bufferedWriter.write(this.preferences.toString());
+            bufferedWriter.write(preferences.toString());
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
-    public JSONObject getPreferences() {
+    public static JSONObject getPreferences() {
         return preferences;
     }
 
-    public File getBackupDirectory(){
-        final String string = (String) this.preferences.get("backup_directory");
+    public static File getBackupDirectory(){
+        final String string = (String) preferences.get("backup_directory");
         if (string == null) return null;
         return new File(string);
     }

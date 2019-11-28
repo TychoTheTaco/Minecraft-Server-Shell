@@ -3,12 +3,16 @@ package com.tycho.mss.layout;
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.Player;
 import com.tycho.mss.ServerShell;
+import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MiniDashboardController extends MenuPage{
 
@@ -24,10 +28,13 @@ public class MiniDashboardController extends MenuPage{
     @FXML
     private Button start_stop_button;
 
+    @FXML
+    private Button create_backup_button;
+
     private final com.tycho.mss.util.UiUpdater uiUpdater = new com.tycho.mss.util.UiUpdater(1000) {
         @Override
         protected void onUiUpdate() {
-
+            updateUptime();
         }
     };
 
@@ -38,6 +45,14 @@ public class MiniDashboardController extends MenuPage{
                 getServerShell().stop();
             }else if (getServerShell().getState() == ServerShell.State.OFFLINE){
                 getServerShell().startOnNewThread();
+            }
+        });
+
+        create_backup_button.setOnAction(event -> {
+            try {
+                Utils.pack(new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").getAbsolutePath(), new File((String) Preferences.getPreferences().get("server_jar")).getAbsolutePath());
+            }catch (IOException e){
+
             }
         });
     }
@@ -98,7 +113,7 @@ public class MiniDashboardController extends MenuPage{
                 Platform.runLater(() -> updatePlayerCount());
             }
         });
-        new Thread(new UiUpdater()).start();
+        uiUpdater.startOnNewThread();
     }
 
     private void updateStatus(){
@@ -160,31 +175,6 @@ public class MiniDashboardController extends MenuPage{
             case STOPPING:
                 start_stop_button.setDisable(true);
                 break;
-        }
-    }
-
-    private class UiUpdater implements Runnable{
-
-        private boolean isRunning = false;
-
-        @Override
-        public void run() {
-            this.isRunning = true;
-            while (isRunning){
-                //Update UI
-                Platform.runLater(MiniDashboardController.this::updateUptime);
-
-                //Sleep
-                try {
-                    Thread.sleep(1000);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public void stop(){
-            this.isRunning = false;
         }
     }
 }
