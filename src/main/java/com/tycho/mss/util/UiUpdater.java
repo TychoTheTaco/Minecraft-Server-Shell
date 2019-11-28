@@ -1,6 +1,7 @@
 package com.tycho.mss.util;
 
 import easytasks.Task;
+import javafx.application.Platform;
 
 public abstract class UiUpdater extends Task {
 
@@ -13,7 +14,7 @@ public abstract class UiUpdater extends Task {
     @Override
     protected void run() {
         while (isRunning()){
-            onUiUpdate();
+            Platform.runLater(this::onUiUpdate);
 
             try {
                 Thread.sleep(this.interval);

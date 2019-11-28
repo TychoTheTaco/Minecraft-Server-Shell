@@ -36,8 +36,12 @@ public class BackupsLayout extends MenuPage {
         final Preferences preferences = new Preferences();
         preferences.load();
         final File backupsDirectory = preferences.getBackupDirectory();
-        for (File file : backupsDirectory.listFiles()){
-            backups_table_view.getItems().add(file);
+        if (backupsDirectory != null){
+            for (File file : backupsDirectory.listFiles()){
+                if (file.getName().endsWith("zip")){
+                    backups_table_view.getItems().add(file);
+                }
+            }
         }
     }
 
