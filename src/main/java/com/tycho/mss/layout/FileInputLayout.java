@@ -1,5 +1,7 @@
 package com.tycho.mss.layout;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -27,6 +29,7 @@ public class FileInputLayout {
 
     @FXML
     private void initialize() {
+        this.input.textProperty().addListener((observable, oldValue, newValue) -> setFile(new File(newValue)));
         this.button.setOnAction(event -> {
             final File file;
             if (isDirectory){
@@ -48,7 +51,15 @@ public class FileInputLayout {
 
     public void setFile(File file) {
         this.file = file;
-        if (file != null) this.input.setText(file.getAbsolutePath());
+        if (file != null){
+            this.input.setText(file.getAbsolutePath());
+
+            if (file.exists()){
+                this.input.getStyleClass().removeAll("invalid_input");
+            }else{
+                this.input.getStyleClass().add("invalid_input");
+            }
+        }
     }
 
     public void setIsDirectory(final boolean isDirectory){

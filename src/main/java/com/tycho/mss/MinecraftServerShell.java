@@ -18,12 +18,6 @@ public class MinecraftServerShell extends Application{
 
     private static ServerShell serverShell;
 
-    /*
-    TODO:
-    - Custom commands page
-    - Backup server button
-     */
-
     public static void main(String... args){
         final ServerShell.LaunchConfiguration launchConfiguration = new ServerShell.LaunchConfiguration();
         launchConfiguration.setServerJar(new File(args[0]));
