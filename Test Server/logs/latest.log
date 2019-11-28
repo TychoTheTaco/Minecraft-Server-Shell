@@ -1,23 +1,30 @@
-[18:50:16] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18:50:16] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18:50:16] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18:50:16] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18:50:16] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18:50:16] [Server thread/INFO]: Starting minecraft server version 1.14.4
-[18:50:16] [Server thread/INFO]: Loading properties
-[18:50:16] [Server thread/INFO]: Default game type: SPECTATOR
-[18:50:16] [Server thread/INFO]: Generating keypair
-[18:50:17] [Server thread/INFO]: Starting Minecraft server on *:25566
-[18:50:17] [Server thread/INFO]: Using default channel type
-[18:50:18] [Server thread/INFO]: Preparing level "world"
-[18:50:19] [Server thread/INFO]: Reloading ResourceManager: Default
-[18:50:19] [Server thread/INFO]: Loaded 6 recipes
-[18:50:20] [Server thread/INFO]: Loaded 811 advancements
-[18:50:20] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[18:50:21] [Server thread/INFO]: Preparing spawn area: 0%
-[18:50:21] [Server thread/INFO]: Preparing spawn area: 0%
-[18:50:21] [Server thread/INFO]: Preparing spawn area: 0%
-[18:50:22] [Server-Worker-7/INFO]: Preparing spawn area: 0%
-[18:50:22] [Server-Worker-5/INFO]: Preparing spawn area: 0%
-[18:50:23] [Server thread/INFO]: Time elapsed: 2530 ms
-[18:50:23] [Server thread/INFO]: Done (4.238s)! For help, type "help"
+[15:40:06] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[15:40:06] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:40:06] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:40:06] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[15:40:06] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:40:06] [Server thread/INFO]: Starting minecraft server version 1.14.4
+[15:40:06] [Server thread/INFO]: Loading properties
+[15:40:06] [Server thread/INFO]: Default game type: SPECTATOR
+[15:40:06] [Server thread/INFO]: Generating keypair
+[15:40:06] [Server thread/INFO]: Starting Minecraft server on *:25565
+[15:40:06] [Server thread/INFO]: Using default channel type
+[15:40:08] [Server thread/INFO]: Preparing level "world"
+[15:40:08] [Server thread/INFO]: Reloading ResourceManager: Default
+[15:40:09] [Server thread/INFO]: Loaded 6 recipes
+[15:40:09] [Server thread/INFO]: Loaded 811 advancements
+[15:40:10] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[15:40:12] [Server thread/INFO]: Preparing spawn area: 0%
+[15:40:12] [Server thread/INFO]: Preparing spawn area: 0%
+[15:40:12] [Server thread/INFO]: Preparing spawn area: 0%
+[15:40:12] [Server thread/INFO]: Preparing spawn area: 0%
+[15:40:12] [Server thread/INFO]: Preparing spawn area: 0%
+[15:40:13] [Server-Worker-6/INFO]: Preparing spawn area: 0%
+[15:40:13] [Server-Worker-2/INFO]: Preparing spawn area: 0%
+[15:40:13] [Server thread/INFO]: Time elapsed: 3436 ms
+[15:40:13] [Server thread/INFO]: Done (5.357s)! For help, type "help"
+[15:40:15] [User Authenticator #1/INFO]: UUID of player TychoTheTaco is ade89a5f-46f6-4d74-88bf-174ff1e917e8
+[15:40:15] [Server thread/INFO]: TychoTheTaco[/127.0.0.1:53986] logged in with entity id 122 at (-218.6790419256713, 75.0, -75.64727392894744)
+[15:40:15] [Server thread/INFO]: TychoTheTaco joined the game
+[15:40:21] [Server thread/INFO]: TychoTheTaco lost connection: Disconnected
+[15:40:21] [Server thread/INFO]: TychoTheTaco left the game

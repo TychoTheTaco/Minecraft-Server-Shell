@@ -1,6 +1,8 @@
 .root {
     -red: #d14545;
     -green: #45d151;
+    -blue: #0093ff;
+    -light_blue: #4fb4ff;
 }
 
 /* ------------------------------------------------------------------------------------ Global ---------------------------------------------------------------------------------- */
@@ -36,8 +38,8 @@
 
 
 .default_button{
-    -fx-background-color: purple;
-    -fx-font-size: 10pt;
+    -fx-background-color: -blue;
+    -fx-font-size: 9pt;
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
@@ -122,11 +124,11 @@
 }
 
 #module_list_view .list-cell:filled:hover {
-    -fx-background-color: #4fb4ff;
+    -fx-background-color: -light_blue;
 }
 
 #module_list_view .list-cell:filled:selected {
-    -fx-background-color: #0093ff;
+    -fx-background-color: -blue;
 }
 
 #container{

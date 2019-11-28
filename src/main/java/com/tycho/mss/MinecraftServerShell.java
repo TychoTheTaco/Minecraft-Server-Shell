@@ -4,6 +4,7 @@ import com.tycho.mss.command.GiveRandomItemCommand;
 import com.tycho.mss.command.HelpCommand;
 import com.tycho.mss.command.HereCommand;
 import com.tycho.mss.layout.MainLayout;
+import com.tycho.mss.util.Preferences;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ public class MinecraftServerShell extends Application{
     private static ServerShell serverShell;
 
     public static void main(String... args){
+        Preferences.load();
         final ServerShell.LaunchConfiguration launchConfiguration = new ServerShell.LaunchConfiguration();
         launchConfiguration.setServerJar(new File(args[0]));
         launchConfiguration.setLaunchOptions(new String[]{"Xms3G", "Xmx4G"});

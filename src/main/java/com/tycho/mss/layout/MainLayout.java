@@ -68,7 +68,10 @@ public class MainLayout {
             e.printStackTrace();
         }
 
-        module_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> container.setCenter(newValue.getNode()));
+        module_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            ((MenuPage) newValue.getLoader().getController()).onPageSelected();
+            container.setCenter(newValue.getNode());
+        });
 
         module_list_view.getSelectionModel().select(getMenuItemIndex("Dashboard"));
     }

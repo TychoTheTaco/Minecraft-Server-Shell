@@ -11,4 +11,8 @@ public abstract class MenuPage {
     public void setServerShell(ServerShell serverShell) {
         this.serverShell = serverShell;
     }
+
+    public void onPageSelected(){
+
+    }
 }

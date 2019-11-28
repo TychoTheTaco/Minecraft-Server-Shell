@@ -1,10 +1,13 @@
 package com.tycho.mss.layout;
 
+import com.tycho.mss.BackupTask;
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.Player;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
+import easytasks.ITask;
+import easytasks.TaskAdapter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -49,11 +52,15 @@ public class MiniDashboardController extends MenuPage{
         });
 
         create_backup_button.setOnAction(event -> {
-            try {
-                Utils.pack(new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").getAbsolutePath(), new File((String) Preferences.getPreferences().get("server_jar")).getAbsolutePath());
-            }catch (IOException e){
-
-            }
+            create_backup_button.setDisable(true);
+            final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip"));
+            backupTask.addTaskListener(new TaskAdapter(){
+                @Override
+                public void onTaskStopped(ITask task) {
+                    create_backup_button.setDisable(false);
+                }
+            });
+            backupTask.startOnNewThread();
         });
     }
 
