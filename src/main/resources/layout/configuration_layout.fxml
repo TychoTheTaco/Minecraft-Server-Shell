@@ -9,7 +9,7 @@
           fx:controller="com.tycho.mss.layout.ConfigurationLayout">
 
     <!-- Server Configuration -->
-    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS">
+    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Configuration" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
             <padding>
                 <Insets top="6" right="8" bottom="6" left="8"/>
@@ -34,26 +34,6 @@
 
     </GridPane>
 
-    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-        <GridPane.margin>
-            <Insets top="10"/>
-        </GridPane.margin>
-        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Backup Settings" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
-            <padding>
-                <Insets top="6" right="8" bottom="6" left="8"/>
-            </padding>
-        </Label>
-
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="10" alignment="CENTER_LEFT">
-            <padding>
-                <Insets right="8" left="8"/>
-            </padding>
-            <Label text="Server Backup Directory:"/>
-            <fx:include fx:id="backupDirectoryInput" source="file_input_layout.fxml" HBox.hgrow="ALWAYS"/>
-        </HBox>
-
-    </GridPane>
-
     <!-- Server Properties -->
     <!--<GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Properties" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
@@ -69,7 +49,7 @@
             <padding>
                 <Insets top="8" right="8" bottom="8" left="8"/>
             </padding>
-            <Button fx:id="save_button" styleClass="default_button" text="Save"/>
+            <Button fx:id="save_button" text="Save"/>
         </HBox>
     </GridPane>
 

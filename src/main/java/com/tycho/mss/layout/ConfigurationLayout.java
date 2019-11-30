@@ -22,9 +22,6 @@ public class ConfigurationLayout extends MenuPage {
     @FXML
     private TextField launch_options_text_field;
 
-    @FXML
-    private FileInputLayout backupDirectoryInputController;
-
    /* @FXML
     private TableView<Property<?>> server_properties_table_view;*/
 
@@ -37,16 +34,12 @@ public class ConfigurationLayout extends MenuPage {
 
     @FXML
     private void initialize() {
-        preferences.load();
-
-        backupDirectoryInputController.setIsDirectory(true);
         //Load the saved configuration
         //final ServerShell.LaunchConfiguration configuration = loadConfiguration();
 
         try {
             serverJarInputController.setFile(new File((String) preferences.getPreferences().get("server_jar")));
             launch_options_text_field.setText(String.join(" ", (String) preferences.getPreferences().get("launch_options")));
-            backupDirectoryInputController.setFile(new File((String) preferences.getPreferences().get("backup_directory")));
         }catch (NullPointerException e){
 
         }
@@ -58,7 +51,6 @@ public class ConfigurationLayout extends MenuPage {
             public void handle(ActionEvent event) {
                 preferences.getPreferences().put("server_jar", serverJarInputController.getFile().getAbsolutePath());
                 preferences.getPreferences().put("launch_options", launch_options_text_field.getText());
-                preferences.getPreferences().put("backup_directory", backupDirectoryInputController.getFile().getAbsolutePath());
                 preferences.save();
             }
         });

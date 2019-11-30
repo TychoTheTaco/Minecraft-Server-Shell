@@ -2,17 +2,18 @@ package com.tycho.mss.util;
 
 import org.json.simple.JSONObject;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class Utils {
 
-    public static JSONObject createText(final String text, final String color){
+    public static JSONObject createText(final String text, final String color) {
         final JSONObject jsonObject = new JSONObject();
         jsonObject.put("text", text);
         jsonObject.put("color", color);
@@ -97,7 +98,7 @@ public class Utils {
         return String.format(Locale.getDefault(), "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static void pack(String sourceDirPath, String zipFilePath) throws IOException {
+    public static void zip(String sourceDirPath, String zipFilePath) throws IOException {
         Path p = Files.createFile(Paths.get(zipFilePath));
         try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
             Path pp = Paths.get(sourceDirPath);
@@ -113,6 +114,45 @@ public class Utils {
                             e.printStackTrace();
                         }
                     });
+        }
+    }
+
+    public static void unzip(final File source, final File destination) throws IOException {
+        // create output directory if it doesn't exist
+        if (!destination.exists()) destination.mkdirs();
+        FileInputStream fis;
+        //buffer for read and write data to file
+        byte[] buffer = new byte[1024];
+        fis = new FileInputStream(source);
+        ZipInputStream zis = new ZipInputStream(fis);
+        ZipEntry ze = zis.getNextEntry();
+        while (ze != null) {
+            String fileName = ze.getName();
+            File newFile = new File(destination + File.separator + fileName);
+            System.out.println("Unzipping to " + newFile.getAbsolutePath());
+            //create directories for sub directories in zip
+            new File(newFile.getParent()).mkdirs();
+            FileOutputStream fos = new FileOutputStream(newFile);
+            int len;
+            while ((len = zis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+            fos.close();
+            //close this ZipEntry
+            zis.closeEntry();
+            ze = zis.getNextEntry();
+        }
+        //close last ZipEntry
+        zis.closeEntry();
+        zis.close();
+        fis.close();
+    }
+
+    public static void clean(final File directory) {
+        System.out.println("CLEAN: " + directory);
+        for (File file : directory.listFiles()) {
+            if (file.isDirectory()) clean(file);
+            file.delete();
         }
     }
 }

@@ -1,16 +1,15 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.BackupTask;
-import com.tycho.mss.MenuPage;
-import com.tycho.mss.Player;
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.*;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 
@@ -53,7 +52,16 @@ public class MiniDashboardController extends MenuPage{
 
         create_backup_button.setOnAction(event -> {
             create_backup_button.setDisable(true);
-            final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip"));
+
+            final File backupDirectory = Preferences.getBackupDirectory();
+            if (backupDirectory == null){
+                final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Please specify a backup directory in the settings!", ButtonType.OK);
+                alert.show();
+                create_backup_button.setDisable(false);
+                return;
+            }
+
+            final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile(), new File(backupDirectory + File.separator + System.currentTimeMillis() + ".zip"));
             backupTask.addTaskListener(new TaskAdapter(){
                 @Override
                 public void onTaskStopped(ITask task) {

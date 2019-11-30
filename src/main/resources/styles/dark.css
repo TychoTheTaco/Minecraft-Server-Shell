@@ -31,21 +31,44 @@
     -fx-background-color: transparent;
 }
 
+.list-view .list-cell:filled:hover {
+    -fx-background-color: #4a4a4a80;
+}
+
 .list-cell{
     -fx-padding: 4px 0px 4px 0px;
     -fx-background-color: transparent;
 }
 
+/* ------------------------------------------------------------------------------------ BUTTON ---------------------------------------------------------------------------------- */
 
-.default_button{
+.button{
     -fx-background-color: -blue;
     -fx-font-size: 9pt;
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
 
-.default_button:pressed{
+.button:hover{
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
+}
+
+.button:pressed{
     -fx-background-color: blue;
+}
+
+.image_button{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-min-width: 24px;
+}
+
+.image_button:pressed{
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow(three-pass-box, white, 10, 0, 0, 0);
 }
 
 .folder_button{
@@ -56,12 +79,12 @@
     -fx-background-color: transparent;
 }
 
-.folder_button:hover{
-    -fx-cursor: hand;
+.folder_button:pressed{
+    -fx-background-color: transparent;
 }
 
 .text-field{
-    -fx-background-color: gray;
+    -fx-background-color: #737373;
     -fx-text-fill: white;
     -fx-font-size: 10pt;
 }

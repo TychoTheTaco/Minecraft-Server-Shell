@@ -7,10 +7,20 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Button?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.BackupsLayout">
 
-    <TableView fx:id="backups_table_view" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10" alignment="CENTER_LEFT">
+        <padding>
+            <Insets top="8" right="8" bottom="8" left="8"/>
+        </padding>
+        <Label text="Server Backup Directory:"/>
+        <fx:include fx:id="backupDirectoryInput" source="file_input_layout.fxml" HBox.hgrow="ALWAYS"/>
+        <Button fx:id="save_button" text="Save"/>
+    </HBox>
+
+    <ListView fx:id="backups_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
 
 </GridPane>

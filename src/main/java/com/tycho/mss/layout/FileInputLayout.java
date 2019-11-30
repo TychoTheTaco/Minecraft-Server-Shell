@@ -10,6 +10,9 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileInputLayout {
 
@@ -23,19 +26,22 @@ public class FileInputLayout {
 
     private final FileChooser fileChooser = new FileChooser();
 
-    private File file;
-
     private boolean isDirectory = false;
 
     @FXML
     private void initialize() {
-        this.input.textProperty().addListener((observable, oldValue, newValue) -> setFile(new File(newValue)));
+        this.input.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (isValid()){
+                this.input.getStyleClass().removeAll("invalid_input");
+            }else{
+                this.input.getStyleClass().add("invalid_input");
+            }
+        });
         this.button.setOnAction(event -> {
             final File file;
             if (isDirectory){
                 file = directoryChooser.showDialog(((Node) event.getTarget()).getScene().getWindow());
             }else{
-                //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RAR archives", "*.rar"));
                 file = fileChooser.showOpenDialog(((Node) event.getTarget()).getScene().getWindow());
             }
 
@@ -49,16 +55,17 @@ public class FileInputLayout {
         return new File(input.getText());
     }
 
-    public void setFile(File file) {
-        this.file = file;
-        if (file != null){
-            this.input.setText(file.getAbsolutePath());
+    private boolean isValid(){
+        if (this.input.getText().trim().length() == 0) return false;
+        return Files.exists(Paths.get(this.input.getText()));
+    }
 
-            if (file.exists()){
-                this.input.getStyleClass().removeAll("invalid_input");
-            }else{
-                this.input.getStyleClass().add("invalid_input");
-            }
+    public void setFile(File file) {
+        System.out.println("SET FILE: " + file);
+        if (file == null){
+            this.input.setText("");
+        }else{
+            this.input.setText(file.getAbsolutePath());
         }
     }
 

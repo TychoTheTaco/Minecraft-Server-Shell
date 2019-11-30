@@ -1,12 +1,15 @@
 package com.tycho.mss.layout;
 
+import com.tycho.mss.BackupListCell;
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.util.Callback;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -15,26 +18,26 @@ import java.util.Date;
 
 public class BackupsLayout extends MenuPage {
 
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy   hh:mm:ss a");
+    @FXML
+    private FileInputLayout backupDirectoryInputController;
 
     @FXML
-    private TableView<File> backups_table_view;
+    private ListView<File> backups_list_view;
+
+    @FXML
+    private Button save_button;
 
     @FXML
     private void initialize() {
-        backups_table_view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        backupDirectoryInputController.setIsDirectory(true);
+        backupDirectoryInputController.setFile(Preferences.getBackupDirectory());
 
-        //Date
-        final TableColumn<File, String> dateColumn = new TableColumn<>("Date Created");
-        dateColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(SIMPLE_DATE_FORMAT.format(new Date(param.getValue().lastModified()))));
-        //dateColumn.setPrefWidth(150);
-        backups_table_view.getColumns().add(dateColumn);
+        save_button.setOnAction(event -> {
+            Preferences.setBackupDirectory(backupDirectoryInputController.getFile());
+            Preferences.save();
+        });
 
-        //Size
-        final TableColumn<File, String> sizeColumn = new TableColumn<>("Size");
-        sizeColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(Utils.humanReadableByteCount(param.getValue().length(), true)));
-        //sizeColumn.setPrefWidth(200);
-        backups_table_view.getColumns().add(sizeColumn);
+        backups_list_view.setCellFactory(param -> new BackupListCell());
 
         refresh();
     }
@@ -45,12 +48,12 @@ public class BackupsLayout extends MenuPage {
     }
 
     private void refresh(){
-        backups_table_view.getItems().clear();
+        backups_list_view.getItems().clear();
         final File backupsDirectory = Preferences.getBackupDirectory();
         if (backupsDirectory != null){
             for (File file : backupsDirectory.listFiles()){
                 if (file.getName().endsWith("zip")){
-                    backups_table_view.getItems().add(file);
+                    backups_list_view.getItems().add(file);
                 }
             }
         }

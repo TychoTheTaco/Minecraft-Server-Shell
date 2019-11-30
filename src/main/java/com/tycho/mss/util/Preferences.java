@@ -44,4 +44,8 @@ public class Preferences {
         if (string == null) return null;
         return new File(string);
     }
+
+    public static void setBackupDirectory(final File directory){
+        preferences.put("backup_directory", directory.getAbsolutePath());
+    }
 }

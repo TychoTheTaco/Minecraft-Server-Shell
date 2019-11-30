@@ -119,6 +119,10 @@ public class ServerShell {
         }
     }
 
+    public File getDirectory(){
+        return this.launchConfiguration.getServerJar().getAbsoluteFile().getParentFile();
+    }
+
     private final Map<String, Set<String>> permissions = new HashMap<>();
 
     private final List<PendingResult> pendingResults = new ArrayList<>();

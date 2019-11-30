@@ -5,14 +5,27 @@ import com.tycho.mss.command.HelpCommand;
 import com.tycho.mss.command.HereCommand;
 import com.tycho.mss.layout.MainLayout;
 import com.tycho.mss.util.Preferences;
+import com.tycho.mss.util.Utils;
+import easytasks.ITask;
+import easytasks.Task;
+import easytasks.TaskAdapter;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * STUFF TO DO:
+ * - Move all backups to new directory when the backup dir changes.
+ * - Create backup schedule
+ */
 public class MinecraftServerShell extends Application{
 
     public static final String APP_NAME = "Minecraft Server Shell";
@@ -67,5 +80,24 @@ public class MinecraftServerShell extends Application{
 
         primaryStage.sizeToScene();
         primaryStage.show();
+    }
+
+    public static void restore(final File backup){
+        final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, new File("C:\\Users\\Tycho\\Downloads\\out"));
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Restoring backup...", new ButtonType("Cancel", ButtonBar.ButtonData.OK_DONE));
+
+        alert.setOnCloseRequest(event -> {
+            if (restoreBackupTask.getState() != Task.State.STOPPED) event.consume();
+        });
+
+        restoreBackupTask.addTaskListener(new TaskAdapter(){
+            @Override
+            public void onTaskStopped(ITask task) {
+                Platform.runLater(alert::close);
+            }
+        });
+
+        alert.show();
+        restoreBackupTask.startOnNewThread();
     }
 }

@@ -22,7 +22,7 @@ public class BackupTask extends Task {
     @Override
     protected void run() {
         try {
-            Utils.pack(source.getAbsolutePath(), destination.getAbsolutePath());
+            Utils.zip(source.getAbsolutePath(), destination.getAbsolutePath());
             this.isSuccessful = true;
         }catch (IOException e){
             e.printStackTrace();
