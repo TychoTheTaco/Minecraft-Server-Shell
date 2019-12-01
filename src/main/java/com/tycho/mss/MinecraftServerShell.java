@@ -1,5 +1,6 @@
 package com.tycho.mss;
 
+import com.sun.jmx.snmp.SnmpNull;
 import com.tycho.mss.command.GiveRandomItemCommand;
 import com.tycho.mss.command.HelpCommand;
 import com.tycho.mss.command.HereCommand;
@@ -24,6 +25,7 @@ import java.io.IOException;
 /**
  * STUFF TO DO:
  * - Move all backups to new directory when the backup dir changes.
+ * - Create progress bar for moving backups to a new directory
  * - Create backup schedule
  */
 public class MinecraftServerShell extends Application{
@@ -33,25 +35,6 @@ public class MinecraftServerShell extends Application{
     private static ServerShell serverShell;
 
     public static void main(String... args){
-        Preferences.load();
-        final ServerShell.LaunchConfiguration launchConfiguration = new ServerShell.LaunchConfiguration();
-        launchConfiguration.setServerJar(new File(args[0]));
-        launchConfiguration.setLaunchOptions(new String[]{"Xms3G", "Xmx4G"});
-        serverShell = new ServerShell(launchConfiguration);
-
-        /*serverShell.addEventListener(new ServerShell.EventAdapter(){
-            @Override
-            public void onServerStarted() {
-                try {
-                    serverShell.execute("time set 0");
-                    serverShell.execute("weather clear");
-                    serverShell.execute("difficulty peaceful");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
-
         launch(args);
     }
 
@@ -59,24 +42,19 @@ public class MinecraftServerShell extends Application{
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle(APP_NAME);
 
-        //Add custom commands
-        try {
-            serverShell.addCustomCommand(new GiveRandomItemCommand(new File("ids.txt")));
-            serverShell.addCustomCommand(new HereCommand());
-            serverShell.addCustomCommand(new HelpCommand());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Preferences.load();
 
+        //Load main layout
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/main_layout.fxml"));
         final Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
         primaryStage.setScene(scene);
 
+        //Attempt to create a server shell
+        createServerShell();
+
         final MainLayout mainLayout = loader.getController();
         mainLayout.setServerShell(serverShell);
-
-        serverShell.startOnNewThread();
 
         primaryStage.sizeToScene();
         primaryStage.show();
@@ -99,5 +77,28 @@ public class MinecraftServerShell extends Application{
 
         alert.show();
         restoreBackupTask.startOnNewThread();
+    }
+
+    public static void createServerShell(){
+        //Validate server jar
+        final File serverJar = Preferences.getServerJar();
+        if (serverShell == null || serverShell.getServerJar() != serverJar){
+            if (serverJar == null || !serverJar.exists()){
+                System.out.println("INVALID SERVER JAR");
+                return;
+            }
+
+            //Create new server with the updated JAR
+            serverShell = new ServerShell(serverJar);
+        }
+    }
+
+    public static void start(){
+        if (serverShell == null) createServerShell();
+        serverShell.startOnNewThread();
+    }
+
+    public static ServerShell getServerShell() {
+        return serverShell;
     }
 }

@@ -30,29 +30,26 @@ public class ConfigurationLayout extends MenuPage {
 
     //private List<Property<?>> properties = new ArrayList<>();
 
-    private Preferences preferences = new Preferences();
-
     @FXML
     private void initialize() {
+        //Server JAR
+        serverJarInputController.setValidator(file -> file.exists() && file.getName().endsWith("jar"));
+
         //Load the saved configuration
-        //final ServerShell.LaunchConfiguration configuration = loadConfiguration();
+        serverJarInputController.setFile(Preferences.getServerJar());
+        launch_options_text_field.setText(String.join(" ", Preferences.getLaunchOptions()));
 
-        try {
-            serverJarInputController.setFile(new File((String) preferences.getPreferences().get("server_jar")));
-            launch_options_text_field.setText(String.join(" ", (String) preferences.getPreferences().get("launch_options")));
-        }catch (NullPointerException e){
-
-        }
 
         //server_properties_table_view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        save_button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                preferences.getPreferences().put("server_jar", serverJarInputController.getFile().getAbsolutePath());
-                preferences.getPreferences().put("launch_options", launch_options_text_field.getText());
-                preferences.save();
+        save_button.setOnAction(event -> {
+            if (serverJarInputController.isValid()){
+                Preferences.setServerJar(serverJarInputController.getFile());
+            }else{
+                System.out.println("INVALID SERVER JAR!");
             }
+            Preferences.setLaunchOptions(launch_options_text_field.getText());
+            Preferences.save();
         });
 
         //Key

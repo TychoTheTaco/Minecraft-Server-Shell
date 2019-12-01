@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -16,6 +17,9 @@ public class MainLayout {
 
     @FXML
     private ListView<MenuItem> module_list_view;
+
+    @FXML
+    private Pane miniDashboard;
 
     @FXML
     private MiniDashboardController miniDashboardController;
@@ -74,6 +78,9 @@ public class MainLayout {
         });
 
         module_list_view.getSelectionModel().select(getMenuItemIndex("Dashboard"));
+
+        //Mini dashboard
+        miniDashboard.managedProperty().bind(miniDashboard.visibleProperty());
     }
 
     private int getMenuItemIndex(final String title){
@@ -85,8 +92,17 @@ public class MainLayout {
 
     public void setServerShell(ServerShell serverShell) {
         this.serverShell = serverShell;
+
+        //Update modules
         for (MenuItem menuItem : module_list_view.getItems()){
             ((MenuPage) menuItem.getLoader().getController()).setServerShell(serverShell);
+        }
+
+        //Update mini dashboard
+        if (serverShell == null){
+            miniDashboard.setVisible(false);
+        }else{
+            miniDashboard.setVisible(true);
         }
         miniDashboardController.setServerShell(serverShell);
     }

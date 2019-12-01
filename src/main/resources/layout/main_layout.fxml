@@ -15,7 +15,7 @@
         <ListView fx:id="module_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
     </GridPane>
 
-    <fx:include fx:id="miniDashboard" source="mini_dashboard_layout.fxml" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-background-color: #3d3d3d"/>
+    <fx:include fx:id="miniDashboard" source="mini_dashboard_layout.fxml" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-background-color: #3d3d3d;"/>
 
     <!-- Layout Container -->
     <BorderPane fx:id="container" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800" prefHeight="500"/>

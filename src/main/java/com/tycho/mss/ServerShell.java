@@ -1,6 +1,9 @@
 package com.tycho.mss;
 
 import com.tycho.mss.command.Command;
+import com.tycho.mss.command.GiveRandomItemCommand;
+import com.tycho.mss.command.HelpCommand;
+import com.tycho.mss.command.HereCommand;
 import com.tycho.mss.util.StreamReader;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
@@ -56,7 +59,6 @@ public class ServerShell {
     private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
     private static final Pattern PLAYER_DISCONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>.+) lost connection: (?<reason>.+)$");
 
-    private final LaunchConfiguration launchConfiguration;
     private final Object STATE_LOCK = new Object();
 
     /**
@@ -83,8 +85,12 @@ public class ServerShell {
 
     private long startTime;
 
-    public ServerShell(final LaunchConfiguration launchConfiguration) {
-        this.launchConfiguration = launchConfiguration;
+    private final File serverJar;
+
+    private String launchOptions = "";
+
+    public ServerShell(final File serverJar) {
+        this.serverJar = serverJar;
         this.authorize("TychoTheTaco", "help");
         this.authorize("TychoTheTaco", "here");
         this.authorize("TychoTheTaco", "mcrandom");
@@ -94,33 +100,23 @@ public class ServerShell {
 
         this.authorize("Assassin_Actual7", "help");
         this.authorize("Assassin_Actual7", "here");
+
+        //Add custom commands
+        try {
+            addCustomCommand(new GiveRandomItemCommand(new File("ids.txt")));
+            addCustomCommand(new HereCommand());
+            addCustomCommand(new HelpCommand());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static class LaunchConfiguration{
-
-        private File serverJar;
-
-        private String[] launchOptions;
-
-        public File getServerJar() {
-            return serverJar;
-        }
-
-        public void setServerJar(File serverJar) {
-            this.serverJar = serverJar;
-        }
-
-        public String[] getLaunchOptions() {
-            return launchOptions;
-        }
-
-        public void setLaunchOptions(String[] launchOptions) {
-            this.launchOptions = launchOptions;
-        }
+    public File getServerJar() {
+        return serverJar;
     }
 
     public File getDirectory(){
-        return this.launchConfiguration.getServerJar().getAbsoluteFile().getParentFile();
+        return this.serverJar.getAbsoluteFile().getParentFile();
     }
 
     private final Map<String, Set<String>> permissions = new HashMap<>();
@@ -190,11 +186,11 @@ public class ServerShell {
 
         final List<String> command = new ArrayList<>();
         command.add("java");
-        for (String option : this.launchConfiguration.getLaunchOptions()) {
-            command.add("-" + option);
+        for (String option : this.launchOptions.split(" ")) {
+            if (option.length() > 0) command.add("-" + option);
         }
         command.add("-jar");
-        command.add(this.launchConfiguration.getServerJar().getAbsolutePath());
+        command.add(this.serverJar.getAbsolutePath());
         command.add("nogui");
 
         final ProcessBuilder processBuilder = new ProcessBuilder(command);

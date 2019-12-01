@@ -1,20 +1,20 @@
-[16:59:10] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[16:59:10] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[16:59:10] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[16:59:10] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[16:59:10] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[16:59:10] [Server thread/INFO]: Starting minecraft server version 1.14.4
-[16:59:10] [Server thread/INFO]: Loading properties
-[16:59:10] [Server thread/INFO]: Default game type: SPECTATOR
-[16:59:10] [Server thread/INFO]: Generating keypair
-[16:59:10] [Server thread/INFO]: Starting Minecraft server on *:25566
-[16:59:10] [Server thread/INFO]: Using default channel type
-[16:59:12] [Server thread/WARN]: **** FAILED TO BIND TO PORT!
-[16:59:12] [Server thread/WARN]: The exception was: java.net.BindException: Address already in use: bind
-[16:59:12] [Server thread/WARN]: Perhaps a server is already running on that port?
-[16:59:12] [Server thread/INFO]: Stopping server
-[16:59:12] [Server thread/INFO]: Saving worlds
-[16:59:12] [Server thread/ERROR]: Exception stopping the server
+[17:01:05] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[17:01:05] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[17:01:05] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[17:01:05] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[17:01:05] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[17:01:05] [Server thread/INFO]: Starting minecraft server version 1.14.4
+[17:01:05] [Server thread/INFO]: Loading properties
+[17:01:05] [Server thread/INFO]: Default game type: SPECTATOR
+[17:01:05] [Server thread/INFO]: Generating keypair
+[17:01:06] [Server thread/INFO]: Starting Minecraft server on *:25566
+[17:01:06] [Server thread/INFO]: Using default channel type
+[17:01:08] [Server thread/WARN]: **** FAILED TO BIND TO PORT!
+[17:01:09] [Server thread/WARN]: The exception was: java.net.BindException: Address already in use: bind
+[17:01:09] [Server thread/WARN]: Perhaps a server is already running on that port?
+[17:01:09] [Server thread/INFO]: Stopping server
+[17:01:09] [Server thread/INFO]: Saving worlds
+[17:01:09] [Server thread/ERROR]: Exception stopping the server
 java.lang.NullPointerException: null
 	at net.minecraft.server.MinecraftServer.a(SourceFile:546) ~[server.jar:?]
 	at net.minecraft.server.MinecraftServer.m(SourceFile:574) ~[server.jar:?]

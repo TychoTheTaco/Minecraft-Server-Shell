@@ -1,5 +1,6 @@
 package com.tycho.mss.util;
 
+import com.tycho.mss.ServerShell;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -17,7 +18,29 @@ public class Preferences {
 
     private static final File PREFERENCES_FILE = new File(System.getProperty("user.dir") + File.separator + "mss_config.json");
 
+    private static final String PREF_SERVER_JAR = "server_jar";
+    private static final String PREF_LAUNCH_OPTIONS = "launch_options";
+    private static final String PREF_BACKUP_DIR = "backup_directory";
+
     public static void load(){
+        if (!PREFERENCES_FILE.exists()){
+            System.out.println("Preferences file does not exist! Creating a new one with defaults...");
+
+            //Try to find a server JAR in the current directory
+            for (File file : new File(System.getProperty("user.dir")).listFiles()){
+                if (file.getName().contains("server") && file.getName().endsWith("jar")){
+                    setServerJar(file);
+                    break;
+                }
+            }
+
+            //Set default values
+            setLaunchOptions("");
+
+            save();
+        }
+
+        //Load preferences
         try {
             final String string = new String(Files.readAllBytes(Paths.get(PREFERENCES_FILE.getAbsolutePath())));
             final JSONObject root = (JSONObject) new JSONParser().parse(string);
@@ -39,13 +62,31 @@ public class Preferences {
         return preferences;
     }
 
+    public static File getServerJar(){
+        final String string = (String) preferences.get(PREF_SERVER_JAR);
+        if (string == null) return null;
+        return new File(string);
+    }
+
+    public static void setServerJar(final File file){
+        preferences.put(PREF_SERVER_JAR, file.getAbsolutePath());
+    }
+
+    public static String[] getLaunchOptions(){
+        return ((String) preferences.get(PREF_LAUNCH_OPTIONS)).split(" ");
+    }
+
+    public static void setLaunchOptions(final String string){
+        preferences.put(PREF_LAUNCH_OPTIONS, string);
+    }
+
     public static File getBackupDirectory(){
-        final String string = (String) preferences.get("backup_directory");
+        final String string = (String) preferences.get(PREF_BACKUP_DIR);
         if (string == null) return null;
         return new File(string);
     }
 
     public static void setBackupDirectory(final File directory){
-        preferences.put("backup_directory", directory.getAbsolutePath());
+        preferences.put(PREF_BACKUP_DIR, directory.getAbsolutePath());
     }
 }

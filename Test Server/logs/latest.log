@@ -1,23 +1,25 @@
-[17:21:00] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[17:21:00] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[17:21:00] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[17:21:00] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[17:21:00] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[17:21:00] [Server thread/INFO]: Starting minecraft server version 1.14.4
-[17:21:00] [Server thread/INFO]: Loading properties
-[17:21:00] [Server thread/INFO]: Default game type: SPECTATOR
-[17:21:00] [Server thread/INFO]: Generating keypair
-[17:21:00] [Server thread/INFO]: Starting Minecraft server on *:25566
-[17:21:00] [Server thread/INFO]: Using default channel type
-[17:21:03] [Server thread/WARN]: **** FAILED TO BIND TO PORT!
-[17:21:03] [Server thread/WARN]: The exception was: java.net.BindException: Address already in use: bind
-[17:21:03] [Server thread/WARN]: Perhaps a server is already running on that port?
-[17:21:03] [Server thread/INFO]: Stopping server
-[17:21:03] [Server thread/INFO]: Saving worlds
-[17:21:03] [Server thread/ERROR]: Exception stopping the server
-java.lang.NullPointerException: null
-	at net.minecraft.server.MinecraftServer.a(SourceFile:546) ~[server.jar:?]
-	at net.minecraft.server.MinecraftServer.m(SourceFile:574) ~[server.jar:?]
-	at uk.m(SourceFile:593) ~[server.jar:?]
-	at net.minecraft.server.MinecraftServer.run(SourceFile:676) [server.jar:?]
-	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_131]
+[22:10:26] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22:10:26] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22:10:26] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[22:10:26] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22:10:26] [Server thread/INFO]: Starting minecraft server version 1.14.4
+[22:10:26] [Server thread/INFO]: Loading properties
+[22:10:26] [Server thread/INFO]: Default game type: SPECTATOR
+[22:10:26] [Server thread/INFO]: Generating keypair
+[22:10:26] [Server thread/INFO]: Starting Minecraft server on *:25566
+[22:10:26] [Server thread/INFO]: Using default channel type
+[22:10:28] [Server thread/INFO]: Preparing level "world"
+[22:10:28] [Server thread/INFO]: Reloading ResourceManager: Default
+[22:10:29] [Server thread/INFO]: Loaded 6 recipes
+[22:10:29] [Server thread/INFO]: Loaded 811 advancements
+[22:10:29] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[22:10:30] [Server thread/INFO]: Preparing spawn area: 0%
+[22:10:31] [Server thread/INFO]: Preparing spawn area: 0%
+[22:10:31] [Server thread/INFO]: Preparing spawn area: 0%
+[22:10:31] [Server-Worker-7/INFO]: Preparing spawn area: 0%
+[22:10:31] [Server thread/INFO]: Time elapsed: 1799 ms
+[22:10:31] [Server thread/INFO]: Done (3.229s)! For help, type "help"
+[22:10:41] [User Authenticator #1/INFO]: UUID of player TychoTheTaco is ade89a5f-46f6-4d74-88bf-174ff1e917e8
+[22:10:41] [Server thread/INFO]: TychoTheTaco[/127.0.0.1:55909] logged in with entity id 121 at (-218.5875476780485, 86.38146365605138, -79.21043999578835)
+[22:10:41] [Server thread/INFO]: TychoTheTaco joined the game
+[22:15:33] [Server thread/WARN]: Can't keep up! Is the server overloaded? Running 2184ms or 43 ticks behind

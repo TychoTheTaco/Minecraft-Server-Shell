@@ -55,13 +55,13 @@ public class FileInputLayout {
         return new File(input.getText());
     }
 
-    private boolean isValid(){
+    public boolean isValid(){
         if (this.input.getText().trim().length() == 0) return false;
+        if (validator != null && !validator.isValid(getFile())) return false;
         return Files.exists(Paths.get(this.input.getText()));
     }
 
     public void setFile(File file) {
-        System.out.println("SET FILE: " + file);
         if (file == null){
             this.input.setText("");
         }else{
@@ -71,5 +71,15 @@ public class FileInputLayout {
 
     public void setIsDirectory(final boolean isDirectory){
         this.isDirectory = isDirectory;
+    }
+
+    public interface Validator{
+        boolean isValid(final File file);
+    }
+
+    private Validator validator;
+
+    public void setValidator(Validator validator) {
+        this.validator = validator;
     }
 }
