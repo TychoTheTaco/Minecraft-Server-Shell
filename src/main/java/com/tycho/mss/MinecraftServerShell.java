@@ -21,10 +21,11 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * STUFF TO DO:
- * - Move all backups to new directory when the backup dir changes.
  * - Create progress bar for moving backups to a new directory
  * - Create backup schedule
  */
@@ -33,6 +34,8 @@ public class MinecraftServerShell extends Application{
     public static final String APP_NAME = "Minecraft Server Shell";
 
     private static ServerShell serverShell;
+
+    public static final Path PRIVATE_DIR = Paths.get(System.getProperty("user.dir")).resolve(".mss");
 
     public static void main(String... args){
         launch(args);

@@ -1,9 +1,6 @@
 package com.tycho.mss;
 
-import com.tycho.mss.command.Command;
-import com.tycho.mss.command.GiveRandomItemCommand;
-import com.tycho.mss.command.HelpCommand;
-import com.tycho.mss.command.HereCommand;
+import com.tycho.mss.command.*;
 import com.tycho.mss.util.StreamReader;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
@@ -59,6 +56,8 @@ public class ServerShell {
     private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
     private static final Pattern PLAYER_DISCONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>.+) lost connection: (?<reason>.+)$");
 
+    private static final Pattern PLAYER_AUTHENTICATED_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[User Authenticator #1\\/INFO]: UUID of player (?<player>.+) is (?<id>.+)$");
+
     private final Object STATE_LOCK = new Object();
 
     /**
@@ -89,11 +88,14 @@ public class ServerShell {
 
     private String launchOptions = "";
 
+    private final Map<String, UUID> pendingAuthenticatedUsers = new HashMap<>();
+
     public ServerShell(final File serverJar) {
         this.serverJar = serverJar;
         this.authorize("TychoTheTaco", "help");
         this.authorize("TychoTheTaco", "here");
         this.authorize("TychoTheTaco", "mcrandom");
+        this.authorize("TychoTheTaco", "location");
 
         this.authorize("Metroscorpio", "help");
         this.authorize("Metroscorpio", "here");
@@ -106,6 +108,7 @@ public class ServerShell {
             addCustomCommand(new GiveRandomItemCommand(new File("ids.txt")));
             addCustomCommand(new HereCommand());
             addCustomCommand(new HelpCommand());
+            addCustomCommand(new LocationCommand());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -273,8 +276,17 @@ public class ServerShell {
                     }
                     if (handled) continue;
 
+                    //Check if a player was authenticated
+                    Matcher matcher = PLAYER_AUTHENTICATED_PATTERN.matcher(line);
+                    if (matcher.find()){
+                        final String player = matcher.group("player");
+                        final UUID id = UUID.fromString(matcher.group("id"));
+                        pendingAuthenticatedUsers.put(player, id);
+                        continue;
+                    }
+
                     //Check if this is a chat message
-                    Matcher matcher = CHAT_MESSAGE_PATTERN.matcher(line);
+                    matcher = CHAT_MESSAGE_PATTERN.matcher(line);
                     if (matcher.find()) {
                         final String player = matcher.group("player");
                         final String message = matcher.group("message");
@@ -321,7 +333,14 @@ public class ServerShell {
                         if (matcher.find()) {
                             final String username = matcher.group("player");
                             final String ipAddress = matcher.group("ip");
-                            final Player player = new Player(username, ipAddress);
+
+                            //Make sure user is authenticated
+                            final UUID id = pendingAuthenticatedUsers.get(username);
+                            assert id != null;
+                            pendingAuthenticatedUsers.remove(username);
+
+                            final Player player = new Player(id, username, ipAddress);
+                            PlayerDatabaseManager.get(player);
                             players.add(player);
                             notifyOnPlayerConnected(player);
 
@@ -336,6 +355,7 @@ public class ServerShell {
                             final String username = matcher.group("player");
                             final String reason = matcher.group("reason");
                             final Player player = getPlayer(username);
+                            PlayerDatabaseManager.save(player);
                             notifyOnPlayerDisconnected(player);
                             players.remove(player);
                         }

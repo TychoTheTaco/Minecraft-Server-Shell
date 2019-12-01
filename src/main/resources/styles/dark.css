@@ -51,7 +51,7 @@
 
 .button:hover{
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, #00000080, 10, 0, 0, 0);
 }
 
 .button:pressed{
