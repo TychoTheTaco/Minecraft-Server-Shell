@@ -2,8 +2,13 @@ package com.tycho.mss.layout;
 
 import com.tycho.mss.BackupListCell;
 import com.tycho.mss.MenuPage;
+import com.tycho.mss.MoveFilesTask;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
+import easytasks.ITask;
+import easytasks.Task;
+import easytasks.TaskAdapter;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -45,25 +50,7 @@ public class BackupsLayout extends MenuPage {
                     final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to move all existing backups to the new location?", ButtonType.YES, ButtonType.NO);
                     alert.showAndWait();
                     if (alert.getResult() == ButtonType.YES) {
-                        //Move files to new location
-                        try {
-                            System.out.println("Moving...");
-                            final Path oldBackupPath = Paths.get(oldBackupDirectory.getAbsolutePath());
-                            Files.walk(oldBackupPath)
-                                    .filter(path -> !Files.isDirectory(path))
-                                    .forEach(path -> {
-                                        System.out.println(oldBackupPath.relativize(path));
-                                        try {
-                                            System.out.println("MOVE " + path + " TO " + Paths.get(backupDirectoryInputController.getFile().getAbsolutePath(), path.getFileName().toString()));
-                                            Files.move(path, Paths.get(backupDirectoryInputController.getFile().getAbsolutePath(), path.getFileName().toString()));
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    });
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.println("Done moving.");
+                        moveBackupDirectory(Paths.get(oldBackupDirectory.getAbsolutePath()), Paths.get(backupDirectoryInputController.getFile().getAbsolutePath()));
                     }
                 }
 
@@ -82,6 +69,26 @@ public class BackupsLayout extends MenuPage {
     @Override
     public void onPageSelected() {
         refresh();
+    }
+
+    private void moveBackupDirectory(final Path source, final Path destination){
+        //Move files to new location
+        final MoveFilesTask moveFilesTask = new MoveFilesTask(source, destination);
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Restoring backup...", ButtonType.CANCEL);
+
+        alert.setOnCloseRequest(event -> {
+            if (moveFilesTask.getState() != Task.State.STOPPED) event.consume();
+        });
+
+        moveFilesTask.addTaskListener(new TaskAdapter(){
+            @Override
+            public void onTaskStopped(ITask task) {
+                Platform.runLater(alert::close);
+            }
+        });
+
+        alert.show();
+        moveFilesTask.startOnNewThread();
     }
 
     private void refresh() {
