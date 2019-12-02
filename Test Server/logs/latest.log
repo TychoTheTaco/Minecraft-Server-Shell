@@ -1,28 +1,656 @@
-[16:41:21] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[16:41:21] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[16:41:21] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[16:41:21] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[16:41:21] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[16:41:21] [Server thread/INFO]: Starting minecraft server version 1.14.4
-[16:41:21] [Server thread/INFO]: Loading properties
-[16:41:21] [Server thread/INFO]: Default game type: SPECTATOR
-[16:41:21] [Server thread/INFO]: Generating keypair
-[16:41:21] [Server thread/INFO]: Starting Minecraft server on *:25566
-[16:41:21] [Server thread/INFO]: Using default channel type
-[16:41:22] [Server thread/INFO]: Preparing level "world"
-[16:41:22] [Server thread/INFO]: Reloading ResourceManager: Default
-[16:41:23] [Server thread/INFO]: Loaded 6 recipes
-[16:41:23] [Server thread/INFO]: Loaded 811 advancements
-[16:41:24] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[16:41:25] [Server thread/INFO]: Preparing spawn area: 0%
-[16:41:25] [Server thread/INFO]: Preparing spawn area: 0%
-[16:41:25] [Server thread/INFO]: Preparing spawn area: 0%
-[16:41:25] [Server thread/INFO]: Preparing spawn area: 0%
-[16:41:26] [Server-Worker-4/INFO]: Preparing spawn area: 0%
-[16:41:26] [Server thread/INFO]: Time elapsed: 2402 ms
-[16:41:26] [Server thread/INFO]: Done (3.903s)! For help, type "help"
-[16:41:34] [User Authenticator #1/INFO]: UUID of player TychoTheTaco is ade89a5f-46f6-4d74-88bf-174ff1e917e8
-[16:41:34] [Server thread/INFO]: TychoTheTaco[/127.0.0.1:60307] logged in with entity id 127 at (-239.88291513866395, 86.38146365605138, -42.69750806276647)
-[16:41:34] [Server thread/INFO]: TychoTheTaco joined the game
-[16:41:37] [Server thread/INFO]: <TychoTheTaco> !help
-[16:41:41] [Server thread/INFO]: <TychoTheTaco> !help location
+[17:42:29] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[17:42:29] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[17:42:29] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[17:42:29] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[17:42:29] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[17:42:29] [Server thread/INFO]: Starting minecraft server version 1.14.4
+[17:42:29] [Server thread/INFO]: Loading properties
+[17:42:29] [Server thread/INFO]: Default game type: SPECTATOR
+[17:42:29] [Server thread/INFO]: Generating keypair
+[17:42:29] [Server thread/INFO]: Starting Minecraft server on *:25566
+[17:42:29] [Server thread/INFO]: Using default channel type
+[17:42:31] [Server thread/INFO]: Preparing level "world"
+[17:42:31] [Server thread/INFO]: Reloading ResourceManager: Default
+[17:42:31] [Server thread/INFO]: Loaded 6 recipes
+[17:42:32] [Server thread/INFO]: Loaded 811 advancements
+[17:42:34] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[17:42:34] [User Authenticator #1/INFO]: UUID of player TychoTheTaco is ade89a5f-46f6-4d74-88bf-174ff1e917e8
+[17:42:35] [Server thread/INFO]: Preparing spawn area: 0%
+[17:42:35] [Server thread/INFO]: Preparing spawn area: 0%
+[17:42:35] [Server thread/INFO]: Preparing spawn area: 58%
+[17:42:35] [Server thread/INFO]: Time elapsed: 1148 ms
+[17:42:35] [Server thread/INFO]: Done (4.571s)! For help, type "help"
+[17:42:35] [Server thread/INFO]: TychoTheTaco[/127.0.0.1:61142] logged in with entity id 98 at (2.1921420737142228, 86.38146365605138, 0.8637928279831872)
+[17:42:35] [Server thread/INFO]: TychoTheTaco joined the game
+[17:42:38] [Server thread/INFO]: <TychoTheTaco> !guide
+[17:42:38] [Server thread/INFO]: TychoTheTaco has the following entity data: [2.1921420737142228d, 86.38146365605138d, 0.8637928279831872d]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:38] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:38] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:39] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:39] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:40] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:40] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:41] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:41] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...7991473532E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...5982947064E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...3974420594E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...7196589413E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...3995736766E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...0794884119E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...7594031472E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...4393178826E-16 0 0 0 0 1 normal<--[HERE]
+[17:42:42] [Server thread/INFO]: Expected whitespace to end one argument, but found trailing data
+[17:42:42] [Server thread/INFO]: ...2119232618E-15 0 0 0 0 1 normal<--[HERE]

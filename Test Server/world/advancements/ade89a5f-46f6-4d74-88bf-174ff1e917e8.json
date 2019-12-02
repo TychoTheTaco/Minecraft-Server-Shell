@@ -32,6 +32,8 @@
   "minecraft:adventure/adventuring_time": {
     "criteria": {
       "minecraft:forest": "2019-11-24 20:28:08 -0800",
+      "minecraft:beach": "2019-12-01 17:34:23 -0800",
+      "minecraft:river": "2019-12-01 17:34:21 -0800",
       "minecraft:wooded_hills": "2019-11-23 20:14:08 -0800"
     },
     "done": false
