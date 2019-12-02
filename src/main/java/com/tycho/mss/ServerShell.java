@@ -81,8 +81,6 @@ public class ServerShell {
      */
     private final List<Player> players = new ArrayList<>();
 
-    private Process process;
-
     private long startTime;
 
     private final File serverJar;
@@ -93,16 +91,14 @@ public class ServerShell {
 
     public ServerShell(final File serverJar) {
         this.serverJar = serverJar;
-        this.authorize("TychoTheTaco", "help");
-        this.authorize("TychoTheTaco", "here");
-        this.authorize("TychoTheTaco", "mcrandom");
-        this.authorize("TychoTheTaco", "location");
 
-        this.authorize("Metroscorpio", "help");
-        this.authorize("Metroscorpio", "here");
+        final PermissionGroup pleb = new PermissionGroup(HereCommand.class, HelpCommand.class, LocationCommand.class);
+        final PermissionGroup admin = new PermissionGroup(GiveRandomItemCommand.class);
+        admin.commands.addAll(pleb.commands);
 
-        this.authorize("Assassin_Actual7", "help");
-        this.authorize("Assassin_Actual7", "here");
+        this.permissions.put("TychoTheTaco", admin);
+        this.permissions.put("Metroscorpio", pleb);
+        this.permissions.put("Assassin_Actual7", pleb);
 
         //Add custom commands
         try {
@@ -123,41 +119,20 @@ public class ServerShell {
         return this.serverJar.getAbsoluteFile().getParentFile();
     }
 
-    private final Map<String, Set<String>> permissions = new HashMap<>();
+    private final Map<String, PermissionGroup> permissions = new HashMap<>();
 
-    private final List<PendingResult> pendingResults = new ArrayList<>();
+    private class PermissionGroup{
+        private Set<Class<? extends Command>> commands = new HashSet<>();
 
-    public void authorize(final String player, final String command) {
-        Set<String> commands = permissions.get(player);
-        if (commands == null) {
-            commands = new HashSet<>();
-
-            if (command.equals("@a")) {
-                for (Command customCommand : customCommands) {
-                    commands.add(customCommand.getCommand());
-                }
-            } else {
-                commands.add(command);
-            }
-
-            this.permissions.put(player, commands);
-        } else {
-            if (command.equals("@a")) {
-                for (Command customCommand : customCommands) {
-                    commands.add(customCommand.getCommand());
-                }
-            } else {
-                commands.add(command);
-            }
+        public PermissionGroup(Class<? extends Command>... classes){
+            this.commands.addAll(Arrays.asList(classes));
         }
     }
 
-    public void deauthorize(final String player, final String command) {
+    private final List<PendingResult> pendingResults = new ArrayList<>();
 
-    }
-
-    public boolean isAuthorized(final String player, final String command) {
-        return this.permissions.containsKey(player) && this.permissions.get(player).contains(command);
+    public boolean isAuthorized(final String player, final Command command) {
+        return this.permissions.containsKey(player) && this.permissions.get(player).commands.contains(command.getClass());
     }
 
     public Map<String, String> getProperties(){
@@ -201,7 +176,7 @@ public class ServerShell {
         System.out.println(processBuilder.command());
 
         try {
-            this.process = processBuilder.start();
+            Process process = processBuilder.start();
 
             notifyOnServerIOready();
 
@@ -383,7 +358,7 @@ public class ServerShell {
             if (command.equals(cmd.getCommand())) {
 
                 //Make sure the player is authorized to use this command
-                if (!isAuthorized(player, command.split(" ")[0])) {
+                if (!isAuthorized(player, cmd)) {
                     final JSONObject root = Utils.createText("Unauthorized: ", "red");
                     final JSONArray extra = new JSONArray();
                     extra.add(Utils.createText("You are not authorized to use this command!", "gray"));
