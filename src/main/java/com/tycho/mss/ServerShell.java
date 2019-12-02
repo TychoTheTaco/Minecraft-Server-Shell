@@ -93,7 +93,7 @@ public class ServerShell {
         this.serverJar = serverJar;
 
         final PermissionGroup pleb = new PermissionGroup(HereCommand.class, HelpCommand.class, LocationCommand.class);
-        final PermissionGroup admin = new PermissionGroup(GiveRandomItemCommand.class, GuideCommand.class);
+        final PermissionGroup admin = new PermissionGroup(GiveRandomItemCommand.class, GuideCommand.class, BackupCommand.class);
         admin.commands.addAll(pleb.commands);
 
         this.permissions.put("TychoTheTaco", admin);
@@ -107,6 +107,7 @@ public class ServerShell {
             addCustomCommand(new HelpCommand());
             addCustomCommand(new LocationCommand());
             addCustomCommand(new GuideCommand());
+            addCustomCommand(new BackupCommand());
         } catch (IOException e) {
             e.printStackTrace();
         }
