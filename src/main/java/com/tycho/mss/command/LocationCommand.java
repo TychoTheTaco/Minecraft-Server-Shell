@@ -58,6 +58,19 @@ public class LocationCommand extends Command {
 
             root.put("extra", extra);
             serverShell.tellraw(player, root);
+        }else if ("remove".equals(type)){
+            if (parameters.length < 2){
+                throw new InvalidParametersException();
+            }
+
+            try {
+                final int index = Integer.parseInt(parameters[1]);
+                serverShell.getPlayer(player).getSavedLocations().remove(index);
+                final JSONObject root = Utils.createText("Location removed!", "green");
+                serverShell.tellraw(player, root);
+            }catch (NumberFormatException e){
+                throw new InvalidParametersException();
+            }
         }
     }
 
@@ -68,7 +81,7 @@ public class LocationCommand extends Command {
 
     @Override
     public String getFormat() {
-        return "<save [<notes>] | list>";
+        return "<save [<notes>] | list | remove <index>>";
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.tycho.mss;
 
 import com.tycho.mss.command.*;
+import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.StreamReader;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
@@ -56,7 +57,7 @@ public class ServerShell {
     private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
     private static final Pattern PLAYER_DISCONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>.+) lost connection: (?<reason>.+)$");
 
-    private static final Pattern PLAYER_AUTHENTICATED_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[User Authenticator #1\\/INFO]: UUID of player (?<player>.+) is (?<id>.+)$");
+    private static final Pattern PLAYER_AUTHENTICATED_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[User Authenticator #\\d+\\/INFO]: UUID of player (?<player>.+) is (?<id>.+)$");
 
     private final Object STATE_LOCK = new Object();
 
@@ -189,8 +190,8 @@ public class ServerShell {
 
         final List<String> command = new ArrayList<>();
         command.add("java");
-        for (String option : this.launchOptions.split(" ")) {
-            if (option.length() > 0) command.add("-" + option);
+        for (String option : Preferences.getLaunchOptions()) {
+            if (option.length() > 0) command.add(option);
         }
         command.add("-jar");
         command.add(this.serverJar.getAbsolutePath());
