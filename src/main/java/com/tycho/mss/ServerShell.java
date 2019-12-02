@@ -55,7 +55,7 @@ public class ServerShell {
     private static final Pattern SERVER_STARTED_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: Done \\(.+\\)!");
     private static final Pattern SERVER_STOPPING_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "Stopping the server$");
     private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
-    private static final Pattern PLAYER_DISCONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>.+) lost connection: (?<reason>.+)$");
+    private static final Pattern PLAYER_DISCONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+) lost connection: (?<reason>.+)$");
 
     private static final Pattern PLAYER_AUTHENTICATED_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[User Authenticator #\\d+\\/INFO]: UUID of player (?<player>.+) is (?<id>.+)$");
 

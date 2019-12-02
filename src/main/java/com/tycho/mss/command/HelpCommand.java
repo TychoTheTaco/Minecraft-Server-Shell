@@ -13,32 +13,59 @@ public class HelpCommand extends Command {
 
     @Override
     public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
-        //Create root object with standard formatting. All extras will inherit these properties.
-        final JSONObject root = Utils.createText("", "gray");
-        final JSONArray extras = new JSONArray();
+        if (parameters.length > 0){
+            //Find target command
+            Command target = null;
+            for (Command command : serverShell.getCustomCommands()){
+                if (command.getCommand().equals(parameters[0])){
+                    target = command;
+                    break;
+                }
+            }
 
-        //Create title text
-        final JSONObject title = Utils.createText("The server accepts the following commands:\n", "");
-        title.put("bold", false);
-        extras.add(title);
+            if (target != null){
+                final JSONObject root = Utils.createText("", "gray");
+                final JSONArray extras = new JSONArray();
 
-        //Sort commands alphabetically
-        final List<Command> commands = serverShell.getCustomCommands();
-        commands.sort(Comparator.comparing(Command::getCommand));
+                extras.add(Utils.createText(target.getCommand(), "green"));
+                extras.add(Utils.createText(": " + target.getDescription(), ""));
+                extras.add(Utils.createText("\n", ""));
+                extras.add(Utils.createText("Usage:\n", "white"));
+                extras.add(Utils.createText(target.getCommand(), "green"));
+                extras.add(Utils.createText(" " + target.getFormat(), "gray"));
 
-        //List commands and descriptions
-        for (Command command : commands){
-            extras.add(Utils.createText(command.getCommand(), "green"));
-            extras.add(Utils.createText(": " + command.getDescription(), ""));
-            extras.add(Utils.createText("\n", ""));
+                //Display text to user
+                root.put("extra", extras);
+                serverShell.tellraw(player, root);
+            }
+        }else{
+            //Create root object with standard formatting. All extras will inherit these properties.
+            final JSONObject root = Utils.createText("", "gray");
+            final JSONArray extras = new JSONArray();
+
+            //Create title text
+            final JSONObject title = Utils.createText("The server accepts the following commands:\n", "");
+            title.put("bold", false);
+            extras.add(title);
+
+            //Sort commands alphabetically
+            final List<Command> commands = serverShell.getCustomCommands();
+            commands.sort(Comparator.comparing(Command::getCommand));
+
+            //List commands and descriptions
+            for (Command command : commands){
+                extras.add(Utils.createText(command.getCommand(), "green"));
+                extras.add(Utils.createText(": " + command.getDescription(), ""));
+                extras.add(Utils.createText("\n", ""));
+            }
+            extras.remove(extras.size() - 1);
+
+            //Add extras to root object
+            root.put("extra", extras);
+
+            //Display text to user
+            serverShell.tellraw(player, root);
         }
-        extras.remove(extras.size() - 1);
-
-        //Add extras to root object
-        root.put("extra", extras);
-
-        //Display text to user
-        serverShell.tellraw(player, root);
     }
 
     @Override
