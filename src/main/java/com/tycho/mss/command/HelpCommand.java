@@ -11,6 +11,10 @@ import java.util.List;
 
 public class HelpCommand extends Command {
 
+    public HelpCommand(){
+        super("help");
+    }
+
     @Override
     public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
         if (parameters.length > 0){
@@ -66,11 +70,6 @@ public class HelpCommand extends Command {
             //Display text to user
             serverShell.tellraw(player, root);
         }
-    }
-
-    @Override
-    public String getCommand() {
-        return "help";
     }
 
     @Override

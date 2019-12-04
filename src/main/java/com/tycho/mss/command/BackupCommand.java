@@ -11,8 +11,13 @@ import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 public class BackupCommand extends Command {
+
+    public BackupCommand() {
+        super("backup");
+    }
 
     @Override
     public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
@@ -61,11 +66,6 @@ public class BackupCommand extends Command {
         }else if ("list".equals(parameters[0])){
             System.out.println("Restore");
         }
-    }
-
-    @Override
-    public String getCommand() {
-        return "backup";
     }
 
     @Override

@@ -6,7 +6,22 @@ import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.regex.Pattern;
+
 public abstract class Command {
+
+    private final String command;
+
+    private final Pattern pattern;
+
+    public Command(final String command){
+        this(command, Pattern.compile("^" + command + "(?<parameters>.*)$"));
+    }
+
+    public Command(final String command, final Pattern pattern){
+        this.command = command;
+        this.pattern = pattern;
+    }
 
     /**
      * Execute the command.
@@ -18,11 +33,17 @@ public abstract class Command {
      */
     public abstract void execute(final String player, final ServerShell serverShell, final String... parameters) throws Exception;
 
-    public abstract String getCommand();
+    public String getCommand() {
+        return command;
+    }
 
     public abstract String getFormat();
 
     public abstract String getDescription();
+
+    public Pattern getPattern() {
+        return pattern;
+    }
 
     public class InvalidParametersException extends Exception{
 

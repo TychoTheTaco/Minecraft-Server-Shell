@@ -13,6 +13,10 @@ public class LocationCommand extends Command {
 
     private static final Pattern POSITION_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+)\\.\\d+d, (?<y>-?\\d+)\\.\\d+d, (?<z>-?\\d+)\\.\\d+d]");
 
+    public LocationCommand(){
+        super("location");
+    }
+
     @Override
     public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
         if (parameters.length < 1){
@@ -72,11 +76,6 @@ public class LocationCommand extends Command {
                 throw new InvalidParametersException();
             }
         }
-    }
-
-    @Override
-    public String getCommand() {
-        return "location";
     }
 
     @Override

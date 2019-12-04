@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 public class GiveRandomItemCommand extends Command {
 
@@ -21,6 +22,7 @@ public class GiveRandomItemCommand extends Command {
     private final List<String> ids = new ArrayList<>();
 
     public GiveRandomItemCommand(final File idsFile) throws IOException {
+        super("mcrandom");
         final BufferedReader bufferedReader = new BufferedReader(new FileReader(idsFile));
         String line;
         while ((line = bufferedReader.readLine()) != null){
@@ -46,11 +48,6 @@ public class GiveRandomItemCommand extends Command {
         }
 
         serverShell.tellraw("@a", give(targetPlayer, maxCount, serverShell));
-    }
-
-    @Override
-    public String getCommand() {
-        return "mcrandom";
     }
 
     @Override

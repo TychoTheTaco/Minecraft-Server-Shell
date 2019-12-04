@@ -16,6 +16,10 @@ public class GuideCommand extends Command {
 
     private final Map<String, GuideTask> tasks = new HashMap<>();
 
+    public GuideCommand() {
+        super("guide");
+    }
+
     @Override
     public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
         if (parameters.length < 1){
@@ -64,11 +68,6 @@ public class GuideCommand extends Command {
         }else{
             throw new InvalidParametersException();
         }
-    }
-
-    @Override
-    public String getCommand() {
-        return "guide";
     }
 
     @Override

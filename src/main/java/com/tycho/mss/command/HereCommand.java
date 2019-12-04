@@ -12,6 +12,10 @@ public class HereCommand extends Command {
 
     private static final Pattern POSITION_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+)\\.\\d+d, (?<y>-?\\d+)\\.\\d+d, (?<z>-?\\d+)\\.\\d+d]");
 
+    public HereCommand(){
+        super("here");
+    }
+
     @Override
     public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
         //Get player position
@@ -46,11 +50,6 @@ public class HereCommand extends Command {
 
         root.put("extra", extra);
         serverShell.tellraw("@a", root);
-    }
-
-    @Override
-    public String getCommand() {
-        return "here";
     }
 
     @Override
