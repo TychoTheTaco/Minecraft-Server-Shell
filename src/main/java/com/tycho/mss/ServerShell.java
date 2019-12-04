@@ -270,6 +270,26 @@ public class ServerShell {
                         final String message = matcher.group("message");
 
                         //Check if this is a command
+                        if (message.startsWith(COMMAND_PREFIX)){
+                            final String input = message.substring(1);
+
+                            //Check which command
+                            boolean isValidCommand = false;
+                            for (Command command : getCustomCommands()){
+                                matcher = command.getPattern().matcher(input);
+                                if (matcher.find()){
+                                    final String parameters = matcher.group("parameters");
+                                    //Execute the command
+                                    isValidCommand = true;
+                                    onCommand(player, command.getCommand(), parameters);
+                                }
+                            }
+
+                            //Show an error if this wasn't a valid command
+                            System.out.println("ERROR: INVALID COMMAND");
+                        }
+
+                        //Check if this is a command
                         matcher = COMMAND_PATTERN.matcher(message);
                         if (matcher.find()) {
                             final String cmd = matcher.group("command");
