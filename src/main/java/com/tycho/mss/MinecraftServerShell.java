@@ -23,6 +23,7 @@ import java.nio.file.Paths;
  * - Create progress bar for moving backups to a new directory
  * - Create backup schedule
  * - Convert preferences File to Path
+ * - Help command should show only authorized commands
  */
 public class MinecraftServerShell extends Application{
 

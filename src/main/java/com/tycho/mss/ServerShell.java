@@ -51,7 +51,7 @@ public class ServerShell {
     //REGEX Patterns
     private static final String SERVER_LOG_PREFIX = "^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: ";
     private static final Pattern CHAT_MESSAGE_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "<(?<player>.+?)> (?<message>.+)$");
-    private static final Pattern COMMAND_PATTERN = Pattern.compile("^" + COMMAND_PREFIX + "(?<input>(?<command>[^ ].*?)(?: (?<parameters>[^ ].*))?)$");
+    private static final Pattern COMMAND_PATTERN = Pattern.compile("^" + COMMAND_PREFIX + "(?<input>(?<command>[^ !].*?)(?: (?<parameters>[^ ].*))?)$");
     private static final Pattern SERVER_STARTED_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: Done \\(.+\\)!");
     private static final Pattern SERVER_STOPPING_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "Stopping the server$");
     private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
@@ -300,27 +300,31 @@ public class ServerShell {
                         final String message = matcher.group("message");
 
                         //Check if this is a command
-                        matcher = COMMAND_PATTERN.matcher(line);
+                        matcher = COMMAND_PATTERN.matcher(message);
                         if (matcher.find()) {
                             final String input = matcher.group("input");
                             final String cmd = matcher.group("command");
 
                             //Check which command was entered
+                            boolean isValidCommand = false;
                             for (Command command : getCustomCommands()) {
                                 matcher = command.getPattern().matcher(input);
                                 if (matcher.find()) {
                                     final String parameters = matcher.group("parameters");
-                                    onCommand(player, command, parameters.split(" +"));
+                                    onCommand(player, command, clean(parameters));
+                                    isValidCommand = true;
+                                    break;
                                 }
                             }
 
                             //Not a valid command, show an error message
-                            System.out.println("ERROR: INVALID COMMAND");
-                            final JSONObject root = Utils.createText("Unknown command:", "red");
-                            final JSONArray extras = new JSONArray();
-                            extras.add(Utils.createText(cmd, "white"));
-                            root.put("extra", extras);
-                            tellraw(player, root);
+                            if (!isValidCommand){
+                                final JSONObject root = Utils.createText("Unknown command: ", "red");
+                                final JSONArray extras = new JSONArray();
+                                extras.add(Utils.createText(input, "white"));
+                                root.put("extra", extras);
+                                tellraw(player, root);
+                            }
                         }
                     } else {
                         //Check if server is done starting
@@ -432,6 +436,23 @@ public class ServerShell {
         this.serverInputWriter.write(command);
         this.serverInputWriter.write("\n");
         this.serverInputWriter.flush();
+    }
+
+    private String[] clean(final String parameters){
+        System.out.println("CLEAN: " + parameters);
+        final String[] split = parameters.split(" +");
+        final List<String> strings = new ArrayList<>();
+        for (String string : split){
+            if (string.length() > 0){
+                strings.add(string);
+            }
+        }
+        final String[] array = new String[strings.size()];
+        for (int i = 0; i < array.length; i++){
+            array[i] = strings.get(i);
+        }
+        System.out.println("RETURN " + array.length);
+        return array;
     }
 
     public Matcher awaitResult(final String command, final Pattern pattern) throws InterruptedException {

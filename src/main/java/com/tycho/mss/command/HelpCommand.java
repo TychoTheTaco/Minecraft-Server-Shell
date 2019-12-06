@@ -41,6 +41,12 @@ public class HelpCommand extends Command {
                 //Display text to user
                 root.put("extra", extras);
                 serverShell.tellraw(player, root);
+            }else{
+                final JSONObject root = Utils.createText("Unknown command: ", "red");
+                final JSONArray extras = new JSONArray();
+                extras.add(Utils.createText(parameters[0], "white"));
+                root.put("extra", extras);
+                serverShell.tellraw(player, root);
             }
         }else{
             //Create root object with standard formatting. All extras will inherit these properties.
@@ -74,7 +80,7 @@ public class HelpCommand extends Command {
 
     @Override
     public String getFormat() {
-        return null;
+        return "[<command>]";
     }
 
     @Override
