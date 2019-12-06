@@ -83,25 +83,27 @@ public class PlayersLayout extends MenuPage {
     @Override
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
-        serverShell.addEventListener(new ServerShell.EventAdapter() {
+        if (serverShell != null){
+            serverShell.addEventListener(new ServerShell.EventAdapter() {
 
-            @Override
-            public void onServerStopped() {
-                Platform.runLater(() -> {
-                    players_table_view.getItems().clear();
-                });
-            }
+                @Override
+                public void onServerStopped() {
+                    Platform.runLater(() -> {
+                        players_table_view.getItems().clear();
+                    });
+                }
 
-            @Override
-            public void onPlayerConnected(Player player) {
-                Platform.runLater(() -> players_table_view.getItems().add(player));
-            }
+                @Override
+                public void onPlayerConnected(Player player) {
+                    Platform.runLater(() -> players_table_view.getItems().add(player));
+                }
 
-            @Override
-            public void onPlayerDisconnected(Player player) {
-                Platform.runLater(() -> players_table_view.getItems().remove(player));
-            }
-        });
+                @Override
+                public void onPlayerDisconnected(Player player) {
+                    Platform.runLater(() -> players_table_view.getItems().remove(player));
+                }
+            });
+        }
     }
 
     private class UiUpdater implements Runnable{

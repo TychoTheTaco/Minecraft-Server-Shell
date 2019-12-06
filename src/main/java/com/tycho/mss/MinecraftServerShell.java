@@ -1,12 +1,7 @@
 package com.tycho.mss;
 
-import com.sun.jmx.snmp.SnmpNull;
-import com.tycho.mss.command.GiveRandomItemCommand;
-import com.tycho.mss.command.HelpCommand;
-import com.tycho.mss.command.HereCommand;
 import com.tycho.mss.layout.MainLayout;
 import com.tycho.mss.util.Preferences;
-import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.Task;
 import easytasks.TaskAdapter;
@@ -20,7 +15,6 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -28,6 +22,7 @@ import java.nio.file.Paths;
  * STUFF TO DO:
  * - Create progress bar for moving backups to a new directory
  * - Create backup schedule
+ * - Convert preferences File to Path
  */
 public class MinecraftServerShell extends Application{
 
@@ -36,6 +31,8 @@ public class MinecraftServerShell extends Application{
     private static ServerShell serverShell;
 
     public static final Path PRIVATE_DIR = Paths.get(System.getProperty("user.dir")).resolve(".mss");
+
+    private static MainLayout mainLayoutController;
 
     public static void main(String... args){
         launch(args);
@@ -52,12 +49,10 @@ public class MinecraftServerShell extends Application{
         final Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
         primaryStage.setScene(scene);
+        mainLayoutController = loader.getController();
 
         //Attempt to create a server shell
         createServerShell();
-
-        final MainLayout mainLayout = loader.getController();
-        mainLayout.setServerShell(serverShell);
 
         primaryStage.sizeToScene();
         primaryStage.show();
@@ -93,6 +88,7 @@ public class MinecraftServerShell extends Application{
 
             //Create new server with the updated JAR
             serverShell = new ServerShell(serverJar);
+            mainLayoutController.setServerShell(serverShell);
         }
     }
 

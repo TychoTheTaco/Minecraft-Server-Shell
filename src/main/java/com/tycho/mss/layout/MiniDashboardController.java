@@ -1,6 +1,9 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.*;
+import com.tycho.mss.BackupTask;
+import com.tycho.mss.MenuPage;
+import com.tycho.mss.Player;
+import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
@@ -14,7 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 
 import java.io.File;
-import java.io.IOException;
 
 public class MiniDashboardController extends MenuPage{
 
@@ -75,60 +77,61 @@ public class MiniDashboardController extends MenuPage{
     @Override
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
+        if (serverShell != null){
+            updateStatus();
+            updateUptime();
+            updatePlayerCount();
+            updateStartStopButton();
 
-        updateStatus();
-        updateUptime();
-        updatePlayerCount();
-        updateStartStopButton();
+            serverShell.addEventListener(new ServerShell.EventAdapter(){
+                @Override
+                public void onServerStarting() {
+                    Platform.runLater(() -> {
+                        updateStatus();
+                        updateStartStopButton();
+                    });
+                }
 
-        serverShell.addEventListener(new ServerShell.EventAdapter(){
-            @Override
-            public void onServerStarting() {
-                Platform.runLater(() -> {
-                    updateStatus();
-                    updateStartStopButton();
-                });
-            }
+                @Override
+                public void onServerStarted() {
+                    Platform.runLater(() -> {
+                        updateStatus();
+                        updateStartStopButton();
+                        updateUptime();
+                    });
+                }
 
-            @Override
-            public void onServerStarted() {
-                Platform.runLater(() -> {
-                    updateStatus();
-                    updateStartStopButton();
-                    updateUptime();
-                });
-            }
+                @Override
+                public void onServerStopping() {
+                    Platform.runLater(() -> {
+                        updateStatus();
+                        updateUptime();
+                        updateStartStopButton();
+                    });
+                }
 
-            @Override
-            public void onServerStopping() {
-                Platform.runLater(() -> {
-                    updateStatus();
-                    updateUptime();
-                    updateStartStopButton();
-                });
-            }
+                @Override
+                public void onServerStopped() {
+                    Platform.runLater(() -> {
+                        updateStatus();
+                        updatePlayerCount();
+                        updateUptime();
+                        updateStartStopButton();
+                    });
+                }
 
-            @Override
-            public void onServerStopped() {
-                Platform.runLater(() -> {
-                    updateStatus();
-                    updatePlayerCount();
-                    updateUptime();
-                    updateStartStopButton();
-                });
-            }
+                @Override
+                public void onPlayerConnected(Player player) {
+                    Platform.runLater(() -> updatePlayerCount());
+                }
 
-            @Override
-            public void onPlayerConnected(Player player) {
-                Platform.runLater(() -> updatePlayerCount());
-            }
-
-            @Override
-            public void onPlayerDisconnected(Player player) {
-                Platform.runLater(() -> updatePlayerCount());
-            }
-        });
-        uiUpdater.startOnNewThread();
+                @Override
+                public void onPlayerDisconnected(Player player) {
+                    Platform.runLater(() -> updatePlayerCount());
+                }
+            });
+            uiUpdater.startOnNewThread();
+        }
     }
 
     private void updateStatus(){

@@ -38,39 +38,41 @@ public class DashboardLayout extends MenuPage {
     @Override
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
-        serverShell.addEventListener(new ServerShell.EventAdapter() {
-            @Override
-            public void onServerStarting() {
-                Platform.runLater(() -> updateStatus());
-            }
+        if (serverShell != null){
+            serverShell.addEventListener(new ServerShell.EventAdapter() {
+                @Override
+                public void onServerStarting() {
+                    Platform.runLater(() -> updateStatus());
+                }
 
-            @Override
-            public void onServerStarted() {
-                Platform.runLater(() -> updateStatus());
-            }
+                @Override
+                public void onServerStarted() {
+                    Platform.runLater(() -> updateStatus());
+                }
 
-            @Override
-            public void onServerStopping() {
-                Platform.runLater(() -> updateStatus());
-            }
+                @Override
+                public void onServerStopping() {
+                    Platform.runLater(() -> updateStatus());
+                }
 
-            @Override
-            public void onServerStopped() {
-                Platform.runLater(() -> updateStatus());
-            }
+                @Override
+                public void onServerStopped() {
+                    Platform.runLater(() -> updateStatus());
+                }
 
-            @Override
-            public void onPlayerConnected(Player player) {
-                Platform.runLater(() -> updatePlayerCount());
-            }
+                @Override
+                public void onPlayerConnected(Player player) {
+                    Platform.runLater(() -> updatePlayerCount());
+                }
 
-            @Override
-            public void onPlayerDisconnected(Player player) {
-                Platform.runLater(() -> updatePlayerCount());
-            }
-        });
-        updatePlayerCount();
-        updateStatus();
+                @Override
+                public void onPlayerDisconnected(Player player) {
+                    Platform.runLater(() -> updatePlayerCount());
+                }
+            });
+            updatePlayerCount();
+            updateStatus();
+        }
     }
 
     private void updateStatus(){

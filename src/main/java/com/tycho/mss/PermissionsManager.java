@@ -2,7 +2,6 @@ package com.tycho.mss;
 
 import com.tycho.mss.command.Command;
 import com.tycho.mss.command.SavedLocation;
-import netscape.javascript.JSObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -55,7 +54,7 @@ public class PermissionsManager {
             final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(DATABASE.toFile()));
             bufferedWriter.write(root.toString());
             bufferedWriter.close();
-        }catch (IOException | ParseException e){
+        }catch (IOException /*| ParseException*/ e){
             e.printStackTrace();
         }
     }

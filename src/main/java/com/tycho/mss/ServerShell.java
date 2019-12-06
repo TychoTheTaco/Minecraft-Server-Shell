@@ -111,8 +111,8 @@ public class ServerShell {
     public ServerShell(final File serverJar) {
         this.serverJar = serverJar;
 
-        final PermissionGroup pleb = new PermissionGroup(HereCommand.class, HelpCommand.class, LocationCommand.class);
-        final PermissionGroup admin = new PermissionGroup(GiveRandomItemCommand.class, GuideCommand.class, BackupCommand.class, PermissionCommand.class);
+        final PermissionGroup pleb = new PermissionGroup("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class);
+        final PermissionGroup admin = new PermissionGroup("admin", GiveRandomItemCommand.class, GuideCommand.class, BackupCommand.class, PermissionCommand.class);
         admin.commands.addAll(pleb.commands);
 
         this.permissions.put("TychoTheTaco", admin);
@@ -168,7 +168,7 @@ public class ServerShell {
     public void authorize(final String player, final Command command){
         final PermissionGroup permissionGroup = this.permissions.get(player);
         if (permissionGroup == null){
-            this.permissions.put(player, new PermissionGroup(command.getClass()));
+            this.permissions.put(player, new PermissionGroup("auth", command.getClass()));
         }else{
             this.permissions.get(player).commands.add(command.getClass());
         }

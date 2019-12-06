@@ -4,27 +4,19 @@ import com.tycho.mss.BackupListCell;
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.MoveFilesTask;
 import com.tycho.mss.util.Preferences;
-import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.Task;
 import easytasks.TaskAdapter;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.util.Callback;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.function.Consumer;
 
 public class BackupsLayout extends MenuPage {
 
@@ -94,7 +86,7 @@ public class BackupsLayout extends MenuPage {
     private void refresh() {
         backups_list_view.getItems().clear();
         final File backupsDirectory = Preferences.getBackupDirectory();
-        if (backupsDirectory != null) {
+        if (backupsDirectory != null && backupsDirectory.exists()) {
             for (File file : backupsDirectory.listFiles()) {
                 if (file.getName().endsWith("zip")) {
                     backups_list_view.getItems().add(file);

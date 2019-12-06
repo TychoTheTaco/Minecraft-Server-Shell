@@ -18,9 +18,6 @@ public class ConsoleLayout extends MenuPage {
 
     @FXML
     private void initialize() {
-        //Console output
-        console.setEditable(false);
-
         //Console input
         console_input.setOnAction(event -> {
             if (getServerShell() != null) {
@@ -37,14 +34,19 @@ public class ConsoleLayout extends MenuPage {
     @Override
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
-        serverShell.addEventListener(new ServerShell.EventAdapter() {
-            @Override
-            public void onOutput(String message) {
-                Platform.runLater(() -> {
-                    console.appendText(message);
-                    console.appendText("\n");
-                });
-            }
-        });
+        if (serverShell != null){
+            serverShell.addEventListener(new ServerShell.EventAdapter() {
+                @Override
+                public void onOutput(String message) {
+                    Platform.runLater(() -> {
+                        console.appendText(message);
+                        console.appendText("\n");
+                    });
+                }
+            });
+        }
+
+        //Console input
+        console_input.setDisable(serverShell == null);
     }
 }

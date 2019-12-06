@@ -61,7 +61,7 @@ public class MainLayout {
         //Modules
         module_list_view.setCellFactory(param -> new MenuListCell());
         try {
-            module_list_view.getItems().add(new MenuItem("Dashboard", "dashboard_layout"));
+            //module_list_view.getItems().add(new MenuItem("Dashboard", "dashboard_layout"));
             module_list_view.getItems().add(new MenuItem("Players", "players_layout"));
             module_list_view.getItems().add(new MenuItem("Console", "console_layout"));
             module_list_view.getItems().add(new MenuItem("Configuration", "configuration_layout"));
@@ -77,7 +77,7 @@ public class MainLayout {
             container.setCenter(newValue.getNode());
         });
 
-        module_list_view.getSelectionModel().select(getMenuItemIndex("Dashboard"));
+        module_list_view.getSelectionModel().select(getMenuItemIndex("Console"));
 
         //Mini dashboard
         miniDashboard.managedProperty().bind(miniDashboard.visibleProperty());

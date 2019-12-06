@@ -1,15 +1,13 @@
 package com.tycho.mss.layout;
 
 import com.tycho.mss.MenuPage;
+import com.tycho.mss.MinecraftServerShell;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Preferences;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +43,7 @@ public class ConfigurationLayout extends MenuPage {
         save_button.setOnAction(event -> {
             if (serverJarInputController.isValid()){
                 Preferences.setServerJar(serverJarInputController.getFile());
+                MinecraftServerShell.createServerShell();
             }else{
                 System.out.println("INVALID SERVER JAR!");
             }
