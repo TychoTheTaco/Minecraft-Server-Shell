@@ -51,7 +51,7 @@ public class ServerShell {
     //REGEX Patterns
     private static final String SERVER_LOG_PREFIX = "^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: ";
     private static final Pattern CHAT_MESSAGE_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "<(?<player>.+?)> (?<message>.+)$");
-    private static final Pattern COMMAND_PATTERN = Pattern.compile("^" + COMMAND_PREFIX + "(?<command>[^ ].*?)(?: (?<parameters>[^ ].*))?$");
+    private static final Pattern COMMAND_PATTERN = Pattern.compile("^" + COMMAND_PREFIX + "(?<input>(?<command>[^ ].*?)(?: (?<parameters>[^ ].*))?)$");
     private static final Pattern SERVER_STARTED_PATTERN = Pattern.compile("\\[Server thread\\/INFO]: Done \\(.+\\)!");
     private static final Pattern SERVER_STOPPING_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "Stopping the server$");
     private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
@@ -117,16 +117,16 @@ public class ServerShell {
         return serverJar;
     }
 
-    public File getDirectory(){
+    public File getDirectory() {
         return this.serverJar.getAbsoluteFile().getParentFile();
     }
 
     private final Map<String, PermissionGroup> permissions = new HashMap<>();
 
-    private class PermissionGroup{
+    private class PermissionGroup {
         private Set<Class<? extends Command>> commands = new HashSet<>();
 
-        public PermissionGroup(Class<? extends Command>... classes){
+        public PermissionGroup(Class<? extends Command>... classes) {
             this.commands.addAll(Arrays.asList(classes));
         }
     }
@@ -137,32 +137,32 @@ public class ServerShell {
         return this.permissions.containsKey(player) && this.permissions.get(player).commands.contains(command.getClass());
     }
 
-    public Map<String, String> getProperties(){
+    public Map<String, String> getProperties() {
         final Map<String, String> properties = new HashMap<>();
-        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader("server.properties"))){
+        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader("server.properties"))) {
             String line;
-            while ((line = bufferedReader.readLine()) != null){
+            while ((line = bufferedReader.readLine()) != null) {
                 final String[] split = line.split("=");
-                if (split.length == 2){
+                if (split.length == 2) {
                     properties.put(split[0], split[1]);
                 }
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return properties;
     }
 
-    public Thread startOnNewThread(){
-        if (this.state != State.OFFLINE){
+    public Thread startOnNewThread() {
+        if (this.state != State.OFFLINE) {
             throw new RuntimeException("Server is already started!");
         }
-        final Thread thread = new Thread(this::startServer);
+        final Thread thread = new Thread(this::start);
         thread.start();
         return thread;
     }
 
-    public void startServer() {
+    public void start() {
         this.onServerStarting();
 
         final List<String> command = new ArrayList<>();
@@ -198,7 +198,7 @@ public class ServerShell {
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         System.out.println(line);
-                        onCommand("server", line);
+                        execute(line);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -216,7 +216,7 @@ public class ServerShell {
         this.onServerStopped();
     }
 
-    public void stop(){
+    public void stop() {
         try {
             execute("stop");
         } catch (IOException e) {
@@ -224,7 +224,7 @@ public class ServerShell {
         }
     }
 
-    private class InputStreamInterceptor implements Runnable{
+    private class InputStreamInterceptor implements Runnable {
 
         private final Process process;
 
@@ -256,7 +256,7 @@ public class ServerShell {
 
                     //Check if a player was authenticated
                     Matcher matcher = PLAYER_AUTHENTICATED_PATTERN.matcher(line);
-                    if (matcher.find()){
+                    if (matcher.find()) {
                         final String player = matcher.group("player");
                         final UUID id = UUID.fromString(matcher.group("id"));
                         pendingAuthenticatedUsers.put(player, id);
@@ -270,44 +270,29 @@ public class ServerShell {
                         final String message = matcher.group("message");
 
                         //Check if this is a command
-                        if (message.startsWith(COMMAND_PREFIX)){
-                            final String input = message.substring(1);
+                        matcher = COMMAND_PATTERN.matcher(line);
+                        if (matcher.find()) {
+                            final String input = matcher.group("input");
+                            final String cmd = matcher.group("command");
 
-                            //Check which command
-                            boolean isValidCommand = false;
-                            for (Command command : getCustomCommands()){
+                            //Check which command was entered
+                            for (Command command : getCustomCommands()) {
                                 matcher = command.getPattern().matcher(input);
-                                if (matcher.find()){
+                                if (matcher.find()) {
                                     final String parameters = matcher.group("parameters");
-                                    //Execute the command
-                                    isValidCommand = true;
-                                    onCommand(player, command.getCommand(), parameters);
+                                    onCommand(player, command, parameters.split(" +"));
                                 }
                             }
 
-                            //Show an error if this wasn't a valid command
+                            //Not a valid command, show an error message
                             System.out.println("ERROR: INVALID COMMAND");
+                            final JSONObject root = Utils.createText("Unknown command:", "red");
+                            final JSONArray extras = new JSONArray();
+                            extras.add(Utils.createText(cmd, "white"));
+                            root.put("extra", extras);
+                            tellraw(player, root);
                         }
-
-                        //Check if this is a command
-                        matcher = COMMAND_PATTERN.matcher(message);
-                        if (matcher.find()) {
-                            final String cmd = matcher.group("command");
-                            final String parameters = matcher.group("parameters") == null ? "" : matcher.group("parameters");
-
-                            //Remove empty space and empty parameters
-                            final String[] split = parameters.split(" +");
-                            int end;
-                            for (end = 0; end < split.length; end++){
-                                if (split[end].length() == 0) break;
-                            }
-                            final String[] params = new String[end];
-                            System.arraycopy(split, 0, params, 0, end);
-
-                            //Execute command
-                            onCommand(player, cmd, params);
-                        }
-                    }else{
+                    } else {
                         //Check if server is done starting
                         if (state == State.STARTING) {
                             matcher = SERVER_STARTED_PATTERN.matcher(line);
@@ -374,47 +359,38 @@ public class ServerShell {
         this.execute("tellraw " + player + " " + jsonObject.toString());
     }
 
-    private void onCommand(final String player, final String command, final String... parameters) throws IOException {
-        //Check if this is a custom command
-        for (Command cmd : customCommands) {
-            if (command.equals(cmd.getCommand())) {
-
-                //Make sure the player is authorized to use this command
-                if (!isAuthorized(player, cmd)) {
-                    final JSONObject root = Utils.createText("Unauthorized: ", "red");
-                    final JSONArray extra = new JSONArray();
-                    extra.add(Utils.createText("You are not authorized to use this command!", "gray"));
-                    root.put("extra", extra);
-                    this.tellraw(player, root);
-                    return;
-                }
-
-                new Thread(() -> {
-                    try {
-                        System.out.println("COMMAND: " + command);
-                        System.out.println("PRAMS: " + parameters.length);
-                        cmd.execute(player, ServerShell.this, parameters);
-                    } catch (Command.InvalidParametersException e) {
-                        try {
-                            tellraw(player, e.getJson());
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        try {
-                            this.tellraw(player, Utils.createText("Error executing command: " + e.toString(), "red"));
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                }).start();
-                return;
-            }
+    private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
+        //Make sure the player is authorized to use this command
+        if (!isAuthorized(player, command)) {
+            final JSONObject root = Utils.createText("Unauthorized: ", "red");
+            final JSONArray extra = new JSONArray();
+            extra.add(Utils.createText("You are not authorized to use this command!", "gray"));
+            root.put("extra", extra);
+            this.tellraw(player, root);
+            return;
         }
 
-        //It was not a custom command, pass it to the server
-        execute(command);
+        //Execute the command
+        new Thread(() -> {
+            try {
+                System.out.println("COMMAND: " + command);
+                System.out.println("PRAMS: " + parameters.length);
+                command.execute(player, ServerShell.this, parameters);
+            } catch (Command.InvalidParametersException e) {
+                try {
+                    tellraw(player, e.getJson());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    this.tellraw(player, Utils.createText("Error executing command: " + e.toString(), "red"));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     public void execute(final String command) throws IOException {
@@ -484,8 +460,8 @@ public class ServerShell {
         return customCommands;
     }
 
-    public Player getPlayer(final String username){
-        for (Player player : this.players){
+    public Player getPlayer(final String username) {
+        for (Player player : this.players) {
             if (player.getUsername().equals(username)) return player;
         }
         return null;
@@ -495,37 +471,37 @@ public class ServerShell {
         return state;
     }
 
-    public long getUptime(){
-        if (this.state == State.ONLINE){
+    public long getUptime() {
+        if (this.state == State.ONLINE) {
             return System.currentTimeMillis() - this.startTime;
         }
         return 0;
     }
 
-    private void onServerStarting(){
-        synchronized (STATE_LOCK){
+    private void onServerStarting() {
+        synchronized (STATE_LOCK) {
             this.state = State.STARTING;
             notifyOnServerStarting();
         }
     }
 
-    private void onServerStarted(){
-        synchronized (STATE_LOCK){
+    private void onServerStarted() {
+        synchronized (STATE_LOCK) {
             this.state = State.ONLINE;
             this.startTime = System.currentTimeMillis();
             notifyOnServerStarted();
         }
     }
 
-    private void onServerStopping(){
-        synchronized (STATE_LOCK){
+    private void onServerStopping() {
+        synchronized (STATE_LOCK) {
             this.state = State.STOPPING;
             notifyOnServerStopping();
         }
     }
 
-    private void onServerStopped(){
-        synchronized (STATE_LOCK){
+    private void onServerStopped() {
+        synchronized (STATE_LOCK) {
             this.players.clear();
             System.out.println("SERVER PROCESS STOPPED");
             this.state = State.OFFLINE;
@@ -537,18 +513,25 @@ public class ServerShell {
     // Event listener
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface EventListener{
+    public interface EventListener {
         void onServerStarting();
+
         void onServerIOready();
+
         void onServerStarted();
+
         void onServerStopping();
+
         void onServerStopped();
+
         void onPlayerConnected(final Player player);
+
         void onPlayerDisconnected(final Player player);
+
         void onOutput(final String message);
     }
 
-    public static class EventAdapter implements EventListener{
+    public static class EventAdapter implements EventListener {
         @Override
         public void onServerStarting() {
 
@@ -592,58 +575,58 @@ public class ServerShell {
 
     private final CopyOnWriteArrayList<EventListener> eventListeners = new CopyOnWriteArrayList<>();
 
-    public void addEventListener(final EventListener listener){
+    public void addEventListener(final EventListener listener) {
         this.eventListeners.add(listener);
     }
 
-    public void removeEventListener(final EventListener listener){
+    public void removeEventListener(final EventListener listener) {
         this.eventListeners.remove(listener);
     }
 
-    private void notifyOnServerStarting(){
-        for (EventListener listener : this.eventListeners){
+    private void notifyOnServerStarting() {
+        for (EventListener listener : this.eventListeners) {
             listener.onServerStarting();
         }
     }
 
-    private void notifyOnServerIOready(){
-        for (EventListener listener : this.eventListeners){
+    private void notifyOnServerIOready() {
+        for (EventListener listener : this.eventListeners) {
             listener.onServerIOready();
         }
     }
 
-    private void notifyOnOutput(final String message){
-        for (EventListener listener : this.eventListeners){
+    private void notifyOnOutput(final String message) {
+        for (EventListener listener : this.eventListeners) {
             listener.onOutput(message);
         }
     }
 
-    private void notifyOnServerStarted(){
-        for (EventListener listener : this.eventListeners){
+    private void notifyOnServerStarted() {
+        for (EventListener listener : this.eventListeners) {
             listener.onServerStarted();
         }
     }
 
-    private void notifyOnServerStopping(){
-        for (EventListener listener : this.eventListeners){
+    private void notifyOnServerStopping() {
+        for (EventListener listener : this.eventListeners) {
             listener.onServerStopping();
         }
     }
 
-    private void notifyOnServerStopped(){
-        for (EventListener listener : this.eventListeners){
+    private void notifyOnServerStopped() {
+        for (EventListener listener : this.eventListeners) {
             listener.onServerStopped();
         }
     }
 
-    private void notifyOnPlayerConnected(final Player player){
-        for (EventListener listener : this.eventListeners){
+    private void notifyOnPlayerConnected(final Player player) {
+        for (EventListener listener : this.eventListeners) {
             listener.onPlayerConnected(player);
         }
     }
 
-    private void notifyOnPlayerDisconnected(final Player player){
-        for (EventListener listener : this.eventListeners){
+    private void notifyOnPlayerDisconnected(final Player player) {
+        for (EventListener listener : this.eventListeners) {
             listener.onPlayerDisconnected(player);
         }
     }
