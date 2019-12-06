@@ -1,5 +1,6 @@
 package com.tycho.mss;
 
+import com.tycho.mss.command.Command;
 import com.tycho.mss.command.SavedLocation;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -12,9 +13,9 @@ import java.util.UUID;
 
 public class Player {
 
-    private final String username;
-
     private final UUID id;
+
+    private final String username;
 
     private final String ipAddress;
 

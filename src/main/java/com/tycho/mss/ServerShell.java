@@ -56,10 +56,42 @@ public class ServerShell {
     private static final Pattern SERVER_STOPPING_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "Stopping the server$");
     private static final Pattern PLAYER_CONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+)\\[(?<ip>.+)] logged in with entity id (?<entity>\\d+) at \\((?<x>.+), (?<y>.+), (?<z>.+)\\)$");
     private static final Pattern PLAYER_DISCONNECTED_PATTERN = Pattern.compile(SERVER_LOG_PREFIX + "(?<player>[^ ]+) lost connection: (?<reason>.+)$");
-
     private static final Pattern PLAYER_AUTHENTICATED_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[User Authenticator #\\d+\\/INFO]: UUID of player (?<player>.+) is (?<id>.+)$");
 
+    /**
+     * The vanilla Minecraft server JAR file used to run the server.
+     */
+    private final File serverJar;
+
+    /**
+     * Lock used to synchronize state.
+     */
     private final Object STATE_LOCK = new Object();
+
+    /**
+     * The set of custom commands.
+     */
+    private final List<Command> customCommands = new ArrayList<>();
+
+    /**
+     * List of players currently connected to the server.
+     */
+    private final List<Player> players = new ArrayList<>();
+
+    /**
+     * Authentication messages arrive before the player actually connects to the server. This list keeps track of those players who have been authenticated, but not connected yet.
+     */
+    private final Map<String, UUID> pendingAuthenticatedUsers = new HashMap<>();
+
+    /**
+     * This map keeps track of which users have permission to use which commands.
+     */
+    private final Map<String, PermissionGroup> permissions = new HashMap<>();
+
+    /**
+     * After calling {@link #awaitResult(String, Pattern)}, the a pending result will be added to this list to keep track of its state.
+     */
+    private final List<PendingResult> pendingResults = new ArrayList<>();
 
     /**
      * The current state of the Minecraft server.
@@ -72,28 +104,15 @@ public class ServerShell {
     private BufferedWriter serverInputWriter;
 
     /**
-     * The set of custom commands.
+     * The time the server started.
      */
-    private final List<Command> customCommands = new ArrayList<>();
-
-    /**
-     * List of players currently connected to the server.
-     */
-    private final List<Player> players = new ArrayList<>();
-
     private long startTime;
-
-    private final File serverJar;
-
-    private String launchOptions = "";
-
-    private final Map<String, UUID> pendingAuthenticatedUsers = new HashMap<>();
 
     public ServerShell(final File serverJar) {
         this.serverJar = serverJar;
 
         final PermissionGroup pleb = new PermissionGroup(HereCommand.class, HelpCommand.class, LocationCommand.class);
-        final PermissionGroup admin = new PermissionGroup(GiveRandomItemCommand.class, GuideCommand.class, BackupCommand.class);
+        final PermissionGroup admin = new PermissionGroup(GiveRandomItemCommand.class, GuideCommand.class, BackupCommand.class, PermissionCommand.class);
         admin.commands.addAll(pleb.commands);
 
         this.permissions.put("TychoTheTaco", admin);
@@ -108,6 +127,7 @@ public class ServerShell {
             addCustomCommand(new LocationCommand());
             addCustomCommand(new GuideCommand());
             addCustomCommand(new BackupCommand());
+            addCustomCommand(new PermissionCommand());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,20 +141,43 @@ public class ServerShell {
         return this.serverJar.getAbsoluteFile().getParentFile();
     }
 
-    private final Map<String, PermissionGroup> permissions = new HashMap<>();
+    public static class PermissionGroup {
 
-    private class PermissionGroup {
+        private final String name;
+
         private Set<Class<? extends Command>> commands = new HashSet<>();
 
-        public PermissionGroup(Class<? extends Command>... classes) {
+        public PermissionGroup(final String name, Class<? extends Command>... classes) {
+            this.name = name;
             this.commands.addAll(Arrays.asList(classes));
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Set<Class<? extends Command>> getCommands() {
+            return commands;
         }
     }
 
-    private final List<PendingResult> pendingResults = new ArrayList<>();
-
     public boolean isAuthorized(final String player, final Command command) {
         return this.permissions.containsKey(player) && this.permissions.get(player).commands.contains(command.getClass());
+    }
+
+    public void authorize(final String player, final Command command){
+        final PermissionGroup permissionGroup = this.permissions.get(player);
+        if (permissionGroup == null){
+            this.permissions.put(player, new PermissionGroup(command.getClass()));
+        }else{
+            this.permissions.get(player).commands.add(command.getClass());
+        }
+    }
+
+    public void deauthorize(final String player, final Command command){
+        if (!this.permissions.containsKey(player)) return;
+
+        this.permissions.get(player).commands.remove(command.getClass());
     }
 
     public Map<String, String> getProperties() {
@@ -178,7 +221,7 @@ public class ServerShell {
         System.out.println(processBuilder.command());
 
         try {
-            Process process = processBuilder.start();
+            final Process process = processBuilder.start();
 
             notifyOnServerIOready();
 
@@ -191,20 +234,6 @@ public class ServerShell {
             final Thread interceptor = new Thread(inputStreamInterceptor);
             interceptor.start();
 
-            //Read this program's input stream
-            new Thread(() -> {
-                try {
-                    final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        System.out.println(line);
-                        execute(line);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
-
             try {
                 process.waitFor();
             } catch (InterruptedException e) {
@@ -213,6 +242,7 @@ public class ServerShell {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         this.onServerStopped();
     }
 
@@ -393,6 +423,11 @@ public class ServerShell {
         }).start();
     }
 
+    /**
+     * Execute the specified command in the Minecraft server process.
+     * @param command The command to execute.
+     * @throws IOException
+     */
     public void execute(final String command) throws IOException {
         this.serverInputWriter.write(command);
         this.serverInputWriter.write("\n");
@@ -516,7 +551,7 @@ public class ServerShell {
     public interface EventListener {
         void onServerStarting();
 
-        void onServerIOready();
+        void onServerIoReady();
 
         void onServerStarted();
 
@@ -538,7 +573,7 @@ public class ServerShell {
         }
 
         @Override
-        public void onServerIOready() {
+        public void onServerIoReady() {
 
         }
 
@@ -591,7 +626,7 @@ public class ServerShell {
 
     private void notifyOnServerIOready() {
         for (EventListener listener : this.eventListeners) {
-            listener.onServerIOready();
+            listener.onServerIoReady();
         }
     }
 
