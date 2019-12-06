@@ -24,6 +24,7 @@ import java.nio.file.Paths;
  * - Create backup schedule
  * - Convert preferences File to Path
  * - Help command should show only authorized commands
+ * - Guide command should ask the target player if they want to be tracked
  */
 public class MinecraftServerShell extends Application{
 
