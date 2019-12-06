@@ -407,8 +407,6 @@ public class ServerShell {
         //Execute the command
         new Thread(() -> {
             try {
-                System.out.println("COMMAND: " + command);
-                System.out.println("PRAMS: " + parameters.length);
                 command.execute(player, ServerShell.this, parameters);
             } catch (Command.InvalidParametersException e) {
                 try {
@@ -439,7 +437,6 @@ public class ServerShell {
     }
 
     private String[] clean(final String parameters){
-        System.out.println("CLEAN: " + parameters);
         final String[] split = parameters.split(" +");
         final List<String> strings = new ArrayList<>();
         for (String string : split){
@@ -451,7 +448,6 @@ public class ServerShell {
         for (int i = 0; i < array.length; i++){
             array[i] = strings.get(i);
         }
-        System.out.println("RETURN " + array.length);
         return array;
     }
 

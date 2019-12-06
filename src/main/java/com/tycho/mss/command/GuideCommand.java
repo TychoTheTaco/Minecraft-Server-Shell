@@ -1,8 +1,9 @@
 package com.tycho.mss.command;
 
-import com.tycho.mss.Player;
 import com.tycho.mss.ServerShell;
+import com.tycho.mss.util.Utils;
 import easytasks.Task;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,6 +16,10 @@ public class GuideCommand extends Command {
     private static final Pattern POSITION_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+)\\.\\d+d, (?<y>-?\\d+)\\.\\d+d, (?<z>-?\\d+)\\.\\d+d]");
 
     private final Map<String, GuideTask> tasks = new HashMap<>();
+
+    private static final int PARTICLE_DISTANCE = 10;
+
+    private static final double DEACTIVATE_RANGE = 5;
 
     public GuideCommand() {
         super("guide");
@@ -72,7 +77,7 @@ public class GuideCommand extends Command {
 
     @Override
     public String getFormat() {
-        return "";
+        return "<player> | <position> | <save_location_index> | stop";
     }
 
     @Override
@@ -122,19 +127,23 @@ public class GuideCommand extends Command {
                     }
 
                     //Calculate direction
+                    final double distance = Math.sqrt(Math.pow(dx - x, 2) + Math.pow(dy - y, 2) + Math.pow(dz - z, 2));
                     final double direction = Math.atan2(dz - z, dx - x);
+                    final double angle = Math.asin((dy - y) / distance);
 
-                    //Spawn particles
-                    for (int i = 1; i < 10; i++){
-                        try {
-                            serverShell.execute("execute at " + player + " run particle composter ~" + (i * Math.cos(direction)) + " ~" + 0 + " ~" + (i * Math.sin(direction)) + " 0 0 0 0 1 normal");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    if (distance <= DEACTIVATE_RANGE){
+                        stop();
+                        final JSONObject root = Utils.createText("Destination reached!", "green");
+                        serverShell.tellraw(player, root);
                     }
 
-                    Thread.sleep(100);
-                }catch (InterruptedException e){
+                    //Spawn particles
+                    for (int i = 1; i < Math.min((int) distance, PARTICLE_DISTANCE); i++){
+                        serverShell.execute("execute at " + player + " run particle composter ~" + String.format("%.2f", i * Math.cos(direction)) + " ~" + String.format("%.2f", i * Math.tan(angle)) + " ~" + String.format("%.2f", i * Math.sin(direction)) + " 0 0 0 0 1 normal");
+                    }
+
+                    Thread.sleep(250);
+                }catch (InterruptedException | IOException e){
                     e.printStackTrace();
                 }
             }
