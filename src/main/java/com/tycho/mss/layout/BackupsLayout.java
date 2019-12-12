@@ -37,8 +37,8 @@ public class BackupsLayout extends MenuPage {
         save_button.setOnAction(event -> {
             //If this is a different backup directory we need to move existing backups to the new location
             final File oldBackupDirectory = Preferences.getBackupDirectory();
-            if (oldBackupDirectory != backupDirectoryInputController.getFile()) {
-                if (oldBackupDirectory != null && oldBackupDirectory.list().length > 0) {
+            if (!backupDirectoryInputController.getFile().equals(oldBackupDirectory)) {
+                if (oldBackupDirectory != null && oldBackupDirectory.exists() && oldBackupDirectory.list().length > 0) {
                     final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to move all existing backups to the new location?", ButtonType.YES, ButtonType.NO);
                     alert.showAndWait();
                     if (alert.getResult() == ButtonType.YES) {

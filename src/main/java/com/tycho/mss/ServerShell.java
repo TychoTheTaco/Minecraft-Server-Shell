@@ -273,15 +273,18 @@ public class ServerShell {
 
                     //Check for pending results
                     boolean handled = false;
-                    final Iterator<PendingResult> iterator = pendingResults.iterator();
-                    while (iterator.hasNext()) {
-                        final PendingResult pendingResult = iterator.next();
-                        final Matcher matcher = pendingResult.getPattern().matcher(line);
-                        if (matcher.find()) {
-                            handled |= pendingResult.onResult(matcher);
-                            iterator.remove();
+                    synchronized (this){
+                        final Iterator<PendingResult> iterator = pendingResults.iterator();
+                        while (iterator.hasNext()) {
+                            final PendingResult pendingResult = iterator.next();
+                            final Matcher matcher = pendingResult.getPattern().matcher(line);
+                            if (matcher.find()) {
+                                handled |= pendingResult.onResult(matcher);
+                                iterator.remove();
+                            }
                         }
                     }
+
                     if (handled) continue;
 
                     //Check if a player was authenticated
@@ -380,6 +383,11 @@ public class ServerShell {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                try {
+                    tellraw("@a", Utils.createText("Shell crashed!", "red"));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             System.out.println("STOPPED INTERCEPTOR");
         }
@@ -454,17 +462,21 @@ public class ServerShell {
     public Matcher awaitResult(final String command, final Pattern pattern) throws InterruptedException {
         final Object LOCK = new Object();
         final Container container = new Container();
-        pendingResults.add(new PendingResult(command, pattern) {
-            @Override
-            boolean onResult(Matcher matcher) {
-                System.out.println("RESULT FOUND: " + matcher.group());
-                container.matcher = matcher;
-                synchronized (LOCK) {
-                    LOCK.notify();
+
+        //Add pending result
+        synchronized (this){
+            pendingResults.add(new PendingResult(command, pattern) {
+                @Override
+                boolean onResult(Matcher matcher) {
+                    System.out.println("RESULT FOUND: " + matcher.group());
+                    container.matcher = matcher;
+                    synchronized (LOCK) {
+                        LOCK.notify();
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        }
 
         synchronized (LOCK) {
             System.out.println("WAITING...");
@@ -480,7 +492,7 @@ public class ServerShell {
         return container.matcher;
     }
 
-    class Container {
+    static class Container {
         Matcher matcher;
     }
 

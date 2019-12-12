@@ -1,1 +1,0 @@
-{"server_jar":"E:\\IntelliJ Projects\\Minecraft Server Shell\\Test Server\\server.jar","backup_directory":"C:\\Users\\Tycho\\Downloads\\ALPHA","launch_options":"-server -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=7 -XX:+AggressiveOpts -Xms3G -Xmx6G"}

@@ -5,6 +5,7 @@ import com.tycho.mss.MenuPage;
 import com.tycho.mss.Player;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Preferences;
+import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
@@ -35,7 +36,7 @@ public class MiniDashboardController extends MenuPage{
     @FXML
     private Button create_backup_button;
 
-    private final com.tycho.mss.util.UiUpdater uiUpdater = new com.tycho.mss.util.UiUpdater(1000) {
+    private final UiUpdater uiUpdater = new UiUpdater(1000) {
         @Override
         protected void onUiUpdate() {
             updateUptime();
@@ -78,10 +79,12 @@ public class MiniDashboardController extends MenuPage{
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
         if (serverShell != null){
-            updateStatus();
-            updateUptime();
-            updatePlayerCount();
-            updateStartStopButton();
+            Platform.runLater(() -> {
+                updateStatus();
+                updateUptime();
+                updatePlayerCount();
+                updateStartStopButton();
+            });
 
             serverShell.addEventListener(new ServerShell.EventAdapter(){
                 @Override

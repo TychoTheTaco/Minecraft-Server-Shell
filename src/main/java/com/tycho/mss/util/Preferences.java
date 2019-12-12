@@ -1,6 +1,6 @@
 package com.tycho.mss.util;
 
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.MinecraftServerShell;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -16,7 +16,7 @@ public class Preferences {
 
     private static JSONObject preferences = new JSONObject();
 
-    private static final File PREFERENCES_FILE = new File(System.getProperty("user.dir") + File.separator + "mss_config.json");
+    private static final File PREFERENCES_FILE = new File(MinecraftServerShell.PRIVATE_DIR + File.separator + "preferences.json");
 
     private static final String PREF_SERVER_JAR = "server_jar";
     private static final String PREF_LAUNCH_OPTIONS = "launch_options";

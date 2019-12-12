@@ -1,6 +1,7 @@
 package com.tycho.mss.layout;
 
 import com.tycho.mss.MenuPage;
+import com.tycho.mss.Player;
 import com.tycho.mss.ServerShell;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -18,6 +19,11 @@ public class ConsoleLayout extends MenuPage {
 
     @FXML
     private TextField console_input;
+
+    private static final List<String> dictionary = new ArrayList<>();
+    static{
+        dictionary.add("say");
+    }
 
     private final List<String> commandHistory = new ArrayList<>();
 
@@ -60,6 +66,13 @@ public class ConsoleLayout extends MenuPage {
                     }
                     event.consume();
                     break;
+
+                case TAB: //Handle autocomplete
+                    final String[] split = console_input.getText().split(" +");
+                    final String word = split[split.length - 1];
+                    console_input.appendText(autocomplete(word));
+                    event.consume();
+                    break;
             }
         });
     }
@@ -69,6 +82,11 @@ public class ConsoleLayout extends MenuPage {
         super.setServerShell(serverShell);
         if (serverShell != null){
             serverShell.addEventListener(new ServerShell.EventAdapter() {
+                @Override
+                public void onServerIoReady() {
+                    console_input.setDisable(false);
+                }
+
                 @Override
                 public void onOutput(String message) {
                     Platform.runLater(() -> {
@@ -80,6 +98,26 @@ public class ConsoleLayout extends MenuPage {
         }
 
         //Console input
-        console_input.setDisable(serverShell == null);
+        console_input.setDisable(serverShell == null || serverShell.getState() != ServerShell.State.ONLINE);
+    }
+
+    private String autocomplete(final String input){
+        if (input.length() <= 0) return "";
+
+        if (getServerShell() != null){
+            for (Player player : getServerShell().getPlayers()){
+                if (player.getUsername().startsWith(input)){
+                    return player.getUsername().replaceFirst(input, "");
+                }
+            }
+        }
+
+        for (String string : dictionary){
+            if (string.startsWith(input)){
+                return string.replaceFirst(input, "");
+            }
+        }
+
+        return "";
     }
 }

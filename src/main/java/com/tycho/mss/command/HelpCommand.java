@@ -54,7 +54,7 @@ public class HelpCommand extends Command {
             final JSONArray extras = new JSONArray();
 
             //Create title text
-            final JSONObject title = Utils.createText("The server accepts the following commands:\n", "");
+            final JSONObject title = Utils.createText("You have access to the following commands:\n", "");
             title.put("bold", false);
             extras.add(title);
 
@@ -64,9 +64,11 @@ public class HelpCommand extends Command {
 
             //List commands and descriptions
             for (Command command : commands){
-                extras.add(Utils.createText(command.getCommand(), "green"));
-                extras.add(Utils.createText(": " + command.getDescription(), ""));
-                extras.add(Utils.createText("\n", ""));
+                if (serverShell.isAuthorized(player, command)){
+                    extras.add(Utils.createText(command.getCommand(), "green"));
+                    extras.add(Utils.createText(": " + command.getDescription(), ""));
+                    extras.add(Utils.createText("\n", ""));
+                }
             }
             extras.remove(extras.size() - 1);
 

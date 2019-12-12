@@ -17,7 +17,9 @@ public class GuideCommand extends Command {
 
     private final Map<String, GuideTask> tasks = new HashMap<>();
 
-    private static final int PARTICLE_DISTANCE = 10;
+    private static final int PARTICLE_COUNT = 10;
+
+    private static final double VERTICAL_OFFSET = 1;
 
     private static final double DEACTIVATE_RANGE = 5;
 
@@ -82,7 +84,7 @@ public class GuideCommand extends Command {
 
     @Override
     public String getDescription() {
-        return "Guides you to another player or location";
+        return "Guides you to another player or location.";
     }
 
     private static class GuideTask extends Task {
@@ -138,8 +140,12 @@ public class GuideCommand extends Command {
                     }
 
                     //Spawn particles
-                    for (int i = 1; i < Math.min((int) distance, PARTICLE_DISTANCE); i++){
-                        serverShell.execute("execute at " + player + " run particle composter ~" + String.format("%.2f", i * Math.cos(direction)) + " ~" + String.format("%.2f", i * Math.tan(angle)) + " ~" + String.format("%.2f", i * Math.sin(direction)) + " 0 0 0 0 1 normal");
+                    for (int i = 1; i < Math.min((int) distance, PARTICLE_COUNT); i++){
+                        serverShell.execute("execute at " + player + " run particle composter"
+                                + " ~" + String.format("%.2f", i * Math.cos(direction))
+                                + " ~" + String.format("%.2f", i * Math.tan(angle) + VERTICAL_OFFSET)
+                                + " ~" + String.format("%.2f", i * Math.sin(direction))
+                                + " 0 0 0 0 1 normal");
                     }
 
                     Thread.sleep(250);
