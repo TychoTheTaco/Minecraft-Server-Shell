@@ -22,7 +22,6 @@ import java.nio.file.Paths;
  * STUFF TO DO:
  * - Create progress bar for moving backups to a new directory
  * - Create backup schedule
- * - Convert preferences File to Path
  * - Help command should show only authorized commands
  *      > different modes: show all, show authorized, show all but different color for auth/non auth
  * - Guide command should ask the target player if they want to be tracked

@@ -10,20 +10,20 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 public class Preferences {
 
     private static JSONObject preferences = new JSONObject();
 
-    private static final File PREFERENCES_FILE = new File(MinecraftServerShell.PRIVATE_DIR + File.separator + "preferences.json");
+    private static final Path PREFERENCES_FILE = MinecraftServerShell.PRIVATE_DIR.resolve("preferences.json");
 
     private static final String PREF_SERVER_JAR = "server_jar";
     private static final String PREF_LAUNCH_OPTIONS = "launch_options";
     private static final String PREF_BACKUP_DIR = "backup_directory";
 
     public static void load(){
-        if (!PREFERENCES_FILE.exists()){
+        if (Files.notExists(PREFERENCES_FILE)){
             System.out.println("Preferences file does not exist! Creating a new one with defaults...");
 
             //Try to find a server JAR in the current directory
@@ -42,7 +42,7 @@ public class Preferences {
 
         //Load preferences
         try {
-            final String string = new String(Files.readAllBytes(Paths.get(PREFERENCES_FILE.getAbsolutePath())));
+            final String string = new String(Files.readAllBytes(PREFERENCES_FILE));
             final JSONObject root = (JSONObject) new JSONParser().parse(string);
             preferences = root;
         }catch (IOException | ParseException e){
@@ -51,7 +51,7 @@ public class Preferences {
     }
 
     public static void save(){
-        try (final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(PREFERENCES_FILE))){
+        try (final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(PREFERENCES_FILE.toFile()))){
             bufferedWriter.write(preferences.toString());
         }catch (IOException e){
             e.printStackTrace();
