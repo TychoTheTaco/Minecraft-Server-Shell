@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 
 import java.io.File;
+import java.text.DecimalFormat;
 
 public class MiniDashboardController extends MenuPage{
 
@@ -45,6 +46,7 @@ public class MiniDashboardController extends MenuPage{
 
     @FXML
     private void initialize() {
+        //Set up "start/stop" button
         start_stop_button.setOnAction(event -> {
             if (getServerShell().getState() == ServerShell.State.ONLINE){
                 getServerShell().stop();
@@ -53,9 +55,15 @@ public class MiniDashboardController extends MenuPage{
             }
         });
 
+        //Set up "Create Backup" button
         create_backup_button.setOnAction(event -> {
-            create_backup_button.setDisable(true);
 
+            //Disable the button
+            create_backup_button.setDisable(true);
+            final String initialButtonText = create_backup_button.getText();
+            create_backup_button.setText("0 %");
+
+            //Make sure a backup directory is specified in the settings
             final File backupDirectory = Preferences.getBackupDirectory();
             if (backupDirectory == null){
                 final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Please specify a backup directory in the settings!", ButtonType.OK);
@@ -64,15 +72,39 @@ public class MiniDashboardController extends MenuPage{
                 return;
             }
 
-            final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile(), new File(backupDirectory + File.separator + System.currentTimeMillis() + ".zip"));
+            //Create backup task and UI updater for button
+            final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile().toPath(), new File(backupDirectory + File.separator + System.currentTimeMillis() + ".zip").toPath());
+            final UiUpdater backupButtonUpdater = new UiUpdater(250) {
+
+                private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##%");
+
+                @Override
+                protected void onUiUpdate() {
+                    create_backup_button.setText(DECIMAL_FORMAT.format(backupTask.getProgress()));
+                }
+            };
             backupTask.addTaskListener(new TaskAdapter(){
                 @Override
+                public void onTaskStarted(ITask task) {
+                    backupButtonUpdater.startOnNewThread();
+                }
+
+                @Override
                 public void onTaskStopped(ITask task) {
-                    create_backup_button.setDisable(false);
+                    try {
+                        backupButtonUpdater.stopAndWait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Platform.runLater(() -> {
+                        create_backup_button.setText(initialButtonText);
+                        create_backup_button.setDisable(false);
+                    });
                 }
             });
             backupTask.startOnNewThread();
         });
+        Platform.runLater(() -> create_backup_button.setPrefWidth(create_backup_button.getWidth()));
     }
 
     @Override

@@ -93,5 +93,6 @@ public class BackupsLayout extends MenuPage {
                 }
             }
         }
+        backups_list_view.getItems().sort((a, b) -> -Long.compare(a.lastModified(), b.lastModified()));
     }
 }

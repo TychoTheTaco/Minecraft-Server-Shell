@@ -2,11 +2,16 @@ package com.tycho.mss.util;
 
 import org.json.simple.JSONObject;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -20,8 +25,24 @@ public class Utils {
         return jsonObject;
     }
 
-    public static String formatTimeHuman(final long millis, final int precision) {
+    public static JSONObject createText(final String... data) {
+        final JSONObject root = new JSONObject();
+        root.put("text", data[0]);
+        root.put("color", data[1]);
 
+        if (data.length > 2) {
+            final JSONObject extras = new JSONObject();
+            for (int i = 2; i < data.length; i += 2) {
+                extras.put("text", data[i]);
+                extras.put("color", data[i + 1]);
+            }
+            root.put("extra", extras);
+        }
+
+        return root;
+    }
+
+    public static String formatTimeHuman(final long millis, final int precision) {
         if (millis == -1) {
             return "infinite time";
         }
@@ -99,7 +120,27 @@ public class Utils {
     }
 
     public static void zip(String sourceDirPath, String zipFilePath) throws IOException {
-        Path p = Files.createFile(Paths.get(zipFilePath));
+        final Path source = Paths.get(sourceDirPath);
+        final List<Path> files = Files.walk(source)
+                .filter(Files::isRegularFile)
+                .collect(Collectors.toList());
+
+        final Path destinationZip = Files.createFile(Paths.get(zipFilePath));
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(destinationZip))) {
+            for (Path path : files){
+                ZipEntry zipEntry = new ZipEntry(source.relativize(path).toString());
+                try {
+                    zipOutputStream.putNextEntry(zipEntry);
+                    Files.copy(path, zipOutputStream);
+                    zipOutputStream.closeEntry();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+        /*Path p = Files.createFile(Paths.get(zipFilePath));
         try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
             Path pp = Paths.get(sourceDirPath);
             Files.walk(pp)
@@ -114,7 +155,7 @@ public class Utils {
                             e.printStackTrace();
                         }
                     });
-        }
+        }*/
     }
 
     public static void unzip(final File source, final File destination) throws IOException {

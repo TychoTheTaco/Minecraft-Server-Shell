@@ -54,7 +54,7 @@ public class HelpCommand extends Command {
             final JSONArray extras = new JSONArray();
 
             //Create title text
-            final JSONObject title = Utils.createText("You have access to the following commands:\n", "");
+            final JSONObject title = Utils.createText("You have access to the following commands:\n", "white");
             title.put("bold", false);
             extras.add(title);
 

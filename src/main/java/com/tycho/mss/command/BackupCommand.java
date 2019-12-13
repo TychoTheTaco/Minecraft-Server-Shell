@@ -3,14 +3,15 @@ package com.tycho.mss.command;
 import com.tycho.mss.BackupTask;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Preferences;
+import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
 public class BackupCommand extends Command {
@@ -31,27 +32,45 @@ public class BackupCommand extends Command {
                 serverShell.tellraw(player, root);
                 return;
             }
-            final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip"));
-            backupTask.addTaskListener(new TaskAdapter() {
+
+            //Save the world
+            serverShell.tellraw("@a", Utils.createText("Saving world...", "dark_aqua"));
+            serverShell.awaitResult("save-all flush", Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: Saved the game$"));
+            serverShell.tellraw("@a", Utils.createText("Creating backup...", "dark_aqua"));
+
+            final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile().toPath(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").toPath());
+            final UiUpdater backupButtonUpdater = new UiUpdater(1000) {
+
+                private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##%");
+
                 @Override
-                public void onTaskStarted(ITask task) {
-                    JSONObject root = Utils.createText("Creating backup...", "white");
+                protected void onUiUpdate() {
                     try {
-                        serverShell.tellraw(player, root);
+                        serverShell.tellraw("@a", Utils.createText(DECIMAL_FORMAT.format(backupTask.getProgress()), "dark_aqua"));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                }
+            };
+            backupTask.addTaskListener(new TaskAdapter() {
+
+                @Override
+                public void onTaskStarted(ITask task) {
+                    backupButtonUpdater.startOnNewThread();
                 }
 
                 @Override
                 public void onTaskStopped(ITask task) {
                     JSONObject root;
+                    try {
+                        backupButtonUpdater.stopAndWait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     if (backupTask.isSuccessful()) {
-                        System.out.println("BACKUP SUCCESSFUL");
-                        root = Utils.createText("Backup Successful!", "green");
+                        root = Utils.createText("Backup successful!", "green");
                     } else {
-                        System.out.println("BACKUP UNSUCESSFUL");
-                        root = Utils.createText("Backup Unsuccessful!", "red");
+                        root = Utils.createText("Backup failed!", "red");
                     }
                     try {
                         serverShell.tellraw(player, root);
