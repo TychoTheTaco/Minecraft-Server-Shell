@@ -89,7 +89,7 @@ public class BackupCommand extends Command {
 
     @Override
     public String getFormat() {
-        return "";
+        return "create | restore | list";
     }
 
     @Override

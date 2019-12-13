@@ -61,7 +61,7 @@ public class MinecraftServerShell extends Application{
     }
 
     public static void restore(final File backup){
-        final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, new File("C:\\Users\\Tycho\\Downloads\\out"));
+        final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, Preferences.getServerJar().getParentFile().toPath());
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Restoring backup...", new ButtonType("Cancel", ButtonBar.ButtonData.OK_DONE));
 
         alert.setOnCloseRequest(event -> {

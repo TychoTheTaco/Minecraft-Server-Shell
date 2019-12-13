@@ -19,7 +19,7 @@ public class GuideCommand extends Command {
 
     private static final int PARTICLE_COUNT = 10;
 
-    private static final double VERTICAL_OFFSET = 1;
+    private static final double VERTICAL_OFFSET = 1.2;
 
     private static final double DEACTIVATE_RANGE = 5;
 

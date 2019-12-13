@@ -6,15 +6,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Locale;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 public class Utils {
 
@@ -119,43 +118,21 @@ public class Utils {
         return String.format(Locale.getDefault(), "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static void zip(String sourceDirPath, String zipFilePath) throws IOException {
-        final Path source = Paths.get(sourceDirPath);
-        final List<Path> files = Files.walk(source)
-                .filter(Files::isRegularFile)
-                .collect(Collectors.toList());
-
-        final Path destinationZip = Files.createFile(Paths.get(zipFilePath));
-        try (ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(destinationZip))) {
-            for (Path path : files){
-                ZipEntry zipEntry = new ZipEntry(source.relativize(path).toString());
-                try {
-                    zipOutputStream.putNextEntry(zipEntry);
-                    Files.copy(path, zipOutputStream);
-                    zipOutputStream.closeEntry();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    public static void deleteDirectory(final Path directory) throws IOException {
+        if (Files.notExists(directory)) return;
+        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
             }
-        }
 
-
-        /*Path p = Files.createFile(Paths.get(zipFilePath));
-        try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
-            Path pp = Paths.get(sourceDirPath);
-            Files.walk(pp)
-                    .filter(path -> !Files.isDirectory(path))
-                    .forEach(path -> {
-                        ZipEntry zipEntry = new ZipEntry(pp.relativize(path).toString());
-                        try {
-                            zs.putNextEntry(zipEntry);
-                            Files.copy(path, zs);
-                            zs.closeEntry();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-        }*/
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     public static void unzip(final File source, final File destination) throws IOException {
@@ -187,13 +164,5 @@ public class Utils {
         zis.closeEntry();
         zis.close();
         fis.close();
-    }
-
-    public static void clean(final File directory) {
-        System.out.println("CLEAN: " + directory);
-        for (File file : directory.listFiles()) {
-            if (file.isDirectory()) clean(file);
-            file.delete();
-        }
     }
 }
