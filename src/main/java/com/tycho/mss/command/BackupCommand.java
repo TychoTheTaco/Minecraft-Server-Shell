@@ -39,7 +39,7 @@ public class BackupCommand extends Command {
             serverShell.tellraw("@a", Utils.createText("Creating backup...", "dark_aqua"));
 
             final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile().toPath(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").toPath());
-            final UiUpdater backupButtonUpdater = new UiUpdater(1000) {
+            final UiUpdater backupButtonUpdater = new UiUpdater(3000) {
 
                 private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##%");
 
@@ -83,7 +83,7 @@ public class BackupCommand extends Command {
         }else if ("restore".equals(parameters[0])){
             System.out.println("Restore");
         }else if ("list".equals(parameters[0])){
-            System.out.println("Restore");
+            System.out.println("List");
         }
     }
 
