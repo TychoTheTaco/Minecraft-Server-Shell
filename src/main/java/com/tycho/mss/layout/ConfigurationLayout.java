@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,9 +44,10 @@ public class ConfigurationLayout extends MenuPage {
         save_button.setOnAction(event -> {
             if (serverJarInputController.isValid()){
                 Preferences.setServerJar(serverJarInputController.getFile());
-                MinecraftServerShell.createServerShell();
+                MinecraftServerShell.refresh();
+                setStatus(Status.OK);
             }else{
-                System.out.println("INVALID SERVER JAR!");
+                setStatus(Status.ERROR);
             }
             Preferences.setLaunchOptions(launch_options_text_field.getText());
             Preferences.save();
@@ -73,6 +75,7 @@ public class ConfigurationLayout extends MenuPage {
             }
         });*/
         //server_properties_table_view.getColumns().add(valueColumn);
+        setStatus(serverJarInputController.isValid() ? Status.OK : Status.ERROR);
     }
 
     /*private ServerShell.LaunchConfiguration loadConfiguration(){

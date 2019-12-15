@@ -25,6 +25,7 @@ import java.nio.file.Paths;
  * - Help command should show only authorized commands
  *      > different modes: show all, show authorized, show all but different color for auth/non auth
  * - Guide command should ask the target player if they want to be tracked
+ * - Make backups show server version. Can be found inside server.jar as version.json
  */
 public class MinecraftServerShell extends Application{
 
@@ -54,7 +55,8 @@ public class MinecraftServerShell extends Application{
         mainLayoutController = loader.getController();
 
         //Attempt to create a server shell
-        createServerShell();
+        serverShell = createServerShell();
+        mainLayoutController.setServerShell(serverShell);
 
         primaryStage.sizeToScene();
         primaryStage.show();
@@ -64,34 +66,37 @@ public class MinecraftServerShell extends Application{
         final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, Preferences.getServerJar().getParentFile().toPath());
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Restoring backup...", new ButtonType("Cancel", ButtonBar.ButtonData.OK_DONE));
 
-        alert.setOnCloseRequest(event -> {
-            if (restoreBackupTask.getState() != Task.State.STOPPED) event.consume();
-        });
-
         restoreBackupTask.addTaskListener(new TaskAdapter(){
             @Override
             public void onTaskStopped(ITask task) {
                 Platform.runLater(alert::close);
             }
         });
+        alert.setOnCloseRequest(event -> {
+            if (restoreBackupTask.getState() != Task.State.STOPPED) event.consume();
+        });
 
         alert.show();
         restoreBackupTask.startOnNewThread();
     }
 
-    public static void createServerShell(){
+    public static void refresh(){
+        serverShell = createServerShell();
+        mainLayoutController.setServerShell(serverShell);
+    }
+
+    private static ServerShell createServerShell(){
         //Validate server jar
         final File serverJar = Preferences.getServerJar();
         if (serverShell == null || serverShell.getServerJar() != serverJar){
             if (serverJar == null || !serverJar.exists()){
-                System.out.println("INVALID SERVER JAR");
-                return;
+                return null;
             }
 
             //Create new server with the updated JAR
-            serverShell = new ServerShell(serverJar);
-            mainLayoutController.setServerShell(serverShell);
+            return new ServerShell(serverJar);
         }
+        return null;
     }
 
     public static void start(){

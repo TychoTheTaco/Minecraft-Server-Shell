@@ -89,7 +89,7 @@ public class ServerShell {
     private final Map<String, PermissionGroup> permissions = new HashMap<>();
 
     /**
-     * After calling {@link #awaitResult(String, Pattern)}, the a pending result will be added to this list to keep track of its state.
+     * After calling {@link #awaitResult(String, Pattern)}, a pending result will be added to this list to keep track of its state.
      */
     private final List<PendingResult> pendingResults = new ArrayList<>();
 

@@ -138,7 +138,7 @@
 }
 
 #module_list_view{
-    -fx-padding: 8px 0px 0px 0px;
+    -fx-padding: 8px 0px 8px 0px;
     -fx-focus-traversable: false;
 }
 

@@ -38,17 +38,25 @@ public class BackupsLayout extends MenuPage {
             //If this is a different backup directory we need to move existing backups to the new location
             final File oldBackupDirectory = Preferences.getBackupDirectory();
             if (!backupDirectoryInputController.getFile().equals(oldBackupDirectory)) {
-                if (oldBackupDirectory != null && oldBackupDirectory.exists() && oldBackupDirectory.list().length > 0) {
-                    final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to move all existing backups to the new location?", ButtonType.YES, ButtonType.NO);
-                    alert.showAndWait();
-                    if (alert.getResult() == ButtonType.YES) {
-                        moveBackupDirectory(Paths.get(oldBackupDirectory.getAbsolutePath()), Paths.get(backupDirectoryInputController.getFile().getAbsolutePath()));
+                if (backupDirectoryInputController.isValid()){
+                    setStatus(Status.OK);
+
+                    //Move backups to new location
+                    if (oldBackupDirectory != null && oldBackupDirectory.exists() && oldBackupDirectory.list().length > 0) {
+                        final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to move all existing backups to the new location?", ButtonType.YES, ButtonType.NO);
+                        alert.showAndWait();
+                        if (alert.getResult() == ButtonType.YES) {
+                            moveBackupDirectory(Paths.get(oldBackupDirectory.getAbsolutePath()), Paths.get(backupDirectoryInputController.getFile().getAbsolutePath()));
+                        }
                     }
+
+                    //Update location
+                    Preferences.setBackupDirectory(backupDirectoryInputController.getFile());
+                    Preferences.save();
+                }else{
+                    setStatus(Status.ERROR);
                 }
 
-                //Update location
-                Preferences.setBackupDirectory(backupDirectoryInputController.getFile());
-                Preferences.save();
                 refresh();
             }
         });
@@ -56,6 +64,7 @@ public class BackupsLayout extends MenuPage {
         backups_list_view.setCellFactory(param -> new BackupListCell());
 
         refresh();
+        setStatus(backupDirectoryInputController.isValid() ? Status.OK : Status.ERROR);
     }
 
     @Override

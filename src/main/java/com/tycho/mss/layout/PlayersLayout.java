@@ -32,7 +32,7 @@ public class PlayersLayout extends MenuPage {
 
         //Session Time
         final TableColumn<Player, String> sessionTimeColumn = new TableColumn<>("Session Time");
-        sessionTimeColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(Utils.formatTimeHuman(System.currentTimeMillis() - param.getValue().getOnConnectTime(), 2)));
+        sessionTimeColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(Utils.formatTimeHuman(param.getValue().getSessionTime(), 2)));
         sessionTimeColumn.setPrefWidth(200);
         players_table_view.getColumns().add(sessionTimeColumn);
 

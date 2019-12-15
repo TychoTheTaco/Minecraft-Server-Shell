@@ -72,6 +72,10 @@ public class MainLayout {
             e.printStackTrace();
         }
 
+        for (MenuItem menuItem : module_list_view.getItems()){
+            ((MenuPage) menuItem.getLoader().getController()).addStatusChangedListener((previous, status) -> module_list_view.refresh());
+        }
+
         module_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             ((MenuPage) newValue.getLoader().getController()).onPageSelected();
             container.setCenter(newValue.getNode());

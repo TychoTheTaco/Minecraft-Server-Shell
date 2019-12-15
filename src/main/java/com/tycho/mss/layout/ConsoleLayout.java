@@ -23,6 +23,7 @@ public class ConsoleLayout extends MenuPage {
     private static final List<String> dictionary = new ArrayList<>();
     static{
         dictionary.add("say");
+        dictionary.add("minecraft:");
     }
 
     private final List<String> commandHistory = new ArrayList<>();

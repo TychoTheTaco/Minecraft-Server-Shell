@@ -81,16 +81,7 @@ public class PermissionsManager {
             System.out.println("TARGET: " + target);
             if (target == null) return;
 
-            final JSONArray savedLocationsArray = (JSONArray) target.get("savedLocations");
-            for (Object object : savedLocationsArray){
-                final JSONObject location = (JSONObject) object;
-                player.getSavedLocations().add(new SavedLocation(
-                        ((Long) location.get("x")).intValue(),
-                        ((Long) location.get("y")).intValue(),
-                        ((Long) location.get("z")).intValue(),
-                        (String) location.get("description"))
-                );
-            }
+            player.load(target);
 
         }catch (IOException | ParseException e){
             e.printStackTrace();

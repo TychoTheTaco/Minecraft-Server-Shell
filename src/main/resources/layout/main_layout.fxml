@@ -11,7 +11,7 @@
           fx:controller="com.tycho.mss.layout.MainLayout">
 
     <!-- Left Pane -->
-    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="180" prefWidth="180" GridPane.vgrow="ALWAYS">
+    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="195" prefWidth="195" GridPane.vgrow="ALWAYS">
         <ListView fx:id="module_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
     </GridPane>
 
