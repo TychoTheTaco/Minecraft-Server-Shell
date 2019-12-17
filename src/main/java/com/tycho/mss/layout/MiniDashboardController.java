@@ -1,9 +1,6 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.BackupTask;
-import com.tycho.mss.MenuPage;
-import com.tycho.mss.Player;
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.*;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
@@ -48,10 +45,10 @@ public class MiniDashboardController extends MenuPage{
     private void initialize() {
         //Set up "start/stop" button
         start_stop_button.setOnAction(event -> {
-            if (getServerShell().getState() == ServerShell.State.ONLINE){
+            if (getServerShell() == null || getServerShell().getState() == ServerShell.State.OFFLINE){
+                MinecraftServerShell.start();
+            }else if (getServerShell().getState() == ServerShell.State.ONLINE){
                 getServerShell().stop();
-            }else if (getServerShell().getState() == ServerShell.State.OFFLINE){
-                getServerShell().startOnNewThread();
             }
         });
 
@@ -199,7 +196,7 @@ public class MiniDashboardController extends MenuPage{
 
     private void updateUptime(){
         if (getServerShell().getState() == ServerShell.State.ONLINE){
-            uptime_label.setText(Utils.formatTimeStopwatch(getServerShell().getUptime(), 2));
+            uptime_label.setText(Utils.formatTimeStopwatch(getServerShell().getUptime(), 3));
         }else{
             uptime_label.setText("");
         }

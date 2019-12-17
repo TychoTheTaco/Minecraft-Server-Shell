@@ -1,5 +1,6 @@
 package com.tycho.mss.command;
 
+import com.tycho.mss.PlayerDatabaseManager;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
@@ -39,6 +40,7 @@ public class LocationCommand extends Command {
             }
 
             serverShell.getPlayer(player).getSavedLocations().add(new SavedLocation(x, y, z, stringBuilder.toString().trim()));
+            PlayerDatabaseManager.save(serverShell.getPlayer(player));
 
             final JSONObject root = Utils.createText("Location saved!", "green");
             serverShell.tellraw(player, root);
@@ -72,6 +74,7 @@ public class LocationCommand extends Command {
                 serverShell.getPlayer(player).getSavedLocations().remove(index);
                 final JSONObject root = Utils.createText("Location removed!", "green");
                 serverShell.tellraw(player, root);
+                PlayerDatabaseManager.save(serverShell.getPlayer(player));
             }catch (NumberFormatException e){
                 throw new InvalidParametersException();
             }

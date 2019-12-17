@@ -26,14 +26,15 @@ import java.nio.file.Paths;
  *      > different modes: show all, show authorized, show all but different color for auth/non auth
  * - Guide command should ask the target player if they want to be tracked
  * - Make backups show server version. Can be found inside server.jar as version.json
+ * - Save player data after command, not on disconnect
  */
 public class MinecraftServerShell extends Application{
 
     public static final String APP_NAME = "Minecraft Server Shell";
 
-    private static ServerShell serverShell;
-
     public static final Path PRIVATE_DIR = Paths.get(System.getProperty("user.dir")).resolve(".mss");
+
+    private static ServerShell serverShell;
 
     private static MainLayout mainLayoutController;
 
@@ -81,8 +82,12 @@ public class MinecraftServerShell extends Application{
     }
 
     public static void refresh(){
-        serverShell = createServerShell();
-        mainLayoutController.setServerShell(serverShell);
+        if (serverShell.getState() == ServerShell.State.OFFLINE){
+            serverShell = createServerShell();
+            mainLayoutController.setServerShell(serverShell);
+        }else{
+            System.out.println("Server must be offline to apply changes!");
+        }
     }
 
     private static ServerShell createServerShell(){
@@ -100,7 +105,7 @@ public class MinecraftServerShell extends Application{
     }
 
     public static void start(){
-        if (serverShell == null) createServerShell();
+        createServerShell();
         serverShell.startOnNewThread();
     }
 

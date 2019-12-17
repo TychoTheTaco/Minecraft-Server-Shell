@@ -273,7 +273,7 @@ public class ServerShell {
 
                     //Check for pending results
                     boolean handled = false;
-                    synchronized (this){
+                    synchronized (pendingResults){
                         final Iterator<PendingResult> iterator = pendingResults.iterator();
                         while (iterator.hasNext()) {
                             final PendingResult pendingResult = iterator.next();
@@ -319,6 +319,8 @@ public class ServerShell {
                                     break;
                                 }
                             }
+
+                            if (cmd.equals("crash")) throw new RuntimeException("Crashed by user");
 
                             //Not a valid command, show an error message
                             if (!isValidCommand){
@@ -388,6 +390,7 @@ public class ServerShell {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                run();
             }
             System.out.println("STOPPED INTERCEPTOR");
         }
@@ -464,7 +467,7 @@ public class ServerShell {
         final Container container = new Container();
 
         //Add pending result
-        synchronized (this){
+        synchronized (pendingResults){
             pendingResults.add(new PendingResult(command, pattern) {
                 @Override
                 boolean onResult(Matcher matcher) {
