@@ -2,6 +2,7 @@ package com.tycho.mss.command;
 
 
 import com.tycho.mss.ServerShell;
+import com.tycho.mss.permission.PermissionsManager;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -64,7 +65,7 @@ public class HelpCommand extends Command {
 
             //List commands and descriptions
             for (Command command : commands){
-                if (serverShell.isAuthorized(player, command)){
+                if (serverShell.getPermissionsManager().isAuthorized(player, command)){
                     extras.add(Utils.createText(command.getCommand(), "green"));
                     extras.add(Utils.createText(": " + command.getDescription(), ""));
                     extras.add(Utils.createText("\n", ""));

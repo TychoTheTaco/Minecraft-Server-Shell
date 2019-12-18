@@ -1,6 +1,8 @@
 package com.tycho.mss;
 
 import com.tycho.mss.command.*;
+import com.tycho.mss.permission.PermissionsManager;
+import com.tycho.mss.permission.Role;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.StreamReader;
 import com.tycho.mss.util.Utils;
@@ -18,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This is a custom shell that wraps around the standard Minecraft server. It can intercept player messages and execute custom commands.
+ * This is a custom shell that wraps around the standard Minecraft server. It can read chat messages and execute custom commands.
  */
 public class ServerShell {
 
@@ -68,12 +70,12 @@ public class ServerShell {
     private final File serverJar;
 
     /**
-     * Lock used to synchronize state.
+     * Mutex used to synchronize state.
      */
-    private final Object STATE_LOCK = new Object();
+    private final Object STATE_MUTEX = new Object();
 
     /**
-     * The set of custom commands.
+     * List of custom commands.
      */
     private final List<Command> customCommands = new ArrayList<>();
 
@@ -88,14 +90,11 @@ public class ServerShell {
     private final Map<String, UUID> pendingAuthenticatedUsers = new HashMap<>();
 
     /**
-     * This map keeps track of which users have permission to use which commands.
-     */
-    private final Map<String, PermissionGroup> permissions = new HashMap<>();
-
-    /**
      * After calling {@link #awaitResult(String, Pattern)}, a pending result will be added to this list to keep track of its state.
      */
     private final List<PendingResult> pendingResults = new ArrayList<>();
+
+    private final PermissionsManager permissionsManager;
 
     /**
      * The current state of the Minecraft server.
@@ -115,13 +114,16 @@ public class ServerShell {
     public ServerShell(final File serverJar) {
         this.serverJar = serverJar;
 
-        final PermissionGroup pleb = new PermissionGroup("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
-        final PermissionGroup admin = new PermissionGroup("admin", GiveRandomItemCommand.class, BackupCommand.class, PermissionCommand.class);
-        admin.commands.addAll(pleb.commands);
+        permissionsManager = new PermissionsManager(Paths.get(getDirectory().getAbsolutePath()));
+        permissionsManager.load();
 
-        this.permissions.put("TychoTheTaco", admin);
-        this.permissions.put("Metroscorpio", pleb);
-        this.permissions.put("Assassin_Actual7", pleb);
+        final Role pleb = new Role("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
+        final Role admin = new Role("admin", GiveRandomItemCommand.class, BackupCommand.class, PermissionCommand.class);
+        admin.getCommands().addAll(pleb.getCommands());
+
+        permissionsManager.assign("TychoTheTaco", admin);
+        permissionsManager.assign("Metroscorpio", pleb);
+        permissionsManager.assign("Assassin_Actual7", pleb);
 
         //Add custom commands
         addCustomCommand(new HereCommand());
@@ -143,45 +145,6 @@ public class ServerShell {
 
     public File getDirectory() {
         return this.serverJar.getAbsoluteFile().getParentFile();
-    }
-
-    public static class PermissionGroup {
-
-        private final String name;
-
-        private Set<Class<? extends Command>> commands = new HashSet<>();
-
-        public PermissionGroup(final String name, Class<? extends Command>... classes) {
-            this.name = name;
-            this.commands.addAll(Arrays.asList(classes));
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Set<Class<? extends Command>> getCommands() {
-            return commands;
-        }
-    }
-
-    public boolean isAuthorized(final String player, final Command command) {
-        return this.permissions.containsKey(player) && this.permissions.get(player).commands.contains(command.getClass());
-    }
-
-    public void authorize(final String player, final Command command){
-        final PermissionGroup permissionGroup = this.permissions.get(player);
-        if (permissionGroup == null){
-            this.permissions.put(player, new PermissionGroup("auth", command.getClass()));
-        }else{
-            this.permissions.get(player).commands.add(command.getClass());
-        }
-    }
-
-    public void deauthorize(final String player, final Command command){
-        if (!this.permissions.containsKey(player)) return;
-
-        this.permissions.get(player).commands.remove(command.getClass());
     }
 
     public Map<String, String> getProperties() {
@@ -324,7 +287,9 @@ public class ServerShell {
                                 }
                             }
 
+                            //TODO: Remove
                             if (cmd.equals("crash")) throw new RuntimeException("Crashed by user");
+                            if (cmd.equals("save")) permissionsManager.save();
 
                             //Not a valid command, show an error message
                             if (!isValidCommand){
@@ -410,7 +375,7 @@ public class ServerShell {
 
     private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
         //Make sure the player is authorized to use this command
-        if (!isAuthorized(player, command)) {
+        if (!permissionsManager.isAuthorized(player, command)) {
             final JSONObject root = Utils.createText("Unauthorized: ", "red");
             final JSONArray extra = new JSONArray();
             extra.add(Utils.createText("You are not authorized to use this command!", "gray"));
@@ -476,38 +441,38 @@ public class ServerShell {
 
         synchronized (LOCK){
             try {
-                synchronized (STATE_LOCK){
+                synchronized (STATE_MUTEX){
                     if (this.state != State.OFFLINE){
                         System.out.println("Waiting...");
                         LOCK.wait();
                     }
-                }
 
-                final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup.toFile(), Paths.get(getDirectory().getAbsolutePath()));
-                restoreBackupTask.addTaskListener(new TaskAdapter(){
-                    @Override
-                    public void onTaskStarted(ITask task) {
-                        System.out.println("Restoring backup...");
-                    }
-
-                    @Override
-                    public void onTaskStopped(ITask task) {
-                        //Restore initial state
-                        switch (initialState){
-                            case STARTING:
-                            case ONLINE:
-                                System.out.println("Restore finished! Starting server...");
-                                startOnNewThread();
-                                break;
-
-                            case STOPPING:
-                            case OFFLINE:
-                                System.out.println("Restore finished!");
-                                break;
+                    final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup.toFile(), Paths.get(getDirectory().getAbsolutePath()));
+                    restoreBackupTask.addTaskListener(new TaskAdapter(){
+                        @Override
+                        public void onTaskStarted(ITask task) {
+                            System.out.println("Restoring backup...");
                         }
-                    }
-                });
-                restoreBackupTask.start();
+
+                        @Override
+                        public void onTaskStopped(ITask task) {
+                            //Restore initial state
+                            switch (initialState){
+                                case STARTING:
+                                case ONLINE:
+                                    System.out.println("Restore finished! Starting server...");
+                                    startOnNewThread();
+                                    break;
+
+                                case STOPPING:
+                                case OFFLINE:
+                                    System.out.println("Restore finished!");
+                                    break;
+                            }
+                        }
+                    });
+                    restoreBackupTask.start();
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -566,6 +531,10 @@ public class ServerShell {
         Matcher matcher;
     }
 
+    public PermissionsManager getPermissionsManager() {
+        return permissionsManager;
+    }
+
     public List<Player> getPlayers() {
         return players;
     }
@@ -613,14 +582,14 @@ public class ServerShell {
     }
 
     private void onServerStarting() {
-        synchronized (STATE_LOCK) {
+        synchronized (STATE_MUTEX) {
             this.state = State.STARTING;
             notifyOnServerStarting();
         }
     }
 
     private void onServerStarted() {
-        synchronized (STATE_LOCK) {
+        synchronized (STATE_MUTEX) {
             this.state = State.ONLINE;
             this.startTime = System.currentTimeMillis();
             notifyOnServerStarted();
@@ -628,14 +597,14 @@ public class ServerShell {
     }
 
     private void onServerStopping() {
-        synchronized (STATE_LOCK) {
+        synchronized (STATE_MUTEX) {
             this.state = State.STOPPING;
             notifyOnServerStopping();
         }
     }
 
     private void onServerStopped() {
-        synchronized (STATE_LOCK) {
+        synchronized (STATE_MUTEX) {
             this.players.clear();
             System.out.println("SERVER PROCESS STOPPED");
             this.state = State.OFFLINE;

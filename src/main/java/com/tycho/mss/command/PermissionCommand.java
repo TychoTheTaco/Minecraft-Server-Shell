@@ -26,7 +26,7 @@ public class PermissionCommand extends Command {
         if (targetCommand == null) throw new InvalidParametersException();
 
         //Determine action
-        switch (parameters[0]){
+        /*switch (parameters[0]){
             case "a":
                 serverShell.authorize(targetPlayer, targetCommand);
                 break;
@@ -34,7 +34,7 @@ public class PermissionCommand extends Command {
             case "d":
                 serverShell.deauthorize(targetPlayer, targetCommand);
                 break;
-        }
+        }*/
     }
 
     @Override

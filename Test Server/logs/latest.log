@@ -1,47 +1,26 @@
-[18:42:21] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18:42:21] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18:42:21] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18:42:21] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18:42:21] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18:42:21] [Server thread/INFO]: Starting minecraft server version 1.15.1
-[18:42:21] [Server thread/INFO]: Loading properties
-[18:42:21] [Server thread/INFO]: Default game type: SPECTATOR
-[18:42:21] [Server thread/INFO]: Generating keypair
-[18:42:21] [Server thread/INFO]: Starting Minecraft server on *:25565
-[18:42:21] [Server thread/INFO]: Using default channel type
-[18:42:22] [Server thread/INFO]: Preparing level "world"
-[18:42:23] [Server thread/INFO]: Reloading ResourceManager: Default
-[18:42:23] [Server thread/INFO]: Loaded 6 recipes
-[18:42:24] [Server thread/INFO]: Loaded 825 advancements
-[18:42:24] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[18:42:26] [Server thread/INFO]: Preparing spawn area: 0%
-[18:42:26] [Server thread/INFO]: Preparing spawn area: 0%
-[18:42:26] [Server thread/INFO]: Preparing spawn area: 0%
-[18:42:27] [Server thread/INFO]: Preparing spawn area: 0%
-[18:42:27] [Server thread/INFO]: Preparing spawn area: 0%
-[18:42:27] [Server-Worker-4/INFO]: Preparing spawn area: 0%
-[18:42:27] [Server thread/INFO]: Preparing spawn area: 50%
-[18:42:28] [Server thread/INFO]: Time elapsed: 3167 ms
-[18:42:28] [Server thread/INFO]: Done (5.147s)! For help, type "help"
-[18:42:34] [User Authenticator #1/INFO]: UUID of player TychoTheTaco is ade89a5f-46f6-4d74-88bf-174ff1e917e8
-[18:42:34] [Server thread/INFO]: TychoTheTaco[/147.92.90.105:62079] logged in with entity id 117 at (-224.54945098647715, 82.0, -151.59436602154526)
-[18:42:34] [Server thread/INFO]: TychoTheTaco joined the game
-[18:42:39] [Server thread/INFO]: <TychoTheTaco> !help
-[18:42:44] [Server thread/INFO]: <TychoTheTaco> !backup list
-[18:42:49] [Server thread/INFO]: <TychoTheTaco> !backup ok
-[18:42:52] [Server thread/INFO]: <TychoTheTaco> !backup
-[18:52:08] [Server thread/INFO]: TychoTheTaco lost connection: Disconnected
-[18:52:08] [Server thread/INFO]: TychoTheTaco left the game
-[18:52:16] [Server thread/INFO]: Stopping the server
-[18:52:16] [Server thread/INFO]: Stopping server
-[18:52:16] [Server thread/INFO]: Saving players
-[18:52:16] [Server thread/INFO]: Saving worlds
-[18:52:16] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:overworld
-[18:52:17] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
-[18:52:17] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:the_nether
-[18:52:17] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[18:52:17] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:the_end
-[18:52:17] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[18:52:17] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
-[18:52:17] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[18:52:17] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[01:02:38] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[01:02:38] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[01:02:38] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[01:02:38] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[01:02:38] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[01:02:38] [Server thread/INFO]: Starting minecraft server version 1.15.1
+[01:02:38] [Server thread/INFO]: Loading properties
+[01:02:38] [Server thread/INFO]: Default game type: SPECTATOR
+[01:02:38] [Server thread/INFO]: Generating keypair
+[01:02:39] [Server thread/INFO]: Starting Minecraft server on *:25565
+[01:02:39] [Server thread/INFO]: Using default channel type
+[01:02:42] [Server thread/INFO]: Preparing level "world"
+[01:02:42] [Server thread/INFO]: Reloading ResourceManager: Default
+[01:02:43] [Server thread/INFO]: Loaded 6 recipes
+[01:02:44] [Server thread/INFO]: Loaded 825 advancements
+[01:02:44] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[01:02:45] [Server thread/INFO]: Preparing spawn area: 0%
+[01:02:45] [Server thread/INFO]: Preparing spawn area: 0%
+[01:02:46] [Server thread/INFO]: Preparing spawn area: 0%
+[01:02:46] [Server thread/INFO]: Preparing spawn area: 0%
+[01:02:46] [Server thread/INFO]: Time elapsed: 1816 ms
+[01:02:46] [Server thread/INFO]: Done (3.666s)! For help, type "help"
+[01:02:51] [User Authenticator #1/INFO]: UUID of player TychoTheTaco is ade89a5f-46f6-4d74-88bf-174ff1e917e8
+[01:02:51] [Server thread/INFO]: TychoTheTaco[/147.92.90.105:57700] logged in with entity id 130 at (-224.54945098647715, 82.0, -151.59436602154526)
+[01:02:51] [Server thread/INFO]: TychoTheTaco joined the game
+[01:02:55] [Server thread/INFO]: <TychoTheTaco> !save
