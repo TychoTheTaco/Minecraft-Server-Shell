@@ -34,6 +34,9 @@ public class MinecraftServerShell extends Application{
 
     public static final String APP_NAME = "Minecraft Server Shell";
 
+    /**
+     * Directory where application files are stored (such as user preferences).
+     */
     public static final Path PRIVATE_DIR = Paths.get(System.getProperty("user.dir")).resolve(".mss");
 
     private static ServerShell serverShell;
