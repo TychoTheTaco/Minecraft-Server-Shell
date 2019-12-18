@@ -105,6 +105,8 @@ public class BackupCommand extends Command {
             for (int i = 0; i < backups.size(); i++){
                 serverShell.tellraw(player, Utils.createText("[" + i + "]: " + SIMPLE_DATE_FORMAT.format(new Date(backups.get(i).toFile().lastModified())), "white"));
             }
+        }else{
+            throw new InvalidParametersException();
         }
     }
 

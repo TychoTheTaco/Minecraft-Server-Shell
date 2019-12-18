@@ -124,14 +124,14 @@ public class ServerShell {
         this.permissions.put("Assassin_Actual7", pleb);
 
         //Add custom commands
+        addCustomCommand(new HereCommand());
+        addCustomCommand(new HelpCommand());
+        addCustomCommand(new LocationCommand());
+        addCustomCommand(new GuideCommand());
+        addCustomCommand(new BackupCommand());
+        addCustomCommand(new PermissionCommand());
         try {
             addCustomCommand(new GiveRandomItemCommand(new File("ids.txt")));
-            addCustomCommand(new HereCommand());
-            addCustomCommand(new HelpCommand());
-            addCustomCommand(new LocationCommand());
-            addCustomCommand(new GuideCommand());
-            addCustomCommand(new BackupCommand());
-            addCustomCommand(new PermissionCommand());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -186,7 +186,7 @@ public class ServerShell {
 
     public Map<String, String> getProperties() {
         final Map<String, String> properties = new HashMap<>();
-        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader("server.properties"))) {
+        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader(getDirectory() + File.separator + "server.properties"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 final String[] split = line.split("=");
@@ -221,7 +221,7 @@ public class ServerShell {
         command.add(this.serverJar.getAbsolutePath());
         command.add("nogui");
 
-        final ProcessBuilder processBuilder = new ProcessBuilder(command);
+        final ProcessBuilder processBuilder = new ProcessBuilder(command).directory(this.serverJar.getParentFile());
         System.out.println(processBuilder.command());
 
         try {

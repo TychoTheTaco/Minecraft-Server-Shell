@@ -93,7 +93,7 @@ public class MinecraftServerShell extends Application{
     }*/
 
     public static void refresh(){
-        if (serverShell.getState() == ServerShell.State.OFFLINE){
+        if (serverShell == null || serverShell.getState() == ServerShell.State.OFFLINE){
             serverShell = createServerShell();
             mainLayoutController.setServerShell(serverShell);
         }else{

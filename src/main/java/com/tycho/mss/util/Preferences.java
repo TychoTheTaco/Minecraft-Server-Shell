@@ -27,6 +27,12 @@ public class Preferences {
         if (Files.notExists(PREFERENCES_FILE)){
             System.out.println("Preferences file does not exist! Creating a new one with defaults...");
 
+            try {
+                Files.createDirectories(PREFERENCES_FILE.getParent());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             //Try to find a server JAR in the current directory
             for (File file : new File(System.getProperty("user.dir")).listFiles()){
                 if (file.getName().contains("server") && file.getName().endsWith("jar")){
