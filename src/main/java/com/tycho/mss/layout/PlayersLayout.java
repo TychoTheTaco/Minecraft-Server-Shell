@@ -106,6 +106,11 @@ public class PlayersLayout extends MenuPage {
         }
     }
 
+    @Override
+    public void onPageHidden() {
+        uiUpdater.stop();
+    }
+
     private class UiUpdater implements Runnable{
 
         private boolean isRunning = false;

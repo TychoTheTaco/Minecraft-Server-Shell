@@ -1,28 +1,37 @@
-[16:59:22] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[16:59:22] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[16:59:22] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[16:59:22] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[16:59:22] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[16:59:22] [Server thread/INFO]: Starting minecraft server version 1.15.1
-[16:59:22] [Server thread/INFO]: Loading properties
-[16:59:22] [Server thread/INFO]: Default game type: SPECTATOR
-[16:59:22] [Server thread/INFO]: Generating keypair
-[16:59:22] [Server thread/INFO]: Starting Minecraft server on *:25565
-[16:59:22] [Server thread/INFO]: Using default channel type
-[16:59:24] [Server thread/INFO]: Preparing level "world"
-[16:59:24] [Server thread/INFO]: Reloading ResourceManager: Default
-[16:59:24] [Server thread/INFO]: Loaded 6 recipes
-[16:59:25] [Server thread/INFO]: Loaded 825 advancements
-[16:59:25] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[16:59:26] [Server thread/INFO]: Preparing spawn area: 0%
-[16:59:26] [Server thread/INFO]: Preparing spawn area: 0%
-[16:59:26] [Server thread/INFO]: Preparing spawn area: 0%
-[16:59:27] [Server-Worker-6/INFO]: Preparing spawn area: 0%
-[16:59:27] [Server thread/INFO]: Preparing spawn area: 0%
-[16:59:28] [Server thread/INFO]: Time elapsed: 2321 ms
-[16:59:28] [Server thread/INFO]: Done (3.947s)! For help, type "help"
-[16:59:39] [User Authenticator #1/INFO]: UUID of player TychoTheTaco is ade89a5f-46f6-4d74-88bf-174ff1e917e8
-[16:59:39] [Server thread/INFO]: TychoTheTaco[/147.92.90.105:60799] logged in with entity id 122 at (-224.54945098647715, 82.0, -151.59436602154526)
-[16:59:40] [Server thread/INFO]: TychoTheTaco joined the game
-[16:59:53] [Server thread/INFO]: <TychoTheTaco> !backup list
-[17:02:42] [Server thread/INFO]: <TychoTheTaco> scoreboard
+[17:46:28] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[17:46:28] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[17:46:28] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[17:46:28] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[17:46:28] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[17:46:28] [Server thread/INFO]: Starting minecraft server version 1.15.1
+[17:46:28] [Server thread/INFO]: Loading properties
+[17:46:28] [Server thread/INFO]: Default game type: SPECTATOR
+[17:46:28] [Server thread/INFO]: Generating keypair
+[17:46:29] [Server thread/INFO]: Starting Minecraft server on *:25565
+[17:46:29] [Server thread/INFO]: Using default channel type
+[17:46:30] [Server thread/INFO]: Preparing level "world"
+[17:46:30] [Server thread/INFO]: Reloading ResourceManager: Default
+[17:46:31] [Server thread/INFO]: Loaded 6 recipes
+[17:46:31] [Server thread/INFO]: Loaded 825 advancements
+[17:46:31] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[17:46:33] [Server thread/INFO]: Preparing spawn area: 0%
+[17:46:33] [Server thread/INFO]: Preparing spawn area: 0%
+[17:46:33] [Server thread/INFO]: Preparing spawn area: 0%
+[17:46:34] [Server thread/INFO]: Preparing spawn area: 0%
+[17:46:34] [Server thread/INFO]: Preparing spawn area: 0%
+[17:46:34] [Server thread/INFO]: Preparing spawn area: 18%
+[17:46:34] [Server thread/INFO]: Time elapsed: 2705 ms
+[17:46:34] [Server thread/INFO]: Done (4.171s)! For help, type "help"
+[17:46:36] [Server thread/INFO]: Stopping the server
+[17:46:36] [Server thread/INFO]: Stopping server
+[17:46:36] [Server thread/INFO]: Saving players
+[17:46:36] [Server thread/INFO]: Saving worlds
+[17:46:36] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:the_nether
+[17:46:36] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[17:46:36] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:the_end
+[17:46:36] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[17:46:36] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:overworld
+[17:46:37] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[17:46:37] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[17:46:37] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[17:46:37] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved

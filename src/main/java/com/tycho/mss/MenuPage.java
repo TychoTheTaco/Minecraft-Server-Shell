@@ -22,6 +22,10 @@ public abstract class MenuPage {
         this.serverShell = serverShell;
     }
 
+    public void onPageHidden(){
+
+    }
+
     public void onPageSelected(){
 
     }

@@ -166,6 +166,11 @@ public class MiniDashboardController extends MenuPage{
         }
     }
 
+    @Override
+    public void onPageHidden() {
+        uiUpdater.stop();
+    }
+
     private void updateStatus(){
         switch (getServerShell().getState()){
             case STARTING:

@@ -79,12 +79,20 @@ public class MainLayout {
         module_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             ((MenuPage) newValue.getLoader().getController()).onPageSelected();
             container.setCenter(newValue.getNode());
+            if (oldValue != null) ((MenuPage) oldValue.getLoader().getController()).onPageHidden();
         });
 
         module_list_view.getSelectionModel().select(getMenuItemIndex("Console"));
 
         //Mini dashboard
         miniDashboard.managedProperty().bind(miniDashboard.visibleProperty());
+    }
+
+    public void onHidden(){
+        miniDashboardController.onPageHidden();
+        for (MenuItem menuItem : module_list_view.getItems()){
+            ((MenuPage) menuItem.getLoader().getController()).onPageHidden();
+        }
     }
 
     private int getMenuItemIndex(final String title){

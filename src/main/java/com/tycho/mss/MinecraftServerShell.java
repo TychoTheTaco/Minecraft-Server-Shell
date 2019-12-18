@@ -7,12 +7,14 @@ import easytasks.Task;
 import easytasks.TaskAdapter;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -61,6 +63,10 @@ public class MinecraftServerShell extends Application{
 
         primaryStage.sizeToScene();
         primaryStage.show();
+        primaryStage.setOnHidden(event -> {
+            if (serverShell != null && serverShell.getState() != ServerShell.State.OFFLINE) serverShell.stop();
+            mainLayoutController.onHidden();
+        });
     }
 
     /*public static void restore(final File backup){
