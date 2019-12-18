@@ -26,7 +26,7 @@ import java.nio.file.Paths;
  *      > different modes: show all, show authorized, show all but different color for auth/non auth
  * - Guide command should ask the target player if they want to be tracked
  * - Make backups show server version. Can be found inside server.jar as version.json
- * - Save player data after command, not on disconnect
+ * - Restoring backups via command should ask first
  */
 public class MinecraftServerShell extends Application{
 
@@ -63,7 +63,12 @@ public class MinecraftServerShell extends Application{
         primaryStage.show();
     }
 
-    public static void restore(final File backup){
+    /*public static void restore(final File backup){
+        if (serverShell == null || serverShell.getState() == ServerShell.State.OFFLINE){
+            //restore now
+        }else{
+            //stop server first
+        }
         final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, Preferences.getServerJar().getParentFile().toPath());
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Restoring backup...", new ButtonType("Cancel", ButtonBar.ButtonData.OK_DONE));
 
@@ -79,7 +84,7 @@ public class MinecraftServerShell extends Application{
 
         alert.show();
         restoreBackupTask.startOnNewThread();
-    }
+    }*/
 
     public static void refresh(){
         if (serverShell.getState() == ServerShell.State.OFFLINE){

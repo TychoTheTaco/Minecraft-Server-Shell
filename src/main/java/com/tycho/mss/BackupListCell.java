@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -55,7 +56,7 @@ public class BackupListCell extends ListCell<File> {
                 final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to restore the backup created on " + SIMPLE_DATE_FORMAT.format(getItem().lastModified()) + "?", ButtonType.YES, ButtonType.NO);
                 alert.showAndWait();
                 if (alert.getResult() == ButtonType.YES) {
-                    MinecraftServerShell.restore(getItem());
+                    MinecraftServerShell.getServerShell().restore(Paths.get(getItem().getAbsolutePath()));
                 }
             });
 

@@ -4,10 +4,14 @@ import com.tycho.mss.command.*;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.StreamReader;
 import com.tycho.mss.util.Utils;
+import easytasks.ITask;
+import easytasks.TaskAdapter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
@@ -385,11 +389,7 @@ public class ServerShell {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                try {
-                    tellraw("@a", Utils.createText("Shell crashed!", "red"));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                tellraw("@a", Utils.createText("Shell crashed!", "red"));
                 run();
             }
             System.out.println("STOPPED INTERCEPTOR");
@@ -400,8 +400,12 @@ public class ServerShell {
         this.customCommands.add(command);
     }
 
-    public void tellraw(final String player, final JSONObject jsonObject) throws IOException {
-        this.execute("tellraw " + player + " " + jsonObject.toString());
+    public void tellraw(final String player, final JSONObject jsonObject) {
+        try {
+            this.execute("tellraw " + player + " " + jsonObject.toString());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
@@ -420,18 +424,10 @@ public class ServerShell {
             try {
                 command.execute(player, ServerShell.this, parameters);
             } catch (Command.InvalidParametersException e) {
-                try {
-                    tellraw(player, e.getJson());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                tellraw(player, e.getJson());
             } catch (Exception e) {
                 e.printStackTrace();
-                try {
-                    this.tellraw(player, Utils.createText("Error executing command: " + e.toString(), "red"));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                this.tellraw(player, Utils.createText("Error executing command: " + e.toString(), "red"));
             }
         }).start();
     }
@@ -445,6 +441,77 @@ public class ServerShell {
         this.serverInputWriter.write(command);
         this.serverInputWriter.write("\n");
         this.serverInputWriter.flush();
+    }
+
+    /**
+     * Restore the world from the specified backup. This method will automatically stop and restart the server if it was already running when this method was called.
+     * @param backup The path to a ZIP file containing a backup of the server.
+     */
+    public void restore(final Path backup){
+        //Remember the initial state to restore later
+        final State initialState = this.state;
+
+        //Make sure the server is offline first
+        final Object LOCK = new Object();
+        if (this.state != State.OFFLINE){
+            tellraw("@a", Utils.createText("Going offline to restore backup...", "white"));
+            try{
+                Thread.sleep(3000);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+
+            addEventListener(new EventAdapter(){
+                @Override
+                public void onServerStopped() {
+                    synchronized (LOCK){
+                        System.out.println("Notify!");
+                        LOCK.notifyAll();
+                    }
+                    removeEventListener(this);
+                }
+            });
+            stop();
+        }
+
+        synchronized (LOCK){
+            try {
+                synchronized (STATE_LOCK){
+                    if (this.state != State.OFFLINE){
+                        System.out.println("Waiting...");
+                        LOCK.wait();
+                    }
+                }
+
+                final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup.toFile(), Paths.get(getDirectory().getAbsolutePath()));
+                restoreBackupTask.addTaskListener(new TaskAdapter(){
+                    @Override
+                    public void onTaskStarted(ITask task) {
+                        System.out.println("Restoring backup...");
+                    }
+
+                    @Override
+                    public void onTaskStopped(ITask task) {
+                        //Restore initial state
+                        switch (initialState){
+                            case STARTING:
+                            case ONLINE:
+                                System.out.println("Restore finished! Starting server...");
+                                startOnNewThread();
+                                break;
+
+                            case STOPPING:
+                            case OFFLINE:
+                                System.out.println("Restore finished!");
+                                break;
+                        }
+                    }
+                });
+                restoreBackupTask.start();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private String[] clean(final String parameters){

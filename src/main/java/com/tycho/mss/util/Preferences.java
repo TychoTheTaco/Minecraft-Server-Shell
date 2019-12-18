@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Preferences {
 
@@ -78,6 +79,12 @@ public class Preferences {
 
     public static void setLaunchOptions(final String string){
         preferences.put(PREF_LAUNCH_OPTIONS, string);
+    }
+
+    public static Path getBackupPath(){
+        final String string = (String) preferences.get(PREF_BACKUP_DIR);
+        if (string == null) return null;
+        return Paths.get(string);
     }
 
     public static File getBackupDirectory(){
