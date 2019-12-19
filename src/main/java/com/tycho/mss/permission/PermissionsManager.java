@@ -116,10 +116,12 @@ public class PermissionsManager {
     public void assign(final String player, final Role role) {
         permissions.computeIfAbsent(role, k -> new HashSet<>());
         permissions.get(role).add(player);
+        save();
     }
 
     public void unassign(final String player, final Role role) {
         permissions.computeIfAbsent(role, k -> new HashSet<>());
         permissions.get(role).remove(player);
+        save();
     }
 }

@@ -47,11 +47,12 @@
     -fx-font-size: 9pt;
     -fx-font-weight: bold;
     -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, #00000080, 6, 0, 0, 0);
 }
 
 .button:hover{
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, #00000080, 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, #000000, 10, 0, 0, 0);
 }
 
 .button:pressed{

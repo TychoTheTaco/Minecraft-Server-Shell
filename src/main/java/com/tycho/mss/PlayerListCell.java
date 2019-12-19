@@ -1,5 +1,7 @@
 package com.tycho.mss;
 
+import com.tycho.mss.permission.PermissionsManager;
+import com.tycho.mss.permission.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -21,7 +23,7 @@ public class PlayerListCell extends ListCell<String> {
     @FXML
     private Button remove_button;
 
-    public PlayerListCell() {
+    public PlayerListCell(final Role role, final PermissionsManager permissionsManager) {
         try {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/player_list_cell.fxml"));
             loader.setController(this);
@@ -35,7 +37,8 @@ public class PlayerListCell extends ListCell<String> {
             });
 
             remove_button.setOnAction(event -> {
-                System.out.println("REMOVE PLAYER");
+                permissionsManager.unassign(getItem(), role);
+                getListView().getItems().remove(getItem());
             });
         }catch (IOException e) {
             throw new RuntimeException(e);

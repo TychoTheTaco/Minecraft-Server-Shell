@@ -7,25 +7,30 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Button?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.PermissionsLayout">
 
     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-background-color: #454545" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-        <Label text="Roles" style="-fx-font-weight: bold;">
+        <GridPane>
             <padding>
                 <Insets top="8" left="8" bottom="8" right="8"/>
             </padding>
-        </Label>
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Roles" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS"/>
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="add_role_button" text="Add Role" />
+        </GridPane>
         <ListView fx:id="roles_list_view"/>
     </VBox>
 
     <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-background-color: #505050" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-        <Label text="Players" style="-fx-font-weight: bold;">
+        <GridPane>
             <padding>
                 <Insets top="8" left="8" bottom="8" right="8"/>
             </padding>
-        </Label>
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Players" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS"/>
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="add_player_button" text="Add Player" />
+        </GridPane>
         <ListView fx:id="players_list_view"/>
     </VBox>
 
