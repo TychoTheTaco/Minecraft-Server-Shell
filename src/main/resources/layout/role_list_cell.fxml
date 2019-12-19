@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListCell?>
+<?import javafx.scene.control.Tooltip?>
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <graphic>
+        <HBox alignment="CENTER">
+            <padding>
+                <Insets left="8" right="8"/>
+            </padding>
+            <GridPane fx:id="grid_pane" HBox.hgrow="ALWAYS">
+                <Label fx:id="name" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"/>
+                <HBox fx:id="buttons" GridPane.columnIndex="2" GridPane.rowIndex="0" spacing="10">
+                    <Button fx:id="edit_button" styleClass="image_button" style="-fx-background-image: url('/icons/round_edit_black_24dp.png');">
+                        <tooltip><Tooltip text="Edit" /></tooltip>
+                    </Button>
+                    <Button fx:id="delete_button" styleClass="image_button" style="-fx-background-image: url('/icons/round_delete_black_24dp.png');">
+                        <tooltip><Tooltip text="Delete" /></tooltip>
+                    </Button>
+                </HBox>
+            </GridPane>
+        </HBox>
+    </graphic>
+</fx:root>

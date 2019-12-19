@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Role {
@@ -36,6 +37,19 @@ public class Role {
 
     public Set<Class<? extends Command>> getCommands() {
         return commands;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return Objects.equals(name, role.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     public JSONObject toJson(){

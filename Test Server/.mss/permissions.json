@@ -1,1 +1,1 @@
-{"permissions":[{"players":["Metroscorpio","Assassin_Actual7"],"name":"pleb","commands":["here","help","location","guide"]},{"players":["TychoTheTaco"],"name":"admin","commands":["here","help","mcrandom","backup","auth","location","guide"]}]}
+{"permissions":[{"players":["TychoTheTaco"],"name":"admin","commands":["BackupCommand","PermissionCommand","GuideCommand","LocationCommand","HereCommand","GiveRandomItemCommand","HelpCommand"]},{"players":["Metroscorpio","Assassin_Actual7"],"name":"pleb","commands":["GuideCommand","LocationCommand","HereCommand","HelpCommand"]}]}

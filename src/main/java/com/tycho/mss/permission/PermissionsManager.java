@@ -13,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -39,7 +40,10 @@ public class PermissionsManager {
             final JSONArray permissionsArray = (JSONArray) root.get("permissions");
             for (Object roleObject : permissionsArray){
                 final Role role = new Role((JSONObject) roleObject);
-                System.out.println("ROLE: " + role);
+                final JSONArray playersArray = (JSONArray) ((JSONObject) roleObject).get("players");
+                for (Object playerObject : playersArray){
+                    assign((String) playerObject, role);
+                }
             }
 
             /*System.out.println("PLAYERS: " + players);
@@ -49,6 +53,8 @@ public class PermissionsManager {
 
             player.load(target);*/
 
+        } catch (NoSuchFileException e){
+            //Ignore
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -97,6 +103,14 @@ public class PermissionsManager {
             if (permissions.get(role).contains(player)) roles.add(role);
         }
         return roles;
+    }
+
+    public List<Role> getRoles(){
+        return new ArrayList<>(permissions.keySet());
+    }
+
+    public List<String> getPlayers(final Role role){
+        return new ArrayList<>(this.permissions.get(role));
     }
 
     public void assign(final String player, final Role role) {

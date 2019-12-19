@@ -2,7 +2,7 @@
     -red: #d14545;
     -green: #45d151;
     -blue: #0093ff;
-    -light_blue: #4fb4ff;
+    -light_blue: #4fb4ff50;
 }
 
 /* ------------------------------------------------------------------------------------ Global ---------------------------------------------------------------------------------- */
@@ -32,7 +32,7 @@
 }
 
 .list-view .list-cell:filled:hover {
-    -fx-background-color: #4a4a4a80;
+    -fx-background-color: -light_blue;
 }
 
 .list-cell{
@@ -146,10 +146,6 @@
     -fx-padding: 4px 8px 4px 8px;
 }
 
-#module_list_view .list-cell:filled:hover {
-    -fx-background-color: -light_blue;
-}
-
 #module_list_view .list-cell:filled:selected {
     -fx-background-color: -blue;
 }
@@ -166,13 +162,6 @@
 
 .stop_button{
     -fx-background-color: -red;
-}
-
-/* ---------------------------------------------------------------------------------- Dashboard --------------------------------------------------------------------------------- */
-
-#players_list{
-    -fx-padding: 0px 5px 5px 5px;
-    -fx-focus-traversable: false;
 }
 
 /* ----------------------------------------------------------------------------------- Players ---------------------------------------------------------------------------------- */
@@ -247,4 +236,10 @@
 
 #server_properties_table_view .column-header .arrow {
     -fx-background-color: white;
+}
+
+/* ---------------------------------------------------------------------------------- Permissions ------------------------------------------------------------------------------- */
+
+#roles_list_view .list-cell:filled:selected {
+    -fx-background-color: -blue;
 }

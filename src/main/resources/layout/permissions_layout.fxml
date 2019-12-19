@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.TableView?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.tycho.mss.layout.PermissionsLayout">
+
+    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-background-color: #454545" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <Label text="Roles" style="-fx-font-weight: bold;">
+            <padding>
+                <Insets top="8" left="8" bottom="8" right="8"/>
+            </padding>
+        </Label>
+        <ListView fx:id="roles_list_view"/>
+    </VBox>
+
+    <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-background-color: #505050" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <Label text="Players" style="-fx-font-weight: bold;">
+            <padding>
+                <Insets top="8" left="8" bottom="8" right="8"/>
+            </padding>
+        </Label>
+        <ListView fx:id="players_list_view"/>
+    </VBox>
+
+</GridPane>
