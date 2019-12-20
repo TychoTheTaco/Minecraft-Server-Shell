@@ -4,20 +4,23 @@ import com.tycho.mss.command.Command;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Role {
 
-    private final String name;
+    private final UUID id = UUID.randomUUID();
+
+    private String name;
 
     private Set<Class<? extends Command>> commands = new HashSet<>();
 
     public Role(final String name, Class<? extends Command>... classes) {
+        this(name, Arrays.asList(classes));
+    }
+
+    public Role(final String name, final List<Class<? extends Command>> commands){
         this.name = name;
-        this.commands.addAll(Arrays.asList(classes));
+        this.commands.addAll(commands);
     }
 
     public Role(final JSONObject jsonObject){
@@ -41,15 +44,13 @@ public class Role {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return Objects.equals(name, role.name);
+        return id.equals(role.getId());
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
+    public UUID getId() {
+        return id;
     }
 
     public JSONObject toJson(){
@@ -69,5 +70,9 @@ public class Role {
                 "name='" + name + '\'' +
                 ", commands=" + commands +
                 '}';
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

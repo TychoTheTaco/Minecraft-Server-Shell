@@ -1,18 +1,19 @@
 package com.tycho.mss;
 
+import com.tycho.mss.layout.EditRoleLayout;
+import com.tycho.mss.permission.PermissionsManager;
 import com.tycho.mss.permission.Role;
-import com.tycho.mss.util.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class RoleListCell extends ListCell<Role> {
 
@@ -31,7 +32,7 @@ public class RoleListCell extends ListCell<Role> {
     @FXML
     private Button delete_button;
 
-    public RoleListCell() {
+    public RoleListCell(final ServerShell serverShell, final PermissionsManager permissionsManager) {
         try {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/role_list_cell.fxml"));
             loader.setController(this);
@@ -45,11 +46,35 @@ public class RoleListCell extends ListCell<Role> {
             });
 
             edit_button.setOnAction(event -> {
-                System.out.println("EDIT ROLE");
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/layout/add_role_layout.fxml"));
+                    Parent root = fxmlLoader.load();
+                    Stage stage = new Stage();
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setTitle("Edit Role");
+                    final EditRoleLayout editRoleLayout = fxmlLoader.getController();
+                    editRoleLayout.setStage(stage);
+                    editRoleLayout.setServerShell(serverShell);
+                    editRoleLayout.setRole(getItem());
+                    final Scene scene = new Scene(root);
+                    scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.showAndWait();
+                    editRoleLayout.getRole();
+                    permissionsManager.save();
+                    getListView().refresh();
+                    getListView().getSelectionModel().select(getItem());
+                    //final Role role = addRoleLayout.getRole();
+                    //getServerShell().getPermissionsManager().addRole(role);
+                    //roles_list_view.getItems().add(role);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
             });
 
             delete_button.setOnAction(event -> {
-                System.out.println("DELETE ROLE");
+                permissionsManager.removeRole(getItem());
+                getListView().getItems().remove(getItem());
             });
         }catch (IOException e) {
             throw new RuntimeException(e);

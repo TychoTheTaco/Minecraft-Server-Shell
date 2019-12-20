@@ -41,28 +41,49 @@ public class PermissionsManager {
             for (Object roleObject : permissionsArray){
                 final Role role = new Role((JSONObject) roleObject);
                 final JSONArray playersArray = (JSONArray) ((JSONObject) roleObject).get("players");
-                for (Object playerObject : playersArray){
-                    assign((String) playerObject, role);
+                if (playersArray.isEmpty()){
+                    addRole(role);
+                }else{
+                    for (Object playerObject : playersArray){
+                        assignNoSave((String) playerObject, role);
+                    }
                 }
             }
-
-            /*System.out.println("PLAYERS: " + players);
-            final JSONObject target = (JSONObject) players.get(player.getId().toString());
-            System.out.println("TARGET: " + target);
-            if (target == null) return;
-
-            player.load(target);*/
-
         } catch (NoSuchFileException e){
             //Ignore
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+        System.out.println("AFTER LOAD: " + this.permissions);
+    }
 
+    public void addRole(final Role role){
+        addRoleNoSave(role);
+        save();
+    }
+
+    public void addRoleNoSave(final Role role){
+        if (!isUnique(role)){
+            System.out.println("ROLE IS NOT UNIQUE: " + role);
+            return;
+        }
+        this.permissions.put(role, new HashSet<>());
+    }
+
+    private boolean isUnique(final Role role){
+        for (Role r : this.permissions.keySet()){
+            if (r.getName().equals(role.getName())) return false;
+        }
+        return true;
+    }
+
+    public void removeRole(final Role role){
+        this.permissions.remove(role);
+        save();
     }
 
     public void save() {
-        System.out.println(permissions);
+        System.out.println("SAVE: " + permissions);
 
         try {
             Files.createDirectories(permissionsFile.getParent());
@@ -110,13 +131,21 @@ public class PermissionsManager {
     }
 
     public List<String> getPlayers(final Role role){
-        return new ArrayList<>(this.permissions.get(role));
+        return new ArrayList<>(this.permissions.getOrDefault(role, new HashSet<>()));
     }
 
     public void assign(final String player, final Role role) {
+        assignNoSave(player, role);
+        save();
+    }
+
+    public void assignNoSave(final String player, final Role role) {
+        if (!permissions.containsKey(role) && !isUnique(role)){
+            System.out.println("ROLE IS NOT UNIQUE: " + role);
+            return;
+        }
         permissions.computeIfAbsent(role, k -> new HashSet<>());
         permissions.get(role).add(player);
-        save();
     }
 
     public void unassign(final String player, final Role role) {
