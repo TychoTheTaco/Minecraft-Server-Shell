@@ -59,7 +59,7 @@ public class PermissionsManager {
         save();
     }
 
-    public void addRoleNoSave(final Role role){
+    private void addRoleNoSave(final Role role){
         if (!isUnique(role)){
             System.out.println("ROLE IS NOT UNIQUE: " + role);
             return;
@@ -134,7 +134,7 @@ public class PermissionsManager {
         save();
     }
 
-    public void assignNoSave(final String player, final Role role) {
+    private void assignNoSave(final String player, final Role role) {
         if (!permissions.containsKey(role) && !isUnique(role)){
             System.out.println("ROLE IS NOT UNIQUE: " + role);
             return;

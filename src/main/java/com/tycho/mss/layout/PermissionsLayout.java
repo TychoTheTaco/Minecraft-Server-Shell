@@ -102,4 +102,15 @@ public class PermissionsLayout extends MenuPage {
         }
         Platform.runLater(() -> roles_list_view.getSelectionModel().select(0));
     }
+
+    @Override
+    public void onPageSelected() {
+        roles_list_view.getItems().clear();
+        if (getServerShell() != null){
+            for (Role role : getServerShell().getPermissionsManager().getRoles()){
+                roles_list_view.getItems().add(role);
+            }
+        }
+        Platform.runLater(() -> roles_list_view.getSelectionModel().select(0));
+    }
 }

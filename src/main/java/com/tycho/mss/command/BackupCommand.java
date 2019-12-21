@@ -1,9 +1,6 @@
 package com.tycho.mss.command;
 
-import com.tycho.mss.BackupTask;
-import com.tycho.mss.MinecraftServerShell;
-import com.tycho.mss.RestoreBackupTask;
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.*;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
@@ -46,9 +43,9 @@ public class BackupCommand extends Command {
             }
 
             //Save the world
-            serverShell.tellraw("@a", Utils.createText("Saving world...", "dark_aqua"));
+            serverShell.tellraw("@a", Utils.createText("Saving world...", Colors.STATUS_MESSAGE_COLOR));
             serverShell.awaitResult("save-all flush", Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: Saved the game$"));
-            serverShell.tellraw("@a", Utils.createText("Creating backup...", "dark_aqua"));
+            serverShell.tellraw("@a", Utils.createText("Creating backup...", Colors.STATUS_MESSAGE_COLOR));
 
             final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile().toPath(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").toPath());
             final UiUpdater progressUpdater = new UiUpdater(3000) {
@@ -57,7 +54,7 @@ public class BackupCommand extends Command {
 
                 @Override
                 protected void onUiUpdate() {
-                    serverShell.tellraw("@a", Utils.createText(DECIMAL_FORMAT.format(backupTask.getProgress()), "dark_aqua"));
+                    serverShell.tellraw("@a", Utils.createText(DECIMAL_FORMAT.format(backupTask.getProgress()), Colors.STATUS_MESSAGE_COLOR));
                 }
             };
             backupTask.addTaskListener(new TaskAdapter() {

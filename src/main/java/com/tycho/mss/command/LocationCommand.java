@@ -45,13 +45,12 @@ public class LocationCommand extends Command {
             final JSONObject root = Utils.createText("Location saved!", "green");
             serverShell.tellraw(player, root);
         }else if ("list".equals(type)){
-            final JSONObject root = Utils.createText("Saved Locations:\n", "white");
-            final JSONArray extra = new JSONArray();
-
             final List<SavedLocation> savedLocations = serverShell.getPlayer(player).getSavedLocations();
             if (savedLocations.isEmpty()){
-                extra.add(Utils.createText("You haven't saved any locations!", "white"));
+                serverShell.tellraw(player, Utils.createText("You haven't saved any locations!", "white"));
             }else{
+                final JSONObject root = Utils.createText("", "white");
+                final JSONArray extra = new JSONArray();
                 for (int i = 0; i < savedLocations.size(); i++){
                     extra.add("[" + i + "]: (");
                     extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getX()), "yellow"));
@@ -64,10 +63,9 @@ public class LocationCommand extends Command {
                     extra.add(Utils.createText("\n", "white"));
                 }
                 extra.remove(extra.size() - 1);
+                root.put("extra", extra);
+                serverShell.tellraw(player, root);
             }
-
-            root.put("extra", extra);
-            serverShell.tellraw(player, root);
         }else if ("remove".equals(type)){
             if (parameters.length < 2){
                 throw new InvalidParametersException();
@@ -89,7 +87,7 @@ public class LocationCommand extends Command {
 
     @Override
     public String getFormat() {
-        return "<save [<notes>] | list | remove <index>>";
+        return "save [<notes>] | list | remove <index>";
     }
 
     @Override

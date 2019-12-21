@@ -244,7 +244,7 @@ public class ServerShell {
 
                     //Check for pending results
                     boolean handled = false;
-                    synchronized (pendingResults){
+                    synchronized (pendingResults) {
                         final Iterator<PendingResult> iterator = pendingResults.iterator();
                         while (iterator.hasNext()) {
                             final PendingResult pendingResult = iterator.next();
@@ -293,15 +293,10 @@ public class ServerShell {
 
                             //TODO: Remove
                             if (cmd.equals("crash")) throw new RuntimeException("Crashed by user");
-                            if (cmd.equals("save")) permissionsManager.save();
 
                             //Not a valid command, show an error message
-                            if (!isValidCommand){
-                                final JSONObject root = Utils.createText("Unknown command: ", "red");
-                                final JSONArray extras = new JSONArray();
-                                extras.add(Utils.createText(input, "white"));
-                                root.put("extra", extras);
-                                tellraw(player, root);
+                            if (!isValidCommand) {
+                                tellraw(player, Utils.createText("Unknown command: ", "red", cmd, "white"));
                             }
                         }
                     } else {
@@ -340,8 +335,7 @@ public class ServerShell {
                             notifyOnPlayerConnected(player);
 
                             //Send welcome message
-                            final JSONObject root = Utils.createText("Welcome to the server " + player.getUsername() + "! Type \"!help\" for a list of commands.", "aqua");
-                            tellraw("@a", root);
+                            tellraw("@a", Utils.createText("Welcome to the server ", "aqua", player.getUsername(), Colors.PLAYER_COLOR, "! Type ", "aqua", "!help", Colors.COMMAND_COLOR, " for a list of commands.", "aqua"));
                         }
 
                         //Check if a player disconnected
@@ -371,7 +365,7 @@ public class ServerShell {
     public void tellraw(final String player, final JSONObject jsonObject) {
         try {
             this.execute("tellraw " + player + " " + jsonObject.toString());
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -406,6 +400,7 @@ public class ServerShell {
 
     /**
      * Execute the specified command in the Minecraft server process.
+     *
      * @param command The command to execute.
      * @throws IOException
      */
@@ -417,85 +412,73 @@ public class ServerShell {
 
     /**
      * Restore the world from the specified backup. This method will automatically stop and restart the server if it was already running when this method was called.
+     *
      * @param backup The path to a ZIP file containing a backup of the server.
      */
-    public void restore(final Path backup){
+    public void restore(final Path backup) {
         //Remember the initial state to restore later
         final State initialState = this.state;
 
         //Make sure the server is offline first
-        final Object LOCK = new Object();
-        if (this.state != State.OFFLINE){
-            tellraw("@a", Utils.createText("Going offline to restore backup...", "white"));
-            try{
-                Thread.sleep(3000);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }
-
-            addEventListener(new EventAdapter(){
-                @Override
-                public void onServerStopped() {
-                    synchronized (LOCK){
-                        System.out.println("Notify!");
-                        LOCK.notifyAll();
-                    }
-                    removeEventListener(this);
-                }
-            });
-            stop();
-        }
-
-        synchronized (LOCK){
+        if (this.state != State.OFFLINE) {
+            tellraw("@a", Utils.createText("Going offline to restore backup...", "dark_aqua"));
             try {
-                synchronized (STATE_MUTEX){
-                    if (this.state != State.OFFLINE){
-                        System.out.println("Waiting...");
-                        LOCK.wait();
-                    }
-
-                    final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup.toFile(), Paths.get(getDirectory().getAbsolutePath()));
-                    restoreBackupTask.addTaskListener(new TaskAdapter(){
-                        @Override
-                        public void onTaskStarted(ITask task) {
-                            System.out.println("Restoring backup...");
-                        }
-
-                        @Override
-                        public void onTaskStopped(ITask task) {
-                            //Restore initial state
-                            switch (initialState){
-                                case STARTING:
-                                case ONLINE:
-                                    System.out.println("Restore finished! Starting server...");
-                                    startOnNewThread();
-                                    break;
-
-                                case STOPPING:
-                                case OFFLINE:
-                                    System.out.println("Restore finished!");
-                                    break;
-                            }
-                        }
-                    });
-                    restoreBackupTask.start();
-                }
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            stop();
+        }
+
+        try {
+            synchronized (STATE_MUTEX) {
+                while (this.state != State.OFFLINE) {
+                    System.out.println("Waiting...");
+                    STATE_MUTEX.wait();
+                }
+
+                final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup.toFile(), Paths.get(getDirectory().getAbsolutePath()));
+                restoreBackupTask.addTaskListener(new TaskAdapter() {
+                    @Override
+                    public void onTaskStarted(ITask task) {
+                        System.out.println("Restoring backup...");
+                    }
+
+                    @Override
+                    public void onTaskStopped(ITask task) {
+                        //Restore initial state
+                        switch (initialState) {
+                            case STARTING:
+                            case ONLINE:
+                                System.out.println("Restore finished! Starting server...");
+                                startOnNewThread();
+                                break;
+
+                            case STOPPING:
+                            case OFFLINE:
+                                System.out.println("Restore finished!");
+                                break;
+                        }
+                    }
+                });
+                restoreBackupTask.start();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    private String[] clean(final String parameters){
+    private String[] clean(final String parameters) {
+        if (parameters == null) return new String[]{};
         final String[] split = parameters.split(" +");
         final List<String> strings = new ArrayList<>();
-        for (String string : split){
-            if (string.length() > 0){
+        for (String string : split) {
+            if (string.length() > 0) {
                 strings.add(string);
             }
         }
         final String[] array = new String[strings.size()];
-        for (int i = 0; i < array.length; i++){
+        for (int i = 0; i < array.length; i++) {
             array[i] = strings.get(i);
         }
         return array;
@@ -506,7 +489,7 @@ public class ServerShell {
         final Container container = new Container();
 
         //Add pending result
-        synchronized (pendingResults){
+        synchronized (pendingResults) {
             pendingResults.add(new PendingResult(command, pattern) {
                 @Override
                 boolean onResult(Matcher matcher) {
@@ -615,6 +598,7 @@ public class ServerShell {
             this.players.clear();
             System.out.println("SERVER PROCESS STOPPED");
             this.state = State.OFFLINE;
+            STATE_MUTEX.notifyAll();
             notifyOnServerStopped();
         }
     }

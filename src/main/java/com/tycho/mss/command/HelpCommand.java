@@ -1,6 +1,7 @@
 package com.tycho.mss.command;
 
 
+import com.tycho.mss.Colors;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.permission.PermissionsManager;
 import com.tycho.mss.util.Utils;
@@ -32,11 +33,11 @@ public class HelpCommand extends Command {
                 final JSONObject root = Utils.createText("", "gray");
                 final JSONArray extras = new JSONArray();
 
-                extras.add(Utils.createText(target.getCommand(), "green"));
+                extras.add(Utils.createText(target.getCommand(), Colors.COMMAND_COLOR));
                 extras.add(Utils.createText(": " + target.getDescription(), ""));
                 extras.add(Utils.createText("\n", ""));
                 extras.add(Utils.createText("Usage:\n", "white"));
-                extras.add(Utils.createText(target.getCommand(), "green"));
+                extras.add(Utils.createText(target.getCommand(), Colors.COMMAND_COLOR));
                 extras.add(Utils.createText(" " + target.getFormat(), "gray"));
 
                 //Display text to user
@@ -66,7 +67,7 @@ public class HelpCommand extends Command {
             //List commands and descriptions
             for (Command command : commands){
                 if (serverShell.getPermissionsManager().isAuthorized(player, command)){
-                    extras.add(Utils.createText(command.getCommand(), "green"));
+                    extras.add(Utils.createText(command.getCommand(), Colors.COMMAND_COLOR));
                     extras.add(Utils.createText(": " + command.getDescription(), ""));
                     extras.add(Utils.createText("\n", ""));
                 }

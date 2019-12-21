@@ -1,5 +1,6 @@
 package com.tycho.mss.util;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.File;
@@ -30,10 +31,12 @@ public class Utils {
         root.put("color", data[1]);
 
         if (data.length > 2) {
-            final JSONObject extras = new JSONObject();
+            final JSONArray extras = new JSONArray();
             for (int i = 2; i < data.length; i += 2) {
-                extras.put("text", data[i]);
-                extras.put("color", data[i + 1]);
+                final JSONObject object = new JSONObject();
+                object.put("text", data[i]);
+                object.put("color", data[i + 1]);
+                extras.add(object);
             }
             root.put("extra", extras);
         }

@@ -1,5 +1,6 @@
 package com.tycho.mss.command;
 
+import com.tycho.mss.Colors;
 import com.tycho.mss.Player;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Utils;
@@ -69,9 +70,9 @@ public class GiveRandomItemCommand extends Command {
         final JSONObject root = Utils.createText("Gave ", "white");
         final JSONArray extra = new JSONArray();
         extra.add(Utils.createText(String.valueOf(count), "dark_green"));
-        extra.add(Utils.createText(" " + item, "yellow"));
+        extra.add(Utils.createText(" " + item, Colors.ITEM_COLOR));
         extra.add(Utils.createText(" to ", ""));
-        extra.add(Utils.createText(player, "light_purple"));
+        extra.add(Utils.createText(player, Colors.PLAYER_COLOR));
         root.put("extra", extra);
         return root;
     }
