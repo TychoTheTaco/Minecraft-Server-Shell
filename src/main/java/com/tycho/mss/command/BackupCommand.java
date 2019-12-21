@@ -1,6 +1,7 @@
 package com.tycho.mss.command;
 
 import com.tycho.mss.*;
+import com.tycho.mss.module.backup.BackupTask;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
@@ -12,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;

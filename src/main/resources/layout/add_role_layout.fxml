@@ -9,7 +9,7 @@
 <?import javafx.scene.control.Button?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.layout.EditRoleLayout" style="-fx-background-color: #505050" prefWidth="500">
+          fx:controller="com.tycho.mss.module.permission.ui.EditRoleLayout" style="-fx-background-color: #505050" prefWidth="500">
 
     <padding>
         <Insets top="8" bottom="8"/>

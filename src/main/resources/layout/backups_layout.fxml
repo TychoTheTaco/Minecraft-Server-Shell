@@ -10,7 +10,7 @@
 <?import javafx.scene.control.Button?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.layout.BackupsLayout">
+          fx:controller="com.tycho.mss.module.backup.BackupsLayout">
 
     <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10" alignment="CENTER_LEFT">
         <padding>

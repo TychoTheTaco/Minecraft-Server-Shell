@@ -3,7 +3,6 @@ package com.tycho.mss.command;
 
 import com.tycho.mss.Colors;
 import com.tycho.mss.ServerShell;
-import com.tycho.mss.permission.PermissionsManager;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

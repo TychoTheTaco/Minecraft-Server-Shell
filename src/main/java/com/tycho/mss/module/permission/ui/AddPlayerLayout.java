@@ -1,22 +1,8 @@
-package com.tycho.mss.layout;
+package com.tycho.mss.module.permission.ui;
 
-import com.tycho.mss.BackupListCell;
-import com.tycho.mss.MenuPage;
-import com.tycho.mss.MoveFilesTask;
-import com.tycho.mss.util.Preferences;
-import easytasks.ITask;
-import easytasks.Task;
-import easytasks.TaskAdapter;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class AddPlayerLayout {
 

@@ -1,8 +1,7 @@
-package com.tycho.mss.layout;
+package com.tycho.mss.module.backup;
 
-import com.tycho.mss.BackupListCell;
+import com.tycho.mss.layout.FileInputLayout;
 import com.tycho.mss.MenuPage;
-import com.tycho.mss.MoveFilesTask;
 import com.tycho.mss.util.Preferences;
 import easytasks.ITask;
 import easytasks.Task;
@@ -31,11 +30,12 @@ public class BackupsLayout extends MenuPage {
 
     @FXML
     private void initialize() {
+        //Backup directory input
         backupDirectoryInputController.setIsDirectory(true);
         backupDirectoryInputController.setFile(Preferences.getBackupDirectory());
+        setStatus(backupDirectoryInputController.isValid() ? Status.OK : Status.ERROR);
 
         save_button.setOnAction(event -> {
-            //If this is a different backup directory we need to move existing backups to the new location
             final File oldBackupDirectory = Preferences.getBackupDirectory();
             if (!backupDirectoryInputController.getFile().equals(oldBackupDirectory)) {
                 if (backupDirectoryInputController.isValid()){
@@ -59,12 +59,13 @@ public class BackupsLayout extends MenuPage {
 
                 refresh();
             }
+
+            setStatus(backupDirectoryInputController.isValid() ? Status.OK : Status.ERROR);
         });
 
+        //Backups list
         backups_list_view.setCellFactory(param -> new BackupListCell());
-
         refresh();
-        setStatus(backupDirectoryInputController.isValid() ? Status.OK : Status.ERROR);
     }
 
     @Override
@@ -73,7 +74,6 @@ public class BackupsLayout extends MenuPage {
     }
 
     private void moveBackupDirectory(final Path source, final Path destination){
-        //Move files to new location
         final MoveFilesTask moveFilesTask = new MoveFilesTask(source, destination);
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Restoring backup...", ButtonType.CANCEL);
 

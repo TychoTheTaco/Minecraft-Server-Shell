@@ -1,4 +1,4 @@
-package com.tycho.mss.permission;
+package com.tycho.mss.module.permission;
 
 import com.tycho.mss.command.Command;
 import org.json.simple.JSONArray;

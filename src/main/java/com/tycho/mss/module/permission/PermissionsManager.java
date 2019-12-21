@@ -1,9 +1,6 @@
-package com.tycho.mss.permission;
+package com.tycho.mss.module.permission;
 
-import com.tycho.mss.Player;
-import com.tycho.mss.ServerShell;
 import com.tycho.mss.command.Command;
-import netscape.javascript.JSObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

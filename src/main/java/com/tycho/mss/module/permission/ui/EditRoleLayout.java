@@ -1,13 +1,8 @@
-package com.tycho.mss.layout;
+package com.tycho.mss.module.permission.ui;
 
-import com.tycho.mss.CommandListCell;
-import com.tycho.mss.RoleListCell;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.command.Command;
-import com.tycho.mss.command.HelpCommand;
-import com.tycho.mss.permission.Role;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import com.tycho.mss.module.permission.Role;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;

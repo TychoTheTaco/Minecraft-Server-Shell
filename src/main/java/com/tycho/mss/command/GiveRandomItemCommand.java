@@ -26,7 +26,7 @@ public class GiveRandomItemCommand extends Command {
         super("mcrandom");
         final BufferedReader bufferedReader = new BufferedReader(new FileReader(idsFile));
         String line;
-        while ((line = bufferedReader.readLine()) != null){
+        while ((line = bufferedReader.readLine()) != null) {
             ids.add(line);
         }
         bufferedReader.close();
@@ -40,9 +40,9 @@ public class GiveRandomItemCommand extends Command {
         final int maxCount = Integer.parseInt(parameters[1]);
 
         //Check for player selectors
-        if (targetPlayer.equals("@a")){
+        if (targetPlayer.equals("@a")) {
             final List<Player> players = serverShell.getPlayers();
-            for (Player p : players){
+            for (Player p : players) {
                 serverShell.tellraw("@a", give(p.getUsername(), maxCount, serverShell));
             }
             return;
@@ -67,13 +67,6 @@ public class GiveRandomItemCommand extends Command {
         serverShell.execute("give " + player + " " + item + " " + count);
 
         //Create message
-        final JSONObject root = Utils.createText("Gave ", "white");
-        final JSONArray extra = new JSONArray();
-        extra.add(Utils.createText(String.valueOf(count), "dark_green"));
-        extra.add(Utils.createText(" " + item, Colors.ITEM_COLOR));
-        extra.add(Utils.createText(" to ", ""));
-        extra.add(Utils.createText(player, Colors.PLAYER_COLOR));
-        root.put("extra", extra);
-        return root;
+        return Utils.createText("Gave ", "white", String.valueOf(count), "dark_green", " " + item, Colors.ITEM_COLOR, " to ", "white", player, Colors.PLAYER_COLOR);
     }
 }

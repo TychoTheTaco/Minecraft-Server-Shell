@@ -7,7 +7,9 @@ import com.tycho.mss.util.Preferences;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +34,8 @@ public class ConfigurationLayout extends MenuPage {
     @FXML
     private void initialize() {
         //Server JAR
-        serverJarInputController.setValidator(file -> file.exists() && file.getName().endsWith("jar"));
+        serverJarInputController.setValidator(File::exists);
+        serverJarInputController.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
 
         //Load the saved configuration
         serverJarInputController.setFile(Preferences.getServerJar());

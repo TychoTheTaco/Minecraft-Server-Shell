@@ -1,6 +1,7 @@
 package com.tycho.mss.layout;
 
 import com.tycho.mss.*;
+import com.tycho.mss.module.backup.BackupTask;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
@@ -174,22 +175,22 @@ public class MiniDashboardController extends MenuPage{
     private void updateStatus(){
         switch (getServerShell().getState()){
             case STARTING:
-                this.status_label.setText("Starting server...");
+                this.status_label.setText("Starting Server...");
                 this.status_label.setTextFill(Paint.valueOf("white"));
                 break;
 
             case ONLINE:
-                this.status_label.setText("Server online");
+                this.status_label.setText("Server Online");
                 this.status_label.setTextFill(Paint.valueOf("#45d151"));
                 break;
 
             case STOPPING:
-                this.status_label.setText("Stopping server...");
+                this.status_label.setText("Stopping Server...");
                 this.status_label.setTextFill(Paint.valueOf("white"));
                 break;
 
             case OFFLINE:
-                this.status_label.setText("Server offline");
+                this.status_label.setText("Server Offline");
                 this.status_label.setTextFill(CustomColor.RED);
                 break;
         }

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.layout.AddPlayerLayout" style="-fx-background-color: #505050">
+          fx:controller="com.tycho.mss.module.permission.ui.AddPlayerLayout" style="-fx-background-color: #505050">
 
     <padding>
         <Insets top="8" bottom="8"/>

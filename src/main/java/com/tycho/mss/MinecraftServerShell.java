@@ -51,6 +51,7 @@ public class MinecraftServerShell extends Application{
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle(APP_NAME);
 
+        //Load user preferences
         Preferences.load();
 
         //Load main layout
@@ -64,6 +65,7 @@ public class MinecraftServerShell extends Application{
         serverShell = createServerShell();
         mainLayoutController.setServerShell(serverShell);
 
+        //Show the main stage
         primaryStage.sizeToScene();
         primaryStage.show();
         primaryStage.setOnHidden(event -> {
@@ -71,29 +73,6 @@ public class MinecraftServerShell extends Application{
             mainLayoutController.onHidden();
         });
     }
-
-    /*public static void restore(final File backup){
-        if (serverShell == null || serverShell.getState() == ServerShell.State.OFFLINE){
-            //restore now
-        }else{
-            //stop server first
-        }
-        final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, Preferences.getServerJar().getParentFile().toPath());
-        final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Restoring backup...", new ButtonType("Cancel", ButtonBar.ButtonData.OK_DONE));
-
-        restoreBackupTask.addTaskListener(new TaskAdapter(){
-            @Override
-            public void onTaskStopped(ITask task) {
-                Platform.runLater(alert::close);
-            }
-        });
-        alert.setOnCloseRequest(event -> {
-            if (restoreBackupTask.getState() != Task.State.STOPPED) event.consume();
-        });
-
-        alert.show();
-        restoreBackupTask.startOnNewThread();
-    }*/
 
     public static void refresh(){
         if (serverShell == null || serverShell.getState() == ServerShell.State.OFFLINE){

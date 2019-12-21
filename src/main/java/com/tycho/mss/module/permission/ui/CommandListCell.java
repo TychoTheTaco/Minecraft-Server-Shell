@@ -1,15 +1,12 @@
-package com.tycho.mss;
+package com.tycho.mss.module.permission.ui;
 
 import com.tycho.mss.command.Command;
-import com.tycho.mss.permission.Role;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 

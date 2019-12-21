@@ -1,13 +1,9 @@
 package com.tycho.mss.command;
 
-import com.tycho.mss.Player;
 import com.tycho.mss.ServerShell;
-import com.tycho.mss.permission.Role;
+import com.tycho.mss.module.permission.Role;
 import com.tycho.mss.util.Utils;
-import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PermissionCommand extends Command {

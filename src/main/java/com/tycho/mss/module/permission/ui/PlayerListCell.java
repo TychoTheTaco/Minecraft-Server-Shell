@@ -1,7 +1,7 @@
-package com.tycho.mss;
+package com.tycho.mss.module.permission.ui;
 
-import com.tycho.mss.permission.PermissionsManager;
-import com.tycho.mss.permission.Role;
+import com.tycho.mss.module.permission.PermissionsManager;
+import com.tycho.mss.module.permission.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;

@@ -1,7 +1,7 @@
-package com.tycho.mss.layout;
+package com.tycho.mss.module.permission.ui;
 
 import com.tycho.mss.*;
-import com.tycho.mss.permission.Role;
+import com.tycho.mss.module.permission.Role;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

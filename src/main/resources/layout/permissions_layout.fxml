@@ -10,7 +10,7 @@
 <?import javafx.scene.control.Button?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.layout.PermissionsLayout">
+          fx:controller="com.tycho.mss.module.permission.ui.PermissionsLayout">
 
     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-background-color: #454545" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <GridPane>

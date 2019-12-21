@@ -73,6 +73,10 @@ public class FileInputLayout {
         this.isDirectory = isDirectory;
     }
 
+    public void addExtensionFilter(final FileChooser.ExtensionFilter extensionFilter){
+        this.fileChooser.getExtensionFilters().add(extensionFilter);
+    }
+
     public interface Validator{
         boolean isValid(final File file);
     }
