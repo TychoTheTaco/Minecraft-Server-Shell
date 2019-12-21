@@ -11,23 +11,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 import static com.tycho.mss.MinecraftServerShell.PRIVATE_DIR;
 
 public class PlayerDatabaseManager {
 
-    private static final Path DATABASE = PRIVATE_DIR.resolve("players.json");
+    private final Path database;
 
-    public static void save(final Player player){
+    public PlayerDatabaseManager(final Path directory){
+        this.database = directory.resolve(".mss").resolve("players.json");
+    }
+
+    public void save(final Player player){
         createIfNotExists();
         try {
-            final String string = new String(Files.readAllBytes(DATABASE));
+            final String string = new String(Files.readAllBytes(database));
             final JSONObject players = (JSONObject) new JSONParser().parse(string);
             players.put(player.getId().toString(), player.toJsonObject());
 
-            final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(DATABASE.toFile()));
+            final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(database.toFile()));
             bufferedWriter.write(players.toString());
             bufferedWriter.close();
         }catch (IOException | ParseException e){
@@ -35,10 +37,10 @@ public class PlayerDatabaseManager {
         }
     }
 
-    private static void createIfNotExists(){
-        if (!Files.exists(DATABASE)){
-            DATABASE.toFile().getParentFile().mkdirs();
-            try (final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(DATABASE.toFile()))){
+    private void createIfNotExists(){
+        if (!Files.exists(database)){
+            database.toFile().getParentFile().mkdirs();
+            try (final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(database.toFile()))){
                 bufferedWriter.write(new JSONObject().toString());
             }catch (IOException e){
                 e.printStackTrace();
@@ -46,10 +48,10 @@ public class PlayerDatabaseManager {
         }
     }
 
-    public static void get(final Player player){
+    public void get(final Player player){
         createIfNotExists();
         try {
-            final String string = new String(Files.readAllBytes(DATABASE));
+            final String string = new String(Files.readAllBytes(database));
             final JSONObject players = (JSONObject) new JSONParser().parse(string);
 
             System.out.println("PLAYERS: " + players);

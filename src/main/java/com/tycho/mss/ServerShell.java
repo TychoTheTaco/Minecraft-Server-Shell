@@ -84,6 +84,8 @@ public class ServerShell {
      */
     private final List<Player> players = new ArrayList<>();
 
+    private final PlayerDatabaseManager playerDatabaseManager;
+
     /**
      * Authentication messages arrive before the player actually connects to the server. This list keeps track of those players who have been authenticated, but not connected yet.
      */
@@ -116,6 +118,8 @@ public class ServerShell {
 
         permissionsManager = new PermissionsManager(Paths.get(getDirectory().getAbsolutePath()));
         permissionsManager.load();
+
+        playerDatabaseManager = new PlayerDatabaseManager(Paths.get(getDirectory().getAbsolutePath()));
 
         final Role pleb = new Role("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
         final Role admin = new Role("admin", GiveRandomItemCommand.class, BackupCommand.class, PermissionCommand.class);
@@ -331,7 +335,7 @@ public class ServerShell {
                             pendingAuthenticatedUsers.remove(username);
 
                             final Player player = new Player(id, username, ipAddress);
-                            PlayerDatabaseManager.get(player);
+                            playerDatabaseManager.get(player);
                             players.add(player);
                             notifyOnPlayerConnected(player);
 
@@ -346,7 +350,7 @@ public class ServerShell {
                             final String username = matcher.group("player");
                             final String reason = matcher.group("reason");
                             final Player player = getPlayer(username);
-                            PlayerDatabaseManager.save(player);
+                            playerDatabaseManager.save(player);
                             notifyOnPlayerDisconnected(player);
                             players.remove(player);
                         }
@@ -357,7 +361,6 @@ public class ServerShell {
                 tellraw("@a", Utils.createText("Shell crashed!", "red"));
                 run();
             }
-            System.out.println("STOPPED INTERCEPTOR");
         }
     }
 
@@ -371,6 +374,10 @@ public class ServerShell {
         }catch (IOException e){
             e.printStackTrace();
         }
+    }
+
+    public PlayerDatabaseManager getPlayerDatabaseManager() {
+        return playerDatabaseManager;
     }
 
     private void onCommand(final String player, final Command command, final String... parameters) throws IOException {

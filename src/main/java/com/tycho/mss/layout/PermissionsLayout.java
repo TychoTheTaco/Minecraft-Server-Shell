@@ -56,8 +56,10 @@ public class PermissionsLayout extends MenuPage {
                     stage.setScene(scene);
                     stage.showAndWait();
                     final Role role = editRoleLayout.getRole();
-                    getServerShell().getPermissionsManager().addRole(role);
-                    roles_list_view.getItems().add(role);
+                    if (role != null){
+                        getServerShell().getPermissionsManager().addRole(role);
+                        roles_list_view.getItems().add(role);
+                    }
                 }catch (IOException e){
                     e.printStackTrace();
                 }

@@ -64,9 +64,6 @@ public class RoleListCell extends ListCell<Role> {
                     permissionsManager.save();
                     getListView().refresh();
                     getListView().getSelectionModel().select(getItem());
-                    //final Role role = addRoleLayout.getRole();
-                    //getServerShell().getPermissionsManager().addRole(role);
-                    //roles_list_view.getItems().add(role);
                 }catch (IOException e){
                     e.printStackTrace();
                 }

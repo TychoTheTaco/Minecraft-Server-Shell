@@ -50,6 +50,8 @@ public class EditRoleLayout {
     }
 
     public Role getRole(){
+        if (role_name_text_field.getText().trim().length() == 0) return null;
+
         final List<Class<? extends Command>> commands = new ArrayList<>();
         for (Command command : commands_list_view.getSelectionModel().getSelectedItems()){
             commands.add(command.getClass());

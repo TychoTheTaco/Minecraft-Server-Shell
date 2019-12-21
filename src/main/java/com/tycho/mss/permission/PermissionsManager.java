@@ -17,8 +17,6 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.*;
 
-import static com.tycho.mss.MinecraftServerShell.PRIVATE_DIR;
-
 public class PermissionsManager {
 
     private final Path permissionsFile;
@@ -28,7 +26,7 @@ public class PermissionsManager {
     private final Map<String, Set<String>> special = new HashMap<>();
 
     public PermissionsManager(final Path directory) {
-        this.permissionsFile = PRIVATE_DIR.resolve("permissions.json");
+        this.permissionsFile = directory.resolve(".mss").resolve("permissions.json");
     }
 
     public void load() {
@@ -54,7 +52,6 @@ public class PermissionsManager {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-        System.out.println("AFTER LOAD: " + this.permissions);
     }
 
     public void addRole(final Role role){
@@ -83,8 +80,6 @@ public class PermissionsManager {
     }
 
     public void save() {
-        System.out.println("SAVE: " + permissions);
-
         try {
             Files.createDirectories(permissionsFile.getParent());
         } catch (IOException e) {

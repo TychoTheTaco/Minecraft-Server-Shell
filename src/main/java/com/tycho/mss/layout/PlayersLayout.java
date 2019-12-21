@@ -3,6 +3,7 @@ package com.tycho.mss.layout;
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.Player;
 import com.tycho.mss.ServerShell;
+import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -18,7 +19,12 @@ public class PlayersLayout extends MenuPage {
     @FXML
     private TableView<Player> players_table_view;
 
-    private final UiUpdater uiUpdater = new UiUpdater();
+    private final UiUpdater uiUpdater = new UiUpdater(1000) {
+        @Override
+        protected void onUiUpdate() {
+            players_table_view.refresh();
+        }
+    };
 
     @FXML
     private void initialize() {
@@ -66,8 +72,11 @@ public class PlayersLayout extends MenuPage {
         players_table_view.getColumns().add(pingColumn);
 
         //players_table_view.getItems().add(new Player("TychoTheTaco", "192.168.1.7"));
+    }
 
-        new Thread(this.uiUpdater).start();
+    @Override
+    public void onPageSelected() {
+        uiUpdater.startOnNewThread();
     }
 
     private class CachedStats{
@@ -109,30 +118,5 @@ public class PlayersLayout extends MenuPage {
     @Override
     public void onPageHidden() {
         uiUpdater.stop();
-    }
-
-    private class UiUpdater implements Runnable{
-
-        private boolean isRunning = false;
-
-        @Override
-        public void run() {
-            this.isRunning = true;
-            while (isRunning){
-                //Update UI
-                players_table_view.refresh();
-
-                //Sleep
-                try {
-                    Thread.sleep(1000);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public void stop(){
-            this.isRunning = false;
-        }
     }
 }

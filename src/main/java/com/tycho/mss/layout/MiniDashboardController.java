@@ -190,7 +190,7 @@ public class MiniDashboardController extends MenuPage{
 
             case OFFLINE:
                 this.status_label.setText("Server offline");
-                this.status_label.setTextFill(Paint.valueOf("#d14545"));
+                this.status_label.setTextFill(CustomColor.RED);
                 break;
         }
     }
