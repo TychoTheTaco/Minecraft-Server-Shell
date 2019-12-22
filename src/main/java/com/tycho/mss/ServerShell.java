@@ -9,6 +9,9 @@ import com.tycho.mss.util.StreamReader;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -198,8 +201,27 @@ public class ServerShell {
             notifyOnServerIOready();
 
             this.serverInputWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-            final StreamReader errorOutput = new StreamReader(process.getErrorStream());
-            errorOutput.start();
+            //final StreamReader errorOutput = new StreamReader(process.getErrorStream());
+            //errorOutput.start();
+
+            //Read error output
+            new Thread(() -> {
+                try {
+                    final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        System.out.println(line);
+                        break;
+                    }
+
+                    Platform.runLater(() -> {
+                        final Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to start server. Launch options may be invalid.", ButtonType.OK);
+                        alert.showAndWait();
+                    });
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }).start();
 
             //Read server output
             final InputStreamInterceptor inputStreamInterceptor = new InputStreamInterceptor(process);

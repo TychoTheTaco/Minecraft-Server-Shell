@@ -77,6 +77,8 @@ public class ConfigurationLayout extends MenuPage {
             }
             Preferences.setLaunchOptions(launch_options_text_field.getText());
             Preferences.save();
+            initialConfiguration = getConfiguration();
+            setDirty(false);
         });
 
         //Key

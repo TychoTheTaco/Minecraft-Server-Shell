@@ -40,6 +40,7 @@ public class CustomCommandsLayout extends MenuPage {
     @Override
     public void setServerShell(ServerShell serverShell) {
         super.setServerShell(serverShell);
+        custom_commands_table_view.getItems().clear();
         if (serverShell != null){
             for (Command command : serverShell.getCustomCommands()){
                 custom_commands_table_view.getItems().add(command);

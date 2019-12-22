@@ -16,7 +16,7 @@
         <padding>
             <Insets top="8" right="8" bottom="8" left="8"/>
         </padding>
-        <Label text="Server Backup Directory:"/>
+        <Label text="Backup Directory:"/>
         <fx:include fx:id="backupDirectoryInput" source="file_input_layout.fxml" HBox.hgrow="ALWAYS"/>
         <Button fx:id="save_button" text="Save"/>
     </HBox>
