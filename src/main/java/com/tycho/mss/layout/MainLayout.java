@@ -3,10 +3,13 @@ package com.tycho.mss.layout;
 import com.tycho.mss.MenuListCell;
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.ServerShell;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
@@ -29,7 +32,7 @@ public class MainLayout {
 
     private ServerShell serverShell;
 
-    public class MenuItem{
+    public class MenuItem {
 
         private final String title;
 
@@ -58,8 +61,16 @@ public class MainLayout {
 
     @FXML
     private void initialize() {
-        //Modules
+        //Set up modules list view
         module_list_view.setCellFactory(param -> new MenuListCell());
+        module_list_view.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (e.isSecondaryButtonDown()) {
+                e.consume();
+            }
+        });
+        module_list_view.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
+        //Add modules
         try {
             //module_list_view.getItems().add(new MenuItem("Dashboard", "dashboard_layout"));
             module_list_view.getItems().add(new MenuItem("Players", "players_layout"));
@@ -69,11 +80,11 @@ public class MainLayout {
             module_list_view.getItems().add(new MenuItem("Backups", "backups_layout"));
             module_list_view.getItems().add(new MenuItem("Permissions", "permissions_layout"));
             module_list_view.getItems().sort(Comparator.comparing(MenuItem::getTitle));
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        for (MenuItem menuItem : module_list_view.getItems()){
+        for (MenuItem menuItem : module_list_view.getItems()) {
             ((MenuPage) menuItem.getLoader().getController()).addStatusChangedListener((previous, status) -> module_list_view.refresh());
         }
 
@@ -89,15 +100,15 @@ public class MainLayout {
         miniDashboard.managedProperty().bind(miniDashboard.visibleProperty());
     }
 
-    public void onHidden(){
+    public void onHidden() {
         miniDashboardController.onPageHidden();
-        for (MenuItem menuItem : module_list_view.getItems()){
+        for (MenuItem menuItem : module_list_view.getItems()) {
             ((MenuPage) menuItem.getLoader().getController()).onPageHidden();
         }
     }
 
-    private int getMenuItemIndex(final String title){
-        for (MenuItem menuItem : module_list_view.getItems()){
+    private int getMenuItemIndex(final String title) {
+        for (MenuItem menuItem : module_list_view.getItems()) {
             if (menuItem.getTitle().equals(title)) return module_list_view.getItems().indexOf(menuItem);
         }
         return -1;
@@ -107,14 +118,14 @@ public class MainLayout {
         this.serverShell = serverShell;
 
         //Update modules
-        for (MenuItem menuItem : module_list_view.getItems()){
+        for (MenuItem menuItem : module_list_view.getItems()) {
             ((MenuPage) menuItem.getLoader().getController()).setServerShell(serverShell);
         }
 
         //Update mini dashboard
-        if (serverShell == null){
+        if (serverShell == null) {
             miniDashboard.setVisible(false);
-        }else{
+        } else {
             miniDashboard.setVisible(true);
         }
         miniDashboardController.setServerShell(serverShell);

@@ -36,12 +36,15 @@ public class FileInputLayout {
             }else{
                 this.input.getStyleClass().add("invalid_input");
             }
+            if (onTextChanged != null) onTextChanged.run();
         });
         this.button.setOnAction(event -> {
             final File file;
             if (isDirectory){
+                if (isValid()) directoryChooser.setInitialDirectory(getFile());
                 file = directoryChooser.showDialog(((Node) event.getTarget()).getScene().getWindow());
             }else{
+                if (isValid()) fileChooser.setInitialDirectory(getFile().getParentFile());
                 file = fileChooser.showOpenDialog(((Node) event.getTarget()).getScene().getWindow());
             }
 
@@ -85,5 +88,11 @@ public class FileInputLayout {
 
     public void setValidator(Validator validator) {
         this.validator = validator;
+    }
+
+    private Runnable onTextChanged;
+
+    public void setOnTextChanged(Runnable onTextChanged) {
+        this.onTextChanged = onTextChanged;
     }
 }
