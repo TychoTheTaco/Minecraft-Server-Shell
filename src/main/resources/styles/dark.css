@@ -18,14 +18,6 @@
     -fx-text-fill: white;
 }
 
-.menu .label{
-    -fx-font-size: 10pt;
-}
-
-.menu-item .label {
-    -fx-font-size: 10pt;
-}
-
 .list-view{
     -fx-padding: 0px;
     -fx-background-color: transparent;
@@ -60,6 +52,8 @@
 }
 
 .image_button{
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 0;
@@ -111,7 +105,7 @@
 
 .table-view .table-cell{
     -fx-text-fill: white;
-    -fx-font-size: 12pt;
+    -fx-font-size: 1.2em;
 }
 
 .table-view .table-row-cell{
@@ -198,7 +192,7 @@
 
 #console_input{
     -fx-font-family: Consolas;
-    -fx-font-size: 12pt;
+    -fx-font-size: 1.2em;
     -fx-background-color: #525252;
     -fx-border-style: none;
     -fx-text-fill: white;
@@ -222,7 +216,7 @@
 
 .server_properties_table_view .table-cell{
     -fx-text-fill: white;
-    -fx-font-size: 12pt;
+    -fx-font-size: 1.2em;
 }
 
 #server_properties_table_view .table-row-cell{

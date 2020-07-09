@@ -9,14 +9,14 @@ import easytasks.Task;
 import easytasks.TaskAdapter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class BackupsLayout extends MenuPage {
 
@@ -28,6 +28,9 @@ public class BackupsLayout extends MenuPage {
 
     @FXML
     private Button save_button;
+
+    @FXML
+    private Label no_backups_found_label;
 
     @FXML
     private void initialize() {
@@ -96,12 +99,23 @@ public class BackupsLayout extends MenuPage {
         backups_list_view.getItems().clear();
         final Path backupsDirectory = Preferences.getBackupDirectory();
         if (backupsDirectory != null && Files.exists(backupsDirectory)) {
-            for (Path path : backupsDirectory) {
-                if (path.getFileName().toString().endsWith("zip")) {
-                    backups_list_view.getItems().add(path);
-                }
+            try {
+                Files.walk(backupsDirectory).filter(new Predicate<Path>() {
+                    @Override
+                    public boolean test(Path path) {
+                        return path.getFileName().toString().endsWith("zip");
+                    }
+                }).forEach(new Consumer<Path>() {
+                    @Override
+                    public void accept(Path path) {
+                        backups_list_view.getItems().add(path);
+                    }
+                });
+            }catch (IOException e){
+                e.printStackTrace();
             }
         }
+
         backups_list_view.getItems().sort((a, b) -> {
             try {
                 return -Long.compare(Files.getLastModifiedTime(a).toMillis(), Files.getLastModifiedTime(b).toMillis());
@@ -110,5 +124,9 @@ public class BackupsLayout extends MenuPage {
             }
             return 0;
         });
+
+        if (!backups_list_view.getItems().isEmpty() && no_backups_found_label.getParent() != null){
+            ((GridPane) no_backups_found_label.getParent()).getChildren().remove(no_backups_found_label);
+        }
     }
 }
