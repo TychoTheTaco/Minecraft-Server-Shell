@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" style="-fx-padding: 0px;">
     <graphic>
+        <!-- This Hbox is necessary for some reason -->
         <HBox alignment="CENTER">
-            <padding>
-                <Insets left="8" right="8"/>
-            </padding>
-            <GridPane fx:id="grid_pane" HBox.hgrow="ALWAYS">
-                <Label fx:id="dateCreated" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"/>
+            <GridPane fx:id="grid_pane" minHeight="32" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <padding>
+                    <Insets left="8" right="8" />
+                </padding>
+                <Label fx:id="dateCreated" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
                 <Label fx:id="size" GridPane.columnIndex="1" GridPane.rowIndex="0">
                     <padding>
-                        <Insets left="8" right="8"/>
+                        <Insets left="8" right="8" />
                     </padding>
                 </Label>
-                <HBox fx:id="buttons" GridPane.columnIndex="2" GridPane.rowIndex="0" spacing="10">
-                    <Button fx:id="restore_button" styleClass="image_button" style="-fx-background-image: url('/icons/round_restore_black_24dp.png');">
+                <HBox fx:id="buttons" alignment="CENTER" spacing="10" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                    <Button fx:id="restore_button" style="-fx-background-image: url('/icons/round_restore_black_24dp.png');" styleClass="image_button">
                         <tooltip><Tooltip text="Restore" /></tooltip>
                     </Button>
-                    <Button fx:id="delete_button" styleClass="image_button" style="-fx-background-image: url('/icons/round_delete_black_24dp.png');">
+                    <Button fx:id="delete_button" style="-fx-background-image: url('/icons/round_delete_black_24dp.png');" styleClass="image_button">
                         <tooltip><Tooltip text="Delete" /></tooltip>
                     </Button>
                 </HBox>

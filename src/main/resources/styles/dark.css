@@ -3,18 +3,18 @@
     -green: #45d151;
     -blue: #0093ff;
     -light_blue: #4fb4ff;
+    -fx-font-size: 12pt;
 }
 
 /* ------------------------------------------------------------------------------------ Global ---------------------------------------------------------------------------------- */
 
 .label{
-    -fx-font-size: 1.2em;
     -fx-text-fill: white;
     -fx-text-alignment: center;
 }
 
 .check-box{
-    -fx-font-size: 1.2em;
+    -fx-font-size: 0.9em;
     -fx-text-fill: white;
 }
 
@@ -36,7 +36,7 @@
 
 .button{
     -fx-background-color: -blue;
-    -fx-font-size: 1.2em;
+    -fx-font-size: 0.9em;
     -fx-font-weight: bold;
     -fx-text-fill: white;
     -fx-effect: dropshadow(three-pass-box, #00000080, 6, 0, 0, 0);
@@ -83,7 +83,7 @@
     -fx-background-color: #222222, #737373;
     -fx-background-insets: 0, 1;
     -fx-text-fill: white;
-    -fx-font-size: 1.2em;
+    -fx-font-size: 0.9em
 }
 
 .invalid_input{
@@ -105,7 +105,7 @@
 
 .table-view .table-cell{
     -fx-text-fill: white;
-    -fx-font-size: 1.2em;
+    -fx-padding: 0px 4px 0px 4px;
 }
 
 .table-view .table-row-cell{
@@ -192,7 +192,6 @@
 
 #console_input{
     -fx-font-family: Consolas;
-    -fx-font-size: 1.2em;
     -fx-background-color: #525252;
     -fx-border-style: none;
     -fx-text-fill: white;
@@ -216,7 +215,6 @@
 
 .server_properties_table_view .table-cell{
     -fx-text-fill: white;
-    -fx-font-size: 1.2em;
 }
 
 #server_properties_table_view .table-row-cell{

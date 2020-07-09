@@ -2,7 +2,6 @@ package com.tycho.mss;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -11,7 +10,6 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.ColorInput;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
@@ -25,7 +23,7 @@ public class MenuListCell extends ListCell<MenuItem> {
 
     public MenuListCell() {
         try {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/module_list_cell.fxml"));
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/menu_item_list_cell.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();

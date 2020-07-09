@@ -15,7 +15,7 @@
             <padding>
                 <Insets left="8" right="8"/>
             </padding>
-            <GridPane fx:id="grid_pane" HBox.hgrow="ALWAYS">
+            <GridPane fx:id="grid_pane" HBox.hgrow="ALWAYS" alignment="CENTER" minHeight="32">
                 <Label fx:id="username" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"/>
                 <HBox fx:id="buttons" GridPane.columnIndex="2" GridPane.rowIndex="0" spacing="10">
                     <Button fx:id="remove_button" styleClass="image_button" style="-fx-background-image: url('/icons/round_cancel_black_24dp.png');">

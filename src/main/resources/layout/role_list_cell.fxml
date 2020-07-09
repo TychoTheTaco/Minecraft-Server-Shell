@@ -13,14 +13,11 @@
     <graphic>
         <HBox alignment="CENTER">
             <padding>
-                <Insets top="10" right="8" bottom="10" left="8" />
+                <Insets left="8" right="8"/>
             </padding>
-            <GridPane fx:id="grid_pane" HBox.hgrow="ALWAYS" style="-fx-background-color: orange;">
-                <padding>
-                    <Insets top="50" bottom="50" />
-                </padding>
+            <GridPane fx:id="grid_pane" minHeight="32" HBox.hgrow="ALWAYS" alignment="CENTER">
                 <Label fx:id="name" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"/>
-                <HBox fx:id="buttons" GridPane.columnIndex="2" GridPane.rowIndex="0" spacing="10" style="-fx-background-color: red; -fx-border-width: 0;">
+                <HBox fx:id="buttons" GridPane.columnIndex="2" GridPane.rowIndex="0" spacing="10">
                     <Button fx:id="edit_button" styleClass="image_button" style="-fx-background-image: url('/icons/round_edit_black_24dp.png');">
                         <tooltip><Tooltip text="Edit" /></tooltip>
                     </Button>
