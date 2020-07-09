@@ -6,7 +6,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -89,7 +88,7 @@ public class Preferences {
         return Paths.get(string);
     }
 
-    public static void setBackupDirectory(final File directory){
-        preferences.put(PREF_BACKUP_DIR, directory.getAbsolutePath());
+    public static void setBackupDirectory(final Path directory){
+        preferences.put(PREF_BACKUP_DIR, directory.toString());
     }
 }

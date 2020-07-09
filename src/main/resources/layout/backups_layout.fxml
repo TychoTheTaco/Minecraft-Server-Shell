@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.Button?>
-<GridPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.layout.BackupsLayout">
 
-    <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10" alignment="CENTER_LEFT">
+<GridPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tycho.mss.layout.BackupsLayout">
+
+    <HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
         <padding>
-            <Insets top="8" right="8" bottom="8" left="8"/>
+            <Insets bottom="8" left="8" right="8" top="8" />
         </padding>
-        <Label text="Server Backup Directory:"/>
-        <fx:include fx:id="backupDirectoryInput" source="file_input_layout.fxml" HBox.hgrow="ALWAYS"/>
-        <Button fx:id="save_button" text="Save"/>
+        <Label text="Server Backup Directory:" />
+        <fx:include fx:id="backupDirectoryInput" source="file_input_layout.fxml" HBox.hgrow="ALWAYS" />
+        <Button fx:id="save_button" text="Save" />
+
     </HBox>
 
-    <ListView fx:id="backups_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+    <Separator style="-fx-border-color: gray; -fx-border-width: 1 0 0 0;" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <GridPane.margin>
+            <Insets bottom="4" left="16" right="16" top="4" />
+        </GridPane.margin>
+    </Separator>
+
+    <Label fx:id="no_backups_found_label" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.halignment="CENTER" text="No Backups Found"/>
+    <ListView fx:id="backups_list_view" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
 
 </GridPane>

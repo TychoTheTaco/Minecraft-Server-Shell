@@ -10,6 +10,7 @@ import easytasks.TaskAdapter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 
@@ -26,28 +27,40 @@ public class BackupsLayout extends MenuPage {
     private ListView<Path> backups_list_view;
 
     @FXML
+    private Button save_button;
+
+    @FXML
     private void initialize() {
         backupDirectoryInputController.setIsDirectory(true);
         backupDirectoryInputController.setPath(Preferences.getBackupDirectory());
+        backupDirectoryInputController.setOnPathChangedListener(new FileInputLayout.OnPathChangedListener() {
+            @Override
+            public void onPathChanged(Path path) {
+                save_button.setDisable(false);
+            }
+        });
 
-        /*save_button.setOnAction(event -> {
+        save_button.setDisable(true);
+        save_button.setOnAction(event -> {
             //If this is a different backup directory we need to move existing backups to the new location
-            final File oldBackupDirectory = Preferences.getBackupDirectory();
-            if (!backupDirectoryInputController.getFile().equals(oldBackupDirectory)) {
-                if (oldBackupDirectory != null && oldBackupDirectory.exists() && oldBackupDirectory.list().length > 0) {
+            final Path oldBackupDirectory = Preferences.getBackupDirectory();
+            if (!backupDirectoryInputController.getPath().equals(oldBackupDirectory)) {
+                if (oldBackupDirectory != null && Files.exists(oldBackupDirectory) && oldBackupDirectory.iterator().hasNext()) {
                     final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to move all existing backups to the new location?", ButtonType.YES, ButtonType.NO);
                     alert.showAndWait();
                     if (alert.getResult() == ButtonType.YES) {
-                        moveBackupDirectory(Paths.get(oldBackupDirectory.getAbsolutePath()), Paths.get(backupDirectoryInputController.getFile().getAbsolutePath()));
+                        moveBackupDirectory(oldBackupDirectory, backupDirectoryInputController.getPath());
                     }
                 }
 
                 //Update location
-                Preferences.setBackupDirectory(backupDirectoryInputController.getFile());
+                Preferences.setBackupDirectory(backupDirectoryInputController.getPath());
                 Preferences.save();
                 refreshBackupsList();
             }
-        });*/
+
+            save_button.setDisable(true);
+        });
 
         backups_list_view.setCellFactory(param -> new BackupListCell());
 

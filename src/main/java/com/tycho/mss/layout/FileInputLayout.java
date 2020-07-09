@@ -7,7 +7,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -30,30 +32,38 @@ public class FileInputLayout {
     @FXML
     private void initialize() {
         this.input.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (validator.isValid(getPathFromText())){
-                this.input.getStyleClass().removeAll("invalid_input");
-            }else{
+            try {
+                path = Paths.get(input.getText());
+                if (validator.isValid(path)){
+                    this.input.getStyleClass().removeAll("invalid_input");
+                    if (onPathChangedListener != null) onPathChangedListener.onPathChanged(path);
+                }else{
+                    throw new InvalidPathException("", "");
+                }
+            }catch (InvalidPathException e){
                 this.input.getStyleClass().add("invalid_input");
             }
         });
 
         //Folder button
         this.button.setOnAction(event -> {
-            final Path path;
+            final File file;
             if (isDirectory){
-                path = directoryChooser.showDialog(((Node) event.getTarget()).getScene().getWindow()).toPath();
+                file = directoryChooser.showDialog(((Node) event.getTarget()).getScene().getWindow());
             }else{
-                path = fileChooser.showOpenDialog(((Node) event.getTarget()).getScene().getWindow()).toPath();
+                file = fileChooser.showOpenDialog(((Node) event.getTarget()).getScene().getWindow());
             }
 
+            //If the user canceled, don't do anything
+            if (file == null){
+                return;
+            }
+
+            final Path path = file.toPath();
             if (validator.isValid(path)){
                 setPath(path);
             }
         });
-    }
-
-    private Path getPathFromText(){
-        return Paths.get(input.getText().trim());
     }
 
     public Path getPath(){
@@ -67,11 +77,13 @@ public class FileInputLayout {
     }
 
     public void setPath(final Path path) {
+        this.path = path;
         if (path == null){
             this.input.setText("");
         }else{
             this.input.setText(path.toString());
         }
+        if (onPathChangedListener != null) onPathChangedListener.onPathChanged(path);
     }
 
     public void setIsDirectory(final boolean isDirectory){

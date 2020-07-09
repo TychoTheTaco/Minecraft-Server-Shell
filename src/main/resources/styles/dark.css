@@ -14,16 +14,8 @@
 }
 
 .check-box{
-    -fx-font-size: 12pt;
+    -fx-font-size: 1.2em;
     -fx-text-fill: white;
-}
-
-.menu .label{
-    -fx-font-size: 10pt;
-}
-
-.menu-item .label {
-    -fx-font-size: 10pt;
 }
 
 .list-view{
@@ -44,7 +36,7 @@
 
 .button{
     -fx-background-color: -blue;
-    -fx-font-size: 9pt;
+    -fx-font-size: 1.2em;
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
@@ -73,6 +65,7 @@
 
 .folder_button{
     -fx-background-image: url('/icons/round_folder_black_24dp.png');
+    -fx-background-position: center center;
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 0;
@@ -84,13 +77,15 @@
 }
 
 .text-field{
-    -fx-background-color: #737373;
+    -fx-background-color: #222222, #737373;
+    -fx-background-insets: 0, 1;
     -fx-text-fill: white;
-    -fx-font-size: 10pt;
+    -fx-font-size: 1.2em;
 }
 
 .invalid_input{
-    -fx-background-color: #d1454580;
+    -fx-background-color: #222222, -red;
+    -fx-background-insets: 0, 1;
 }
 
 /* T R B L */
@@ -247,4 +242,14 @@
 
 #server_properties_table_view .column-header .arrow {
     -fx-background-color: white;
+}
+
+
+
+
+
+
+.separator *.line {
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 1 0;
 }
