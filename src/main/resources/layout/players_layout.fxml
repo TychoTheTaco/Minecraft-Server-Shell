@@ -13,4 +13,20 @@
 
     <TableView fx:id="players_table_view" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
 
+    <!--<VBox>
+        <Label text="Online Players" style="-fx-font-weight: bold;">
+            <padding>
+                <Insets top="6" right="8" bottom="6" left="8"/>
+            </padding>
+        </Label>
+        <ListView fx:id="online_players_list_view" />
+
+        <Label text="Offline Players" style="-fx-font-weight: bold;">
+            <padding>
+                <Insets top="6" right="8" bottom="6" left="8"/>
+            </padding>
+        </Label>
+        <ListView fx:id="offline_players_list_view"/>
+    </VBox>-->
+
 </GridPane>

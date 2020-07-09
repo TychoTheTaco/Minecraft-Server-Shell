@@ -1,5 +1,5 @@
 .root {
-    -red: #d14545;
+    -red: #f44336;
     -green: #45d151;
     -blue: #0093ff;
     -light_blue: #4fb4ff;
@@ -16,6 +16,14 @@
 .check-box{
     -fx-font-size: 1.2em;
     -fx-text-fill: white;
+}
+
+.menu .label{
+    -fx-font-size: 10pt;
+}
+
+.menu-item .label {
+    -fx-font-size: 10pt;
 }
 
 .list-view{
@@ -39,11 +47,12 @@
     -fx-font-size: 1.2em;
     -fx-font-weight: bold;
     -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, #00000080, 6, 0, 0, 0);
 }
 
 .button:hover{
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, #00000080, 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, #000000, 10, 0, 0, 0);
 }
 
 .button:pressed{
@@ -163,13 +172,6 @@
     -fx-background-color: -red;
 }
 
-/* ---------------------------------------------------------------------------------- Dashboard --------------------------------------------------------------------------------- */
-
-#players_list{
-    -fx-padding: 0px 5px 5px 5px;
-    -fx-focus-traversable: false;
-}
-
 /* ----------------------------------------------------------------------------------- Players ---------------------------------------------------------------------------------- */
 
 
@@ -244,6 +246,11 @@
     -fx-background-color: white;
 }
 
+/* ---------------------------------------------------------------------------------- Permissions ------------------------------------------------------------------------------- */
+
+#roles_list_view .list-cell:filled:selected {
+    -fx-background-color: -blue;
+}
 
 
 

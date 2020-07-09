@@ -1,5 +1,6 @@
 package com.tycho.mss.command;
 
+import com.tycho.mss.Colors;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
@@ -28,7 +29,7 @@ public class HereCommand extends Command {
         serverShell.execute("execute at " + player + " run summon minecraft:firework_rocket ~ ~3 ~ {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,15435844,15790320],FadeColors:[I;8073150,12801229]}]}}}}");
 
         //Display player's position
-        final JSONObject root = Utils.createText(player, "light_purple");
+        final JSONObject root = Utils.createText(player, Colors.PLAYER_COLOR);
         final JSONArray extra = new JSONArray();
         extra.add(Utils.createText(" is at (", "white"));
 

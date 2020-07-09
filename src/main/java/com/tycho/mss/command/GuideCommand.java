@@ -13,11 +13,11 @@ import java.util.regex.Pattern;
 
 public class GuideCommand extends Command {
 
-    private static final Pattern POSITION_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+)\\.\\d+d, (?<y>-?\\d+)\\.\\d+d, (?<z>-?\\d+)\\.\\d+d]");
+    private static final Pattern POSITION_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+\\.\\d+)d, (?<y>-?\\d+\\.\\d+)d, (?<z>-?\\d+\\.\\d+)d]");
 
     private final Map<String, GuideTask> tasks = new HashMap<>();
 
-    private static final int PARTICLE_COUNT = 10;
+    private static final int PARTICLE_COUNT = 7;
 
     private static final double VERTICAL_OFFSET = 1.2;
 
@@ -107,9 +107,9 @@ public class GuideCommand extends Command {
                 try {
                     //Get player position
                     Matcher matcher = serverShell.awaitResult("data get entity " + player + " Pos", POSITION_PATTERN);
-                    final int x = Integer.parseInt(matcher.group("x"));
-                    final int y = Integer.parseInt(matcher.group("y"));
-                    final int z = Integer.parseInt(matcher.group("z"));
+                    final double x = Double.parseDouble(matcher.group("x"));
+                    final double y = Double.parseDouble(matcher.group("y"));
+                    final double z = Double.parseDouble(matcher.group("z"));
 
                     //Determine destination
                     final int dx;
@@ -141,14 +141,17 @@ public class GuideCommand extends Command {
 
                     //Spawn particles
                     for (int i = 1; i < Math.min((int) distance, PARTICLE_COUNT); i++){
-                        serverShell.execute("execute at " + player + " run particle composter"
+                        serverShell.execute("execute positioned " + x + " " + y + " " + z + " run particle composter"
                                 + " ~" + String.format("%.2f", i * Math.cos(direction))
                                 + " ~" + String.format("%.2f", i * Math.tan(angle) + VERTICAL_OFFSET)
                                 + " ~" + String.format("%.2f", i * Math.sin(direction))
                                 + " 0 0 0 0 1 normal");
+                        try {
+                            Thread.sleep(100);
+                        }catch (InterruptedException e){
+                            e.printStackTrace();
+                        }
                     }
-
-                    Thread.sleep(250);
                 }catch (InterruptedException | IOException e){
                     e.printStackTrace();
                 }

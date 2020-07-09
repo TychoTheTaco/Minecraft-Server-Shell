@@ -4,6 +4,11 @@ import com.tycho.mss.command.*;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.StreamReader;
 import com.tycho.mss.util.Utils;
+import easytasks.ITask;
+import easytasks.TaskAdapter;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -15,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This is a custom shell that wraps around the standard Minecraft server. It can intercept player messages and execute custom commands.
+ * This is a custom shell that wraps around the standard Minecraft server. It can read chat messages and execute custom commands.
  */
 public class ServerShell {
 
@@ -65,12 +70,12 @@ public class ServerShell {
     private final Path serverJar;
 
     /**
-     * Lock used to synchronize state.
+     * Mutex used to synchronize state.
      */
-    private final Object STATE_LOCK = new Object();
+    private final Object STATE_MUTEX = new Object();
 
     /**
-     * The set of custom commands.
+     * List of custom commands.
      */
     private final List<Command> customCommands = new ArrayList<>();
 
@@ -79,20 +84,19 @@ public class ServerShell {
      */
     private final List<Player> players = new ArrayList<>();
 
+    private final PlayerDatabaseManager playerDatabaseManager;
+
     /**
      * Authentication messages arrive before the player actually connects to the server. This list keeps track of those players who have been authenticated, but not connected yet.
      */
     private final Map<String, UUID> pendingAuthenticatedUsers = new HashMap<>();
 
     /**
-     * This map keeps track of which users have permission to use which commands.
-     */
-    private final Map<String, PermissionGroup> permissions = new HashMap<>();
-
-    /**
-     * After calling {@link #awaitResult(String, Pattern)}, the a pending result will be added to this list to keep track of its state.
+     * After calling {@link #awaitResult(String, Pattern)}, a pending result will be added to this list to keep track of its state.
      */
     private final List<PendingResult> pendingResults = new ArrayList<>();
+
+    private final PermissionsManager permissionsManager;
 
     /**
      * The current state of the Minecraft server.
@@ -112,23 +116,28 @@ public class ServerShell {
     public ServerShell(final Path serverJar) {
         this.serverJar = serverJar;
 
-        final PermissionGroup pleb = new PermissionGroup("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
-        final PermissionGroup admin = new PermissionGroup("admin", GiveRandomItemCommand.class, BackupCommand.class, PermissionCommand.class);
-        admin.commands.addAll(pleb.commands);
+        permissionsManager = new PermissionsManager(Paths.get(getDirectory().getAbsolutePath()));
+        permissionsManager.load();
 
-        this.permissions.put("TychoTheTaco", admin);
-        this.permissions.put("Metroscorpio", pleb);
-        this.permissions.put("Assassin_Actual7", pleb);
+        playerDatabaseManager = new PlayerDatabaseManager(Paths.get(getDirectory().getAbsolutePath()));
+
+        final Role pleb = new Role("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
+        final Role admin = new Role("admin", GiveRandomItemCommand.class, BackupCommand.class, PermissionCommand.class);
+        admin.getCommands().addAll(pleb.getCommands());
+
+        permissionsManager.assign("TychoTheTaco", admin);
+        permissionsManager.assign("Metroscorpio", pleb);
+        permissionsManager.assign("Assassin_Actual7", pleb);
 
         //Add custom commands
+        addCustomCommand(new HereCommand());
+        addCustomCommand(new HelpCommand());
+        addCustomCommand(new LocationCommand());
+        addCustomCommand(new GuideCommand());
+        addCustomCommand(new BackupCommand());
+        addCustomCommand(new PermissionCommand());
         try {
             addCustomCommand(new GiveRandomItemCommand(new File("ids.txt")));
-            addCustomCommand(new HereCommand());
-            addCustomCommand(new HelpCommand());
-            addCustomCommand(new LocationCommand());
-            addCustomCommand(new GuideCommand());
-            addCustomCommand(new BackupCommand());
-            addCustomCommand(new PermissionCommand());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -142,48 +151,9 @@ public class ServerShell {
         return this.serverJar.getParent();
     }
 
-    public static class PermissionGroup {
-
-        private final String name;
-
-        private Set<Class<? extends Command>> commands = new HashSet<>();
-
-        public PermissionGroup(final String name, Class<? extends Command>... classes) {
-            this.name = name;
-            this.commands.addAll(Arrays.asList(classes));
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Set<Class<? extends Command>> getCommands() {
-            return commands;
-        }
-    }
-
-    public boolean isAuthorized(final String player, final Command command) {
-        return this.permissions.containsKey(player) && this.permissions.get(player).commands.contains(command.getClass());
-    }
-
-    public void authorize(final String player, final Command command){
-        final PermissionGroup permissionGroup = this.permissions.get(player);
-        if (permissionGroup == null){
-            this.permissions.put(player, new PermissionGroup("auth", command.getClass()));
-        }else{
-            this.permissions.get(player).commands.add(command.getClass());
-        }
-    }
-
-    public void deauthorize(final String player, final Command command){
-        if (!this.permissions.containsKey(player)) return;
-
-        this.permissions.get(player).commands.remove(command.getClass());
-    }
-
     public Map<String, String> getProperties() {
         final Map<String, String> properties = new HashMap<>();
-        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader("server.properties"))) {
+        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader(getDirectory() + File.separator + "server.properties"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 final String[] split = line.split("=");
@@ -218,7 +188,7 @@ public class ServerShell {
         command.add(this.serverJar.toString());
         command.add("nogui");
 
-        final ProcessBuilder processBuilder = new ProcessBuilder(command);
+        final ProcessBuilder processBuilder = new ProcessBuilder(command).directory(this.serverJar.getParentFile());
         System.out.println(processBuilder.command());
 
         try {
@@ -227,8 +197,27 @@ public class ServerShell {
             notifyOnServerIOready();
 
             this.serverInputWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-            final StreamReader errorOutput = new StreamReader(process.getErrorStream());
-            errorOutput.start();
+            //final StreamReader errorOutput = new StreamReader(process.getErrorStream());
+            //errorOutput.start();
+
+            //Read error output
+            new Thread(() -> {
+                try {
+                    final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        System.out.println(line);
+                        break;
+                    }
+
+                    Platform.runLater(() -> {
+                        final Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to start server. Launch options may be invalid.", ButtonType.OK);
+                        alert.showAndWait();
+                    });
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }).start();
 
             //Read server output
             final InputStreamInterceptor inputStreamInterceptor = new InputStreamInterceptor(process);
@@ -274,7 +263,7 @@ public class ServerShell {
 
                     //Check for pending results
                     boolean handled = false;
-                    synchronized (this){
+                    synchronized (pendingResults) {
                         final Iterator<PendingResult> iterator = pendingResults.iterator();
                         while (iterator.hasNext()) {
                             final PendingResult pendingResult = iterator.next();
@@ -321,13 +310,12 @@ public class ServerShell {
                                 }
                             }
 
+                            //TODO: Remove
+                            if (cmd.equals("crash")) throw new RuntimeException("Crashed by user");
+
                             //Not a valid command, show an error message
-                            if (!isValidCommand){
-                                final JSONObject root = Utils.createText("Unknown command: ", "red");
-                                final JSONArray extras = new JSONArray();
-                                extras.add(Utils.createText(input, "white"));
-                                root.put("extra", extras);
-                                tellraw(player, root);
+                            if (!isValidCommand) {
+                                tellraw(player, Utils.createText("Unknown command: ", "red", cmd, "white"));
                             }
                         }
                     } else {
@@ -361,13 +349,12 @@ public class ServerShell {
                             pendingAuthenticatedUsers.remove(username);
 
                             final Player player = new Player(id, username, ipAddress);
-                            PlayerDatabaseManager.get(player);
+                            playerDatabaseManager.get(player);
                             players.add(player);
                             notifyOnPlayerConnected(player);
 
                             //Send welcome message
-                            final JSONObject root = Utils.createText("Welcome to the server " + player.getUsername() + "! Type \"!help\" for a list of commands.", "aqua");
-                            tellraw("@a", root);
+                            tellraw("@a", Utils.createText("Welcome to the server ", "aqua", player.getUsername(), Colors.PLAYER_COLOR, "! Type ", "aqua", "!help", Colors.COMMAND_COLOR, " for a list of commands.", "aqua"));
                         }
 
                         //Check if a player disconnected
@@ -376,7 +363,7 @@ public class ServerShell {
                             final String username = matcher.group("player");
                             final String reason = matcher.group("reason");
                             final Player player = getPlayer(username);
-                            PlayerDatabaseManager.save(player);
+                            playerDatabaseManager.save(player);
                             notifyOnPlayerDisconnected(player);
                             players.remove(player);
                         }
@@ -384,13 +371,9 @@ public class ServerShell {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                try {
-                    tellraw("@a", Utils.createText("Shell crashed!", "red"));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                tellraw("@a", Utils.createText("Shell crashed!", "red"));
+                run();
             }
-            System.out.println("STOPPED INTERCEPTOR");
         }
     }
 
@@ -398,13 +381,21 @@ public class ServerShell {
         this.customCommands.add(command);
     }
 
-    public void tellraw(final String player, final JSONObject jsonObject) throws IOException {
-        this.execute("tellraw " + player + " " + jsonObject.toString());
+    public void tellraw(final String player, final JSONObject jsonObject) {
+        try {
+            this.execute("tellraw " + player + " " + jsonObject.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public PlayerDatabaseManager getPlayerDatabaseManager() {
+        return playerDatabaseManager;
     }
 
     private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
         //Make sure the player is authorized to use this command
-        if (!isAuthorized(player, command)) {
+        if (!permissionsManager.isAuthorized(player, command)) {
             final JSONObject root = Utils.createText("Unauthorized: ", "red");
             final JSONArray extra = new JSONArray();
             extra.add(Utils.createText("You are not authorized to use this command!", "gray"));
@@ -418,24 +409,17 @@ public class ServerShell {
             try {
                 command.execute(player, ServerShell.this, parameters);
             } catch (Command.InvalidParametersException e) {
-                try {
-                    tellraw(player, e.getJson());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                tellraw(player, e.getJson());
             } catch (Exception e) {
                 e.printStackTrace();
-                try {
-                    this.tellraw(player, Utils.createText("Error executing command: " + e.toString(), "red"));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                this.tellraw(player, Utils.createText("Error executing command: " + e.toString(), "red"));
             }
         }).start();
     }
 
     /**
      * Execute the specified command in the Minecraft server process.
+     *
      * @param command The command to execute.
      * @throws IOException
      */
@@ -445,16 +429,75 @@ public class ServerShell {
         this.serverInputWriter.flush();
     }
 
-    private String[] clean(final String parameters){
+    /**
+     * Restore the world from the specified backup. This method will automatically stop and restart the server if it was already running when this method was called.
+     *
+     * @param backup The path to a ZIP file containing a backup of the server.
+     */
+    public void restore(final Path backup) {
+        //Remember the initial state to restore later
+        final State initialState = this.state;
+
+        //Make sure the server is offline first
+        if (this.state != State.OFFLINE) {
+            tellraw("@a", Utils.createText("Going offline to restore backup...", "dark_aqua"));
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            stop();
+        }
+
+        try {
+            synchronized (STATE_MUTEX) {
+                while (this.state != State.OFFLINE) {
+                    System.out.println("Waiting...");
+                    STATE_MUTEX.wait();
+                }
+
+                final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup.toFile(), Paths.get(getDirectory().getAbsolutePath()));
+                restoreBackupTask.addTaskListener(new TaskAdapter() {
+                    @Override
+                    public void onTaskStarted(ITask task) {
+                        System.out.println("Restoring backup...");
+                    }
+
+                    @Override
+                    public void onTaskStopped(ITask task) {
+                        //Restore initial state
+                        switch (initialState) {
+                            case STARTING:
+                            case ONLINE:
+                                System.out.println("Restore finished! Starting server...");
+                                startOnNewThread();
+                                break;
+
+                            case STOPPING:
+                            case OFFLINE:
+                                System.out.println("Restore finished!");
+                                break;
+                        }
+                    }
+                });
+                restoreBackupTask.start();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String[] clean(final String parameters) {
+        if (parameters == null) return new String[]{};
         final String[] split = parameters.split(" +");
         final List<String> strings = new ArrayList<>();
-        for (String string : split){
-            if (string.length() > 0){
+        for (String string : split) {
+            if (string.length() > 0) {
                 strings.add(string);
             }
         }
         final String[] array = new String[strings.size()];
-        for (int i = 0; i < array.length; i++){
+        for (int i = 0; i < array.length; i++) {
             array[i] = strings.get(i);
         }
         return array;
@@ -465,7 +508,7 @@ public class ServerShell {
         final Container container = new Container();
 
         //Add pending result
-        synchronized (this){
+        synchronized (pendingResults) {
             pendingResults.add(new PendingResult(command, pattern) {
                 @Override
                 boolean onResult(Matcher matcher) {
@@ -495,6 +538,10 @@ public class ServerShell {
 
     static class Container {
         Matcher matcher;
+    }
+
+    public PermissionsManager getPermissionsManager() {
+        return permissionsManager;
     }
 
     public List<Player> getPlayers() {
@@ -544,14 +591,14 @@ public class ServerShell {
     }
 
     private void onServerStarting() {
-        synchronized (STATE_LOCK) {
+        synchronized (STATE_MUTEX) {
             this.state = State.STARTING;
             notifyOnServerStarting();
         }
     }
 
     private void onServerStarted() {
-        synchronized (STATE_LOCK) {
+        synchronized (STATE_MUTEX) {
             this.state = State.ONLINE;
             this.startTime = System.currentTimeMillis();
             notifyOnServerStarted();
@@ -559,17 +606,18 @@ public class ServerShell {
     }
 
     private void onServerStopping() {
-        synchronized (STATE_LOCK) {
+        synchronized (STATE_MUTEX) {
             this.state = State.STOPPING;
             notifyOnServerStopping();
         }
     }
 
     private void onServerStopped() {
-        synchronized (STATE_LOCK) {
+        synchronized (STATE_MUTEX) {
             this.players.clear();
             System.out.println("SERVER PROCESS STOPPED");
             this.state = State.OFFLINE;
+            STATE_MUTEX.notifyAll();
             notifyOnServerStopped();
         }
     }

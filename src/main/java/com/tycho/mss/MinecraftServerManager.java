@@ -7,12 +7,14 @@ import easytasks.Task;
 import easytasks.TaskAdapter;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -26,14 +28,19 @@ import java.nio.file.Paths;
  * - Help command should show only authorized commands
  *      > different modes: show all, show authorized, show all but different color for auth/non auth
  * - Guide command should ask the target player if they want to be tracked
+ * - Make backups show server version. Can be found inside server.jar as version.json
+ * - Restoring backups via command should ask first
  */
 public class MinecraftServerManager extends Application{
 
     public static final String APP_NAME = "Minecraft Server Manager";
 
-    private static ServerShell serverShell;
-
+    /**
+     * Directory where application files are stored (such as user preferences).
+     */
     public static final Path PRIVATE_DIR = Paths.get(System.getProperty("user.dir")).resolve(".mss");
+
+    private static ServerShell serverShell;
 
     private static MainLayout mainLayoutController;
 
@@ -45,6 +52,7 @@ public class MinecraftServerManager extends Application{
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle(APP_NAME);
 
+        //Load user preferences
         Preferences.load();
 
         //Load main layout
@@ -55,32 +63,28 @@ public class MinecraftServerManager extends Application{
         mainLayoutController = loader.getController();
 
         //Attempt to create a server shell
-        createServerShell();
+        serverShell = createServerShell();
+        mainLayoutController.setServerShell(serverShell);
 
+        //Show the main stage
         primaryStage.sizeToScene();
         primaryStage.show();
+        primaryStage.setOnHidden(event -> {
+            if (serverShell != null && serverShell.getState() != ServerShell.State.OFFLINE) serverShell.stop();
+            mainLayoutController.onHidden();
+        });
     }
 
-    public static void restore(final Path backup){
-        final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, Preferences.getServerJar().getParent());
-        final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Restoring backup...", new ButtonType("Cancel", ButtonBar.ButtonData.OK_DONE));
-
-        alert.setOnCloseRequest(event -> {
-            if (restoreBackupTask.getState() != Task.State.STOPPED) event.consume();
-        });
-
-        restoreBackupTask.addTaskListener(new TaskAdapter(){
-            @Override
-            public void onTaskStopped(ITask task) {
-                Platform.runLater(alert::close);
-            }
-        });
-
-        alert.show();
-        restoreBackupTask.startOnNewThread();
+    public static void refresh(){
+        if (serverShell == null || serverShell.getState() == ServerShell.State.OFFLINE){
+            serverShell = createServerShell();
+            mainLayoutController.setServerShell(serverShell);
+        }else{
+            System.out.println("Server must be offline to apply changes!");
+        }
     }
 
-    public static void createServerShell(){
+    private static ServerShell createServerShell(){
         //Validate server jar
         final Path serverJar = Preferences.getServerJar();
         if (serverShell == null || serverShell.getServerJar() != serverJar){
@@ -90,13 +94,13 @@ public class MinecraftServerManager extends Application{
             }
 
             //Create new server with the updated JAR
-            serverShell = new ServerShell(serverJar);
-            mainLayoutController.setServerShell(serverShell);
+            return new ServerShell(serverJar);
         }
+        return null;
     }
 
     public static void start(){
-        if (serverShell == null) createServerShell();
+        createServerShell();
         serverShell.startOnNewThread();
     }
 

@@ -1,9 +1,7 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.BackupTask;
-import com.tycho.mss.MenuPage;
-import com.tycho.mss.Player;
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.*;
+import com.tycho.mss.module.backup.BackupTask;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
@@ -49,10 +47,10 @@ public class MiniDashboardController extends MenuPage{
     private void initialize() {
         //Set up "start/stop" button
         start_stop_button.setOnAction(event -> {
-            if (getServerShell().getState() == ServerShell.State.ONLINE){
+            if (getServerShell() == null || getServerShell().getState() == ServerShell.State.OFFLINE){
+                MinecraftServerShell.start();
+            }else if (getServerShell().getState() == ServerShell.State.ONLINE){
                 getServerShell().stop();
-            }else if (getServerShell().getState() == ServerShell.State.OFFLINE){
-                getServerShell().startOnNewThread();
             }
         });
 
@@ -170,26 +168,31 @@ public class MiniDashboardController extends MenuPage{
         }
     }
 
+    @Override
+    public void onPageHidden() {
+        uiUpdater.stop();
+    }
+
     private void updateStatus(){
         switch (getServerShell().getState()){
             case STARTING:
-                this.status_label.setText("Starting server...");
+                this.status_label.setText("Starting Server...");
                 this.status_label.setTextFill(Paint.valueOf("white"));
                 break;
 
             case ONLINE:
-                this.status_label.setText("Server online");
+                this.status_label.setText("Server Online");
                 this.status_label.setTextFill(Paint.valueOf("#45d151"));
                 break;
 
             case STOPPING:
-                this.status_label.setText("Stopping server...");
+                this.status_label.setText("Stopping Server...");
                 this.status_label.setTextFill(Paint.valueOf("white"));
                 break;
 
             case OFFLINE:
-                this.status_label.setText("Server offline");
-                this.status_label.setTextFill(Paint.valueOf("#d14545"));
+                this.status_label.setText("Server Offline");
+                this.status_label.setTextFill(CustomColor.RED);
                 break;
         }
     }
@@ -200,7 +203,7 @@ public class MiniDashboardController extends MenuPage{
 
     private void updateUptime(){
         if (getServerShell().getState() == ServerShell.State.ONLINE){
-            uptime_label.setText(Utils.formatTimeStopwatch(getServerShell().getUptime(), 2));
+            uptime_label.setText(Utils.formatTimeStopwatch(getServerShell().getUptime(), 3));
         }else{
             uptime_label.setText("");
         }

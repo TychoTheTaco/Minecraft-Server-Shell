@@ -1,17 +1,21 @@
 package com.tycho.mss.layout;
 
 import com.tycho.mss.MenuPage;
-import com.tycho.mss.MinecraftServerManager;
+import com.tycho.mss.MinecraftServerShell;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Preferences;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,34 +33,52 @@ public class ConfigurationLayout extends MenuPage {
     @FXML
     private Button save_button;
 
+    @FXML
+    private Button revert_button;
+
     //private List<Property<?>> properties = new ArrayList<>();
+
+    private JSONObject initialConfiguration;
 
     @FXML
     private void initialize() {
         //Server JAR
-        serverJarInputController.setValidator(new FileInputLayout.Validator(){
+        serverJarInputController.setValidator(File::exists);
+        serverJarInputController.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
+
+        //Load the saved configuration
+        setDefaults();
+        initialConfiguration = getConfiguration();
+
+        serverJarInputController.setOnTextChanged(() -> {
+            setDirty(!initialConfiguration.get("server_jar").toString().equals(serverJarInputController.getFile().getAbsolutePath()));
+        });
+
+        launch_options_text_field.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            boolean isValid(Path path) {
-                return Files.exists(path) && path.getFileName().endsWith("jar");
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                setDirty(!initialConfiguration.get("launch_options").toString().equals(newValue));
             }
         });
 
-        //Load the saved configuration
-        serverJarInputController.setPath(Preferences.getServerJar());
-        launch_options_text_field.setText(String.join(" ", Preferences.getLaunchOptions()));
-
-
         //server_properties_table_view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        revert_button.setOnAction(event -> {
+            setDefaults();
+        });
 
         save_button.setOnAction(event -> {
             if (serverJarInputController.isValid()){
-                Preferences.setServerJar(serverJarInputController.getPath());
-                MinecraftServerManager.createServerShell();
+                Preferences.setServerJar(serverJarInputController.getFile());
+                MinecraftServerShell.refresh();
+                setStatus(Status.OK);
             }else{
-                System.out.println("INVALID SERVER JAR!");
+                setStatus(Status.ERROR);
             }
             Preferences.setLaunchOptions(launch_options_text_field.getText());
             Preferences.save();
+            initialConfiguration = getConfiguration();
+            setDirty(false);
         });
 
         //Key
@@ -81,6 +103,30 @@ public class ConfigurationLayout extends MenuPage {
             }
         });*/
         //server_properties_table_view.getColumns().add(valueColumn);
+
+        setStatus(serverJarInputController.isValid() ? Status.OK : Status.ERROR);
+    }
+
+    private void setDirty(final boolean dirty){
+        if (dirty){
+            revert_button.setVisible(true);
+            revert_button.setManaged(true);
+        }else{
+            revert_button.setVisible(false);
+            revert_button.setManaged(false);
+        }
+    }
+
+    private void setDefaults(){
+        serverJarInputController.setFile(Preferences.getServerJar());
+        launch_options_text_field.setText(String.join(" ", Preferences.getLaunchOptions()));
+    }
+
+    private JSONObject getConfiguration(){
+        final JSONObject root = new JSONObject();
+        root.put("server_jar", serverJarInputController.getFile());
+        root.put("launch_options", launch_options_text_field.getText().trim());
+        return root;
     }
 
     /*private ServerShell.LaunchConfiguration loadConfiguration(){

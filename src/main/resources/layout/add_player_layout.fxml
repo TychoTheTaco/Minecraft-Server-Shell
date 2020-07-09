@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.tycho.mss.module.permission.ui.AddPlayerLayout" style="-fx-background-color: #505050">
+
+    <padding>
+        <Insets top="8" bottom="8"/>
+    </padding>
+
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10" alignment="CENTER_LEFT" GridPane.hgrow="ALWAYS">
+        <padding>
+            <Insets right="8" left="8"/>
+        </padding>
+        <Label text="Username:"/>
+        <TextField fx:id="player_text_field" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"/>
+    </HBox>
+
+</GridPane>

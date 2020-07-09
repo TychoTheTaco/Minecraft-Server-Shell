@@ -49,6 +49,7 @@
             <padding>
                 <Insets top="8" right="8" bottom="8" left="8"/>
             </padding>
+            <Button fx:id="revert_button" text="Revert" visible="false" managed="false"/>
             <Button fx:id="save_button" text="Save"/>
         </HBox>
     </GridPane>

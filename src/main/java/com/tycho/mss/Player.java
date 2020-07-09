@@ -1,6 +1,5 @@
 package com.tycho.mss;
 
-import com.tycho.mss.command.Command;
 import com.tycho.mss.command.SavedLocation;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,7 +18,9 @@ public class Player {
 
     private final String ipAddress;
 
-    private final long onConnectTime;
+    private final long sessionStartTime;
+
+    private long totalPlaytime = 0;
 
     private final List<SavedLocation> savedLocations = new ArrayList<>();
 
@@ -27,7 +28,7 @@ public class Player {
         this.id = id;
         this.username = username;
         this.ipAddress = ipAddress;
-        this.onConnectTime = System.currentTimeMillis();
+        this.sessionStartTime = System.currentTimeMillis();
     }
 
     public UUID getId() {
@@ -42,8 +43,27 @@ public class Player {
         return ipAddress;
     }
 
-    public long getOnConnectTime() {
-        return onConnectTime;
+    public long getTotalPlaytime(){
+        return totalPlaytime + getSessionTime();
+    }
+
+    public void load(final JSONObject jsonObject){
+        totalPlaytime = (long) jsonObject.getOrDefault("playtime", 0);
+
+        final JSONArray savedLocationsArray = (JSONArray) jsonObject.get("savedLocations");
+        for (Object object : savedLocationsArray){
+            final JSONObject location = (JSONObject) object;
+            savedLocations.add(new SavedLocation(
+                    ((Long) location.get("x")).intValue(),
+                    ((Long) location.get("y")).intValue(),
+                    ((Long) location.get("z")).intValue(),
+                    (String) location.get("description"))
+            );
+        }
+    }
+
+    public long getSessionTime(){
+        return System.currentTimeMillis() - sessionStartTime;
     }
 
     public long getPing(){
@@ -65,6 +85,7 @@ public class Player {
         final JSONObject root = new JSONObject();
         root.put("id", this.id.toString());
         root.put("username", this.username);
+        root.put("playtime", getTotalPlaytime());
 
         //Saved locations
         final JSONArray savedLocationsArray = new JSONArray();

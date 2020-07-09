@@ -15,7 +15,7 @@ public abstract class Command {
     private final Pattern pattern;
 
     public Command(final String command){
-        this(command, Pattern.compile("^" + command + "(?<parameters>.*)$"));
+        this(command, Pattern.compile("^" + command + "(?: (?<parameters>[^ ].*))?$"));
     }
 
     public Command(final String command, final Pattern pattern){
@@ -48,13 +48,7 @@ public abstract class Command {
     public class InvalidParametersException extends Exception{
 
         public JSONObject getJson(){
-            final JSONObject root = Utils.createText("Invalid Parameters! ", "red");
-            final JSONArray extra = new JSONArray();
-            extra.add(Utils.createText("Expected format:\n", "gray"));
-            extra.add(Utils.createText(getCommand(), "green"));
-            extra.add(Utils.createText(" " + getFormat(), "white"));
-            root.put("extra", extra);
-            return root;
+            return Utils.createText("Invalid Parameters! ", "red", "Expected format:\n", "gray", getCommand(), "green", " " + getFormat(), "white");
         }
     }
 }

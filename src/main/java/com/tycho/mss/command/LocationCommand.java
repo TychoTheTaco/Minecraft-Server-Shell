@@ -1,5 +1,6 @@
 package com.tycho.mss.command;
 
+import com.tycho.mss.PlayerDatabaseManager;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
@@ -39,29 +40,32 @@ public class LocationCommand extends Command {
             }
 
             serverShell.getPlayer(player).getSavedLocations().add(new SavedLocation(x, y, z, stringBuilder.toString().trim()));
+            serverShell.getPlayerDatabaseManager().save(serverShell.getPlayer(player));
 
             final JSONObject root = Utils.createText("Location saved!", "green");
             serverShell.tellraw(player, root);
         }else if ("list".equals(type)){
-            final JSONObject root = Utils.createText("Saved Locations:\n", "white");
-            final JSONArray extra = new JSONArray();
-
             final List<SavedLocation> savedLocations = serverShell.getPlayer(player).getSavedLocations();
-            for (int i = 0; i < savedLocations.size(); i++){
-                extra.add("[" + i + "]: (");
-                extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getX()), "yellow"));
-                extra.add(Utils.createText(", ", "white"));
-                extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getY()), "yellow"));
-                extra.add(Utils.createText(", ", "white"));
-                extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getZ()), "yellow"));
-                extra.add(Utils.createText("): ", "white"));
-                extra.add(Utils.createText(savedLocations.get(i).getDescription(), "green"));
-                extra.add(Utils.createText("\n", "white"));
+            if (savedLocations.isEmpty()){
+                serverShell.tellraw(player, Utils.createText("You haven't saved any locations!", "white"));
+            }else{
+                final JSONObject root = Utils.createText("", "white");
+                final JSONArray extra = new JSONArray();
+                for (int i = 0; i < savedLocations.size(); i++){
+                    extra.add("[" + i + "]: (");
+                    extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getX()), "yellow"));
+                    extra.add(Utils.createText(", ", "white"));
+                    extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getY()), "yellow"));
+                    extra.add(Utils.createText(", ", "white"));
+                    extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getZ()), "yellow"));
+                    extra.add(Utils.createText("): ", "white"));
+                    extra.add(Utils.createText(savedLocations.get(i).getDescription(), "green"));
+                    extra.add(Utils.createText("\n", "white"));
+                }
+                extra.remove(extra.size() - 1);
+                root.put("extra", extra);
+                serverShell.tellraw(player, root);
             }
-            extra.remove(extra.size() - 1);
-
-            root.put("extra", extra);
-            serverShell.tellraw(player, root);
         }else if ("remove".equals(type)){
             if (parameters.length < 2){
                 throw new InvalidParametersException();
@@ -72,15 +76,18 @@ public class LocationCommand extends Command {
                 serverShell.getPlayer(player).getSavedLocations().remove(index);
                 final JSONObject root = Utils.createText("Location removed!", "green");
                 serverShell.tellraw(player, root);
+                serverShell.getPlayerDatabaseManager().save(serverShell.getPlayer(player));
             }catch (NumberFormatException e){
                 throw new InvalidParametersException();
             }
+        }else{
+            throw new InvalidParametersException();
         }
     }
 
     @Override
     public String getFormat() {
-        return "<save [<notes>] | list | remove <index>>";
+        return "save [<notes>] | list | remove <index>";
     }
 
     @Override

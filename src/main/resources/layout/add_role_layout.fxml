@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.tycho.mss.module.permission.ui.EditRoleLayout" style="-fx-background-color: #505050" prefWidth="500">
+
+    <padding>
+        <Insets top="8" bottom="8"/>
+    </padding>
+
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10" alignment="CENTER_LEFT" GridPane.hgrow="ALWAYS">
+        <padding>
+            <Insets right="8" bottom="8" left="8"/>
+        </padding>
+        <Label text="Role Name:"/>
+        <TextField fx:id="role_name_text_field" GridPane.columnIndex="0" GridPane.rowIndex="0" HBox.hgrow="ALWAYS"/>
+    </HBox>
+    <ListView fx:id="commands_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS"/>
+    <Button fx:id="ok_button" GridPane.columnIndex="0" GridPane.rowIndex="2" text="Save" GridPane.halignment="CENTER"/>
+</GridPane>
