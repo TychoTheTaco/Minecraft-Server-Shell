@@ -1,5 +1,6 @@
 .root {
     -red: #f44336;
+    -light_red: #f44336A0;
     -green: #45d151;
     -blue: #0093ff;
     -light_blue: #4fb4ff;
@@ -79,6 +80,24 @@
     -fx-background-color: transparent;
 }
 
+.error_button{
+    -fx-background-image: url('/icons/round_error_outline_black_24dp.png');
+    -fx-background-position: center center;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-effect: none;
+}
+
+.error_button:hover{
+    -fx-effect: none;
+}
+
+.error_button:pressed{
+    -fx-background-color: transparent;
+}
+
 .text-field{
     -fx-background-color: #222222, #737373;
     -fx-background-insets: 0, 1;
@@ -87,7 +106,7 @@
 }
 
 .invalid_input{
-    -fx-background-color: #222222, -red;
+    -fx-background-color: #222222, -light_red;
     -fx-background-insets: 0, 1;
 }
 

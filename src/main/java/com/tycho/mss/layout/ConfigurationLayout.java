@@ -43,8 +43,18 @@ public class ConfigurationLayout extends MenuPage {
         //Server JAR
         serverJarInputController.setValidator(new FileInputLayout.Validator(){
             @Override
-            boolean isValid(Path path) {
-                return Files.exists(path) && path.getFileName().endsWith("jar");
+            boolean isValid(Path path, final StringBuilder stringBuilder) {
+                if (!Files.exists(path)){
+                    if (stringBuilder != null) stringBuilder.append("File does not exist!");
+                    return false;
+                }
+
+                if (!path.getFileName().toString().toLowerCase().endsWith("jar")){
+                    if (stringBuilder != null) stringBuilder.append("Not a valid JAR file!");
+                    return false;
+                }
+
+                return true;
             }
         });
         //serverJarInputController.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
