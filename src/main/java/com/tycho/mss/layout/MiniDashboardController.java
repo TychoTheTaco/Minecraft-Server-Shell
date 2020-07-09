@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 
 public class MiniDashboardController extends MenuPage{
@@ -64,7 +65,7 @@ public class MiniDashboardController extends MenuPage{
             create_backup_button.setText("0 %");
 
             //Make sure a backup directory is specified in the settings
-            final File backupDirectory = Preferences.getBackupDirectory();
+            final Path backupDirectory = Preferences.getBackupDirectory();
             if (backupDirectory == null){
                 final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Please specify a backup directory in the settings!", ButtonType.OK);
                 alert.show();

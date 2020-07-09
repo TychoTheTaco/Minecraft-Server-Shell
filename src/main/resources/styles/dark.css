@@ -8,7 +8,7 @@
 /* ------------------------------------------------------------------------------------ Global ---------------------------------------------------------------------------------- */
 
 .label{
-    -fx-font-size: 12pt;
+    -fx-font-size: 1.2em;
     -fx-text-fill: white;
     -fx-text-alignment: center;
 }
@@ -137,20 +137,20 @@
     -fx-background-color: #404040;
 }
 
-#module_list_view{
+#menu_items_list_view{
     -fx-padding: 8px 0px 0px 0px;
     -fx-focus-traversable: false;
 }
 
-#module_list_view .list-cell:filled {
+#menu_items_list_view .list-cell:filled {
     -fx-padding: 4px 8px 4px 8px;
 }
 
-#module_list_view .list-cell:filled:hover {
+#menu_items_list_view .list-cell:filled:hover {
     -fx-background-color: -light_blue;
 }
 
-#module_list_view .list-cell:filled:selected {
+#menu_items_list_view .list-cell:filled:selected {
     -fx-background-color: -blue;
 }
 

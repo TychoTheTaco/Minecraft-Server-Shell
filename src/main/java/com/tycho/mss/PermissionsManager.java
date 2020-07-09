@@ -15,7 +15,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import static com.tycho.mss.MinecraftServerShell.PRIVATE_DIR;
+import static com.tycho.mss.MinecraftServerManager.PRIVATE_DIR;
 
 public class PermissionsManager {
 

@@ -3,8 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
@@ -12,12 +12,31 @@
 
     <!-- Left Pane -->
     <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="180" prefWidth="180" GridPane.vgrow="ALWAYS">
-        <ListView fx:id="module_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+        <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" style="-fx-background-color: #81c1f040;">
+            <padding>
+                <Insets top="8" bottom="8" right="8"/>
+            </padding>
+
+            <StackPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2">
+                <padding>
+                    <Insets top="8" left="12" bottom="8" right="12"/>
+                </padding>
+
+                <ImageView>
+                    <Image url="/icons/round_folder_black_24dp.png" backgroundLoading="true"/>
+                </ImageView>
+            </StackPane>
+
+            <Label text="Server Name" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-font-size: 1.3em; -fx-font-weight: bold;"/>
+            <Label text="1.16" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        </GridPane>
+        <ListView fx:id="menu_items_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
     </GridPane>
 
     <fx:include fx:id="miniDashboard" source="mini_dashboard_layout.fxml" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-background-color: #3d3d3d;"/>
 
     <!-- Layout Container -->
-    <BorderPane fx:id="container" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800" prefHeight="500"/>
+    <BorderPane fx:id="container" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800"
+                prefHeight="500"/>
 
 </GridPane>

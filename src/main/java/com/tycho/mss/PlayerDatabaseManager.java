@@ -11,10 +11,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
-import static com.tycho.mss.MinecraftServerShell.PRIVATE_DIR;
+import static com.tycho.mss.MinecraftServerManager.PRIVATE_DIR;
 
 public class PlayerDatabaseManager {
 

@@ -8,6 +8,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
@@ -61,7 +62,7 @@ public class ServerShell {
     /**
      * The vanilla Minecraft server JAR file used to run the server.
      */
-    private final File serverJar;
+    private final Path serverJar;
 
     /**
      * Lock used to synchronize state.
@@ -108,7 +109,7 @@ public class ServerShell {
      */
     private long startTime;
 
-    public ServerShell(final File serverJar) {
+    public ServerShell(final Path serverJar) {
         this.serverJar = serverJar;
 
         final PermissionGroup pleb = new PermissionGroup("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
@@ -133,12 +134,12 @@ public class ServerShell {
         }
     }
 
-    public File getServerJar() {
+    public Path getServerJar() {
         return serverJar;
     }
 
-    public File getDirectory() {
-        return this.serverJar.getAbsoluteFile().getParentFile();
+    public Path getDirectory() {
+        return this.serverJar.getParent();
     }
 
     public static class PermissionGroup {
@@ -214,7 +215,7 @@ public class ServerShell {
             if (option.length() > 0) command.add(option);
         }
         command.add("-jar");
-        command.add(this.serverJar.getAbsolutePath());
+        command.add(this.serverJar.toString());
         command.add("nogui");
 
         final ProcessBuilder processBuilder = new ProcessBuilder(command);

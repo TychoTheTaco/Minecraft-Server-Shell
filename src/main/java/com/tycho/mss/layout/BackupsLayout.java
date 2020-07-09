@@ -10,13 +10,12 @@ import easytasks.TaskAdapter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class BackupsLayout extends MenuPage {
 
@@ -24,17 +23,14 @@ public class BackupsLayout extends MenuPage {
     private FileInputLayout backupDirectoryInputController;
 
     @FXML
-    private ListView<File> backups_list_view;
-
-    @FXML
-    private Button save_button;
+    private ListView<Path> backups_list_view;
 
     @FXML
     private void initialize() {
         backupDirectoryInputController.setIsDirectory(true);
-        backupDirectoryInputController.setFile(Preferences.getBackupDirectory());
+        backupDirectoryInputController.setPath(Preferences.getBackupDirectory());
 
-        save_button.setOnAction(event -> {
+        /*save_button.setOnAction(event -> {
             //If this is a different backup directory we need to move existing backups to the new location
             final File oldBackupDirectory = Preferences.getBackupDirectory();
             if (!backupDirectoryInputController.getFile().equals(oldBackupDirectory)) {
@@ -49,18 +45,18 @@ public class BackupsLayout extends MenuPage {
                 //Update location
                 Preferences.setBackupDirectory(backupDirectoryInputController.getFile());
                 Preferences.save();
-                refresh();
+                refreshBackupsList();
             }
-        });
+        });*/
 
         backups_list_view.setCellFactory(param -> new BackupListCell());
 
-        refresh();
+        refreshBackupsList();
     }
 
     @Override
     public void onPageSelected() {
-        refresh();
+        refreshBackupsList();
     }
 
     private void moveBackupDirectory(final Path source, final Path destination){
@@ -83,16 +79,23 @@ public class BackupsLayout extends MenuPage {
         moveFilesTask.startOnNewThread();
     }
 
-    private void refresh() {
+    private void refreshBackupsList() {
         backups_list_view.getItems().clear();
-        final File backupsDirectory = Preferences.getBackupDirectory();
-        if (backupsDirectory != null && backupsDirectory.exists()) {
-            for (File file : backupsDirectory.listFiles()) {
-                if (file.getName().endsWith("zip")) {
-                    backups_list_view.getItems().add(file);
+        final Path backupsDirectory = Preferences.getBackupDirectory();
+        if (backupsDirectory != null && Files.exists(backupsDirectory)) {
+            for (Path path : backupsDirectory) {
+                if (path.getFileName().toString().endsWith("zip")) {
+                    backups_list_view.getItems().add(path);
                 }
             }
         }
-        backups_list_view.getItems().sort((a, b) -> -Long.compare(a.lastModified(), b.lastModified()));
+        backups_list_view.getItems().sort((a, b) -> {
+            try {
+                return -Long.compare(Files.getLastModifiedTime(a).toMillis(), Files.getLastModifiedTime(b).toMillis());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        });
     }
 }

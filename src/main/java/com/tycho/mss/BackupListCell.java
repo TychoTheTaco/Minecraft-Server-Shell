@@ -1,10 +1,6 @@
 package com.tycho.mss;
 
 import com.tycho.mss.util.Utils;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -13,10 +9,12 @@ import javafx.scene.layout.HBox;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class BackupListCell extends ListCell<File> {
+public class BackupListCell extends ListCell<Path> {
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy   hh:mm:ss a");
 
@@ -52,20 +50,37 @@ public class BackupListCell extends ListCell<File> {
             });
 
             restore_button.setOnAction(event -> {
-                final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to restore the backup created on " + SIMPLE_DATE_FORMAT.format(getItem().lastModified()) + "?", ButtonType.YES, ButtonType.NO);
+                final Alert alert;
+                String lastModified = "Unknown";
+                try {
+                    lastModified = SIMPLE_DATE_FORMAT.format(Files.getLastModifiedTime(getItem()).toMillis());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to restore the backup created on " + lastModified + " ?", ButtonType.YES, ButtonType.NO);
                 alert.showAndWait();
                 if (alert.getResult() == ButtonType.YES) {
-                    MinecraftServerShell.restore(getItem());
+                    MinecraftServerManager.restore(getItem());
                 }
             });
 
             delete_button.setOnAction(event -> {
-                final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete the backup created on " + SIMPLE_DATE_FORMAT.format(getItem().lastModified()) + "?", ButtonType.YES, ButtonType.NO);
+                final Alert alert;
+                String lastModified = "Unknown";
+                try {
+                    lastModified = SIMPLE_DATE_FORMAT.format(Files.getLastModifiedTime(getItem()).toMillis());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete the backup created on " + lastModified + " ?", ButtonType.YES, ButtonType.NO);
                 alert.showAndWait();
                 if (alert.getResult() == ButtonType.YES) {
-                    final File file = getItem();
-                    if (file.delete()){
-                        getListView().getItems().remove(file);
+                    final Path path = getItem();
+                    try {
+                        Files.delete(path);
+                        getListView().getItems().remove(path);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -75,14 +90,22 @@ public class BackupListCell extends ListCell<File> {
     }
 
     @Override
-    protected void updateItem(File item, boolean empty) {
+    protected void updateItem(Path item, boolean empty) {
         super.updateItem(item, empty);
         if (empty){
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }else{
-            dateCreated.setText(SIMPLE_DATE_FORMAT.format(new Date(item.lastModified())));
-            size.setText(Utils.humanReadableByteCount(item.length(), true));
+            try {
+                dateCreated.setText(SIMPLE_DATE_FORMAT.format(new Date(Files.getLastModifiedTime(item).toMillis())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                size.setText(Utils.humanReadableByteCount(Files.size(item), true));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }

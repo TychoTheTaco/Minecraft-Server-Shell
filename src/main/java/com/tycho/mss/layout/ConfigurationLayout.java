@@ -1,13 +1,16 @@
 package com.tycho.mss.layout;
 
 import com.tycho.mss.MenuPage;
-import com.tycho.mss.MinecraftServerShell;
+import com.tycho.mss.MinecraftServerManager;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Preferences;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +34,15 @@ public class ConfigurationLayout extends MenuPage {
     @FXML
     private void initialize() {
         //Server JAR
-        serverJarInputController.setValidator(file -> file.exists() && file.getName().endsWith("jar"));
+        serverJarInputController.setValidator(new FileInputLayout.Validator(){
+            @Override
+            boolean isValid(Path path) {
+                return Files.exists(path) && path.getFileName().endsWith("jar");
+            }
+        });
 
         //Load the saved configuration
-        serverJarInputController.setFile(Preferences.getServerJar());
+        serverJarInputController.setPath(Preferences.getServerJar());
         launch_options_text_field.setText(String.join(" ", Preferences.getLaunchOptions()));
 
 
@@ -42,8 +50,8 @@ public class ConfigurationLayout extends MenuPage {
 
         save_button.setOnAction(event -> {
             if (serverJarInputController.isValid()){
-                Preferences.setServerJar(serverJarInputController.getFile());
-                MinecraftServerShell.createServerShell();
+                Preferences.setServerJar(serverJarInputController.getPath());
+                MinecraftServerManager.createServerShell();
             }else{
                 System.out.println("INVALID SERVER JAR!");
             }

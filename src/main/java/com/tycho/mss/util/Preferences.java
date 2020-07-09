@@ -1,6 +1,6 @@
 package com.tycho.mss.util;
 
-import com.tycho.mss.MinecraftServerShell;
+import com.tycho.mss.MinecraftServerManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -11,12 +11,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Preferences {
 
     private static JSONObject preferences = new JSONObject();
 
-    private static final Path PREFERENCES_FILE = MinecraftServerShell.PRIVATE_DIR.resolve("preferences.json");
+    private static final Path PREFERENCES_FILE = MinecraftServerManager.PRIVATE_DIR.resolve("preferences.json");
 
     private static final String PREF_SERVER_JAR = "server_jar";
     private static final String PREF_LAUNCH_OPTIONS = "launch_options";
@@ -27,10 +28,12 @@ public class Preferences {
             System.out.println("Preferences file does not exist! Creating a new one with defaults...");
 
             //Try to find a server JAR in the current directory
-            for (File file : new File(System.getProperty("user.dir")).listFiles()){
-                if (file.getName().contains("server") && file.getName().endsWith("jar")){
-                    setServerJar(file);
-                    break;
+            for (Path path : Paths.get(System.getProperty("user.dir"))){
+                System.out.println("PATH: " + path);
+                //TODO: Check potential server jar for META_INF?
+                final String name = path.getFileName().toString();
+                if (name.contains("server") && name.endsWith("jar")){
+                    setServerJar(path);
                 }
             }
 
@@ -62,14 +65,14 @@ public class Preferences {
         return preferences;
     }
 
-    public static File getServerJar(){
+    public static Path getServerJar(){
         final String string = (String) preferences.get(PREF_SERVER_JAR);
         if (string == null) return null;
-        return new File(string);
+        return Paths.get(string);
     }
 
-    public static void setServerJar(final File file){
-        preferences.put(PREF_SERVER_JAR, file.getAbsolutePath());
+    public static void setServerJar(final Path path){
+        preferences.put(PREF_SERVER_JAR, path.toString());
     }
 
     public static String[] getLaunchOptions(){
@@ -80,10 +83,10 @@ public class Preferences {
         preferences.put(PREF_LAUNCH_OPTIONS, string);
     }
 
-    public static File getBackupDirectory(){
+    public static Path getBackupDirectory(){
         final String string = (String) preferences.get(PREF_BACKUP_DIR);
         if (string == null) return null;
-        return new File(string);
+        return Paths.get(string);
     }
 
     public static void setBackupDirectory(final File directory){

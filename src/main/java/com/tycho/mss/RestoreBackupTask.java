@@ -16,13 +16,13 @@ import java.util.zip.ZipInputStream;
 
 public class RestoreBackupTask extends Task {
 
-    private final File backup;
+    private final Path backup;
 
     private final Path destination;
 
     private boolean isSuccessful = false;
 
-    public RestoreBackupTask(final File backup, final Path destination) {
+    public RestoreBackupTask(final Path backup, final Path destination) {
         this.backup = backup;
         this.destination = destination;
     }
@@ -35,7 +35,7 @@ public class RestoreBackupTask extends Task {
             Utils.deleteDirectory(worldDirectory);
 
             //Extract world from backup
-            final ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(backup));
+            final ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(backup.toFile()));
             final byte[] buffer = new byte[1024];
             ZipEntry entry;
             while ((entry = zipInputStream.getNextEntry()) != null) {

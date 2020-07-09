@@ -15,6 +15,7 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -26,9 +27,9 @@ import java.nio.file.Paths;
  *      > different modes: show all, show authorized, show all but different color for auth/non auth
  * - Guide command should ask the target player if they want to be tracked
  */
-public class MinecraftServerShell extends Application{
+public class MinecraftServerManager extends Application{
 
-    public static final String APP_NAME = "Minecraft Server Shell";
+    public static final String APP_NAME = "Minecraft Server Manager";
 
     private static ServerShell serverShell;
 
@@ -60,8 +61,8 @@ public class MinecraftServerShell extends Application{
         primaryStage.show();
     }
 
-    public static void restore(final File backup){
-        final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, Preferences.getServerJar().getParentFile().toPath());
+    public static void restore(final Path backup){
+        final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, Preferences.getServerJar().getParent());
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Restoring backup...", new ButtonType("Cancel", ButtonBar.ButtonData.OK_DONE));
 
         alert.setOnCloseRequest(event -> {
@@ -81,9 +82,9 @@ public class MinecraftServerShell extends Application{
 
     public static void createServerShell(){
         //Validate server jar
-        final File serverJar = Preferences.getServerJar();
+        final Path serverJar = Preferences.getServerJar();
         if (serverShell == null || serverShell.getServerJar() != serverJar){
-            if (serverJar == null || !serverJar.exists()){
+            if (serverJar == null || !Files.exists(serverJar)){
                 System.out.println("INVALID SERVER JAR");
                 return;
             }
