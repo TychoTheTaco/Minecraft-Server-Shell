@@ -94,7 +94,7 @@ public class BackupCommand extends Command {
                 e.printStackTrace();
             }
         }else if ("list".equals(parameters[0])){
-            final Path backupsDirectory = Preferences.getBackupPath();
+            final Path backupsDirectory = Preferences.getBackupDirectory();
             if (backupsDirectory == null){
                 return;
             }
@@ -118,6 +118,6 @@ public class BackupCommand extends Command {
     }
 
     private List<Path> getBackups() throws IOException {
-        return Files.walk(Preferences.getBackupPath()).filter(Files::isRegularFile).sorted(Comparator.comparing(a -> ((Path) a).toFile().getName()).reversed()).collect(Collectors.toList());
+        return Files.walk(Preferences.getBackupDirectory()).filter(Files::isRegularFile).sorted(Comparator.comparing(a -> ((Path) a).toFile().getName()).reversed()).collect(Collectors.toList());
     }
 }

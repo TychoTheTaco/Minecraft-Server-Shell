@@ -2,21 +2,11 @@ package com.tycho.mss;
 
 import com.tycho.mss.layout.MainLayout;
 import com.tycho.mss.util.Preferences;
-import easytasks.ITask;
-import easytasks.Task;
-import easytasks.TaskAdapter;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -90,7 +80,7 @@ public class MinecraftServerManager extends Application{
         if (serverShell == null || serverShell.getServerJar() != serverJar){
             if (serverJar == null || !Files.exists(serverJar)){
                 System.out.println("INVALID SERVER JAR");
-                return;
+                return null;
             }
 
             //Create new server with the updated JAR

@@ -1,5 +1,6 @@
-package com.tycho.mss;
+package com.tycho.mss.module.backup;
 
+import com.tycho.mss.MinecraftServerManager;
 import com.tycho.mss.util.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,7 +60,7 @@ public class BackupListCell extends ListCell<Path> {
                 alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to restore the backup created on " + lastModified + " ?", ButtonType.YES, ButtonType.NO);
                 alert.showAndWait();
                 if (alert.getResult() == ButtonType.YES) {
-                    MinecraftServerManager.restore(getItem());
+                    MinecraftServerManager.getServerShell().restore(getItem());
                 }
             });
 

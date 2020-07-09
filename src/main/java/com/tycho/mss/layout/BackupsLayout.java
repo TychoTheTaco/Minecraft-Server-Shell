@@ -1,8 +1,8 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.BackupListCell;
 import com.tycho.mss.MenuPage;
-import com.tycho.mss.MoveFilesTask;
+import com.tycho.mss.module.backup.BackupListCell;
+import com.tycho.mss.module.backup.MoveFilesTask;
 import com.tycho.mss.util.Preferences;
 import easytasks.ITask;
 import easytasks.Task;

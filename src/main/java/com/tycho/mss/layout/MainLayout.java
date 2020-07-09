@@ -5,8 +5,6 @@ import com.tycho.mss.MenuListCell;
 import com.tycho.mss.MenuPage;
 import com.tycho.mss.ServerShell;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -42,23 +40,23 @@ public class MainLayout {
     private void loadMenuItems(){
         menu_items_list_view.setCellFactory(param -> new MenuListCell());
         try {
-            //module_list_view.getItems().add(new MenuItem("Dashboard", "dashboard_layout"));
-            module_list_view.getItems().add(new MenuItem("Players", "players_layout"));
-            module_list_view.getItems().add(new MenuItem("Console", "console_layout"));
-            module_list_view.getItems().add(new MenuItem("Configuration", "configuration_layout"));
-            module_list_view.getItems().add(new MenuItem("Custom Commands", "custom_commands_layout"));
-            module_list_view.getItems().add(new MenuItem("Backups", "backups_layout"));
-            module_list_view.getItems().add(new MenuItem("Permissions", "permissions_layout"));
-            module_list_view.getItems().sort(Comparator.comparing(MenuItem::getTitle));
+            //menu_items_list_view.getItems().add(new MenuItem("Dashboard", "dashboard_layout"));
+            menu_items_list_view.getItems().add(new MenuItem("Players", "players_layout"));
+            menu_items_list_view.getItems().add(new MenuItem("Console", "console_layout"));
+            menu_items_list_view.getItems().add(new MenuItem("Configuration", "configuration_layout"));
+            menu_items_list_view.getItems().add(new MenuItem("Custom Commands", "custom_commands_layout"));
+            menu_items_list_view.getItems().add(new MenuItem("Backups", "backups_layout"));
+            menu_items_list_view.getItems().add(new MenuItem("Permissions", "permissions_layout"));
+            menu_items_list_view.getItems().sort(Comparator.comparing(MenuItem::getTitle));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        for (MenuItem menuItem : module_list_view.getItems()) {
-            ((MenuPage) menuItem.getLoader().getController()).addStatusChangedListener((previous, status) -> module_list_view.refresh());
+        for (MenuItem menuItem : menu_items_list_view.getItems()) {
+            ((MenuPage) menuItem.getLoader().getController()).addStatusChangedListener((previous, status) -> menu_items_list_view.refresh());
         }
 
-        module_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        menu_items_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             ((MenuPage) newValue.getLoader().getController()).onPageSelected();
             container.setCenter(newValue.getNode());
             if (oldValue != null) ((MenuPage) oldValue.getLoader().getController()).onPageHidden();
@@ -67,7 +65,7 @@ public class MainLayout {
 
     public void onHidden() {
         miniDashboardController.onPageHidden();
-        for (MenuItem menuItem : module_list_view.getItems()) {
+        for (MenuItem menuItem : menu_items_list_view.getItems()) {
             ((MenuPage) menuItem.getLoader().getController()).onPageHidden();
         }
     }

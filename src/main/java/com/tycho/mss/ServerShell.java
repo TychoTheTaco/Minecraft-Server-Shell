@@ -1,8 +1,10 @@
 package com.tycho.mss;
 
 import com.tycho.mss.command.*;
+import com.tycho.mss.module.backup.RestoreBackupTask;
+import com.tycho.mss.module.permission.PermissionsManager;
+import com.tycho.mss.module.permission.Role;
 import com.tycho.mss.util.Preferences;
-import com.tycho.mss.util.StreamReader;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
@@ -116,10 +118,10 @@ public class ServerShell {
     public ServerShell(final Path serverJar) {
         this.serverJar = serverJar;
 
-        permissionsManager = new PermissionsManager(Paths.get(getDirectory().getAbsolutePath()));
+        permissionsManager = new PermissionsManager(getDirectory());
         permissionsManager.load();
 
-        playerDatabaseManager = new PlayerDatabaseManager(Paths.get(getDirectory().getAbsolutePath()));
+        playerDatabaseManager = new PlayerDatabaseManager(getDirectory());
 
         final Role pleb = new Role("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
         final Role admin = new Role("admin", GiveRandomItemCommand.class, BackupCommand.class, PermissionCommand.class);
@@ -188,7 +190,7 @@ public class ServerShell {
         command.add(this.serverJar.toString());
         command.add("nogui");
 
-        final ProcessBuilder processBuilder = new ProcessBuilder(command).directory(this.serverJar.getParentFile());
+        final ProcessBuilder processBuilder = new ProcessBuilder(command).directory(this.serverJar.getParent().toFile());
         System.out.println(processBuilder.command());
 
         try {
@@ -456,7 +458,7 @@ public class ServerShell {
                     STATE_MUTEX.wait();
                 }
 
-                final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup.toFile(), Paths.get(getDirectory().getAbsolutePath()));
+                final RestoreBackupTask restoreBackupTask = new RestoreBackupTask(backup, getDirectory());
                 restoreBackupTask.addTaskListener(new TaskAdapter() {
                     @Override
                     public void onTaskStarted(ITask task) {

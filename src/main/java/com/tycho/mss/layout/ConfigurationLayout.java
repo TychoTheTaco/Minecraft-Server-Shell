@@ -1,7 +1,7 @@
 package com.tycho.mss.layout;
 
 import com.tycho.mss.MenuPage;
-import com.tycho.mss.MinecraftServerShell;
+import com.tycho.mss.MinecraftServerManager;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Preferences;
 import javafx.beans.value.ChangeListener;
@@ -9,13 +9,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,16 +41,21 @@ public class ConfigurationLayout extends MenuPage {
     @FXML
     private void initialize() {
         //Server JAR
-        serverJarInputController.setValidator(File::exists);
-        serverJarInputController.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
+        serverJarInputController.setValidator(new FileInputLayout.Validator(){
+            @Override
+            boolean isValid(Path path) {
+                return Files.exists(path) && path.getFileName().endsWith("jar");
+            }
+        });
+        //serverJarInputController.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
 
         //Load the saved configuration
         setDefaults();
         initialConfiguration = getConfiguration();
 
-        serverJarInputController.setOnTextChanged(() -> {
-            setDirty(!initialConfiguration.get("server_jar").toString().equals(serverJarInputController.getFile().getAbsolutePath()));
-        });
+        /*serverJarInputController.setOnTextChanged(() -> {
+            setDirty(!initialConfiguration.get("server_jar").toString().equals(serverJarInputController.getPath().getAbsolutePath()));
+        });*/
 
         launch_options_text_field.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -69,8 +72,8 @@ public class ConfigurationLayout extends MenuPage {
 
         save_button.setOnAction(event -> {
             if (serverJarInputController.isValid()){
-                Preferences.setServerJar(serverJarInputController.getFile());
-                MinecraftServerShell.refresh();
+                Preferences.setServerJar(serverJarInputController.getPath());
+                MinecraftServerManager.refresh();
                 setStatus(Status.OK);
             }else{
                 setStatus(Status.ERROR);
@@ -118,13 +121,13 @@ public class ConfigurationLayout extends MenuPage {
     }
 
     private void setDefaults(){
-        serverJarInputController.setFile(Preferences.getServerJar());
+        serverJarInputController.setPath(Preferences.getServerJar());
         launch_options_text_field.setText(String.join(" ", Preferences.getLaunchOptions()));
     }
 
     private JSONObject getConfiguration(){
         final JSONObject root = new JSONObject();
-        root.put("server_jar", serverJarInputController.getFile());
+        root.put("server_jar", serverJarInputController.getPath().toString());
         root.put("launch_options", launch_options_text_field.getText().trim());
         return root;
     }

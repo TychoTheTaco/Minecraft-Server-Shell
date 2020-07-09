@@ -48,7 +48,7 @@ public class MiniDashboardController extends MenuPage{
         //Set up "start/stop" button
         start_stop_button.setOnAction(event -> {
             if (getServerShell() == null || getServerShell().getState() == ServerShell.State.OFFLINE){
-                MinecraftServerShell.start();
+                getServerShell().start();
             }else if (getServerShell().getState() == ServerShell.State.ONLINE){
                 getServerShell().stop();
             }
