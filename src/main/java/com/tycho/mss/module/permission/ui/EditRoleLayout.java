@@ -59,7 +59,6 @@ public class EditRoleLayout {
                 }
             }
         });
-
     }
 
     public void setServerShell(final ServerShell serverShell){

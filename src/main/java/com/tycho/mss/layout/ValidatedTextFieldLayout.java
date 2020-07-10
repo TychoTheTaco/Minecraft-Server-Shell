@@ -48,7 +48,6 @@ public class ValidatedTextFieldLayout {
         container = (Pane) error_icon_container.getParent();
 
         this.input.textProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("SET TEXT");
             checkValidity();
         });
     }
@@ -94,7 +93,6 @@ public class ValidatedTextFieldLayout {
     private Validator validator = new Validator();
 
     public void setValidator(Validator validator) {
-        System.out.println("SET VALIDATOR");
         if (validator == null) this.validator = new Validator();
         this.validator = validator;
 
@@ -109,5 +107,6 @@ public class ValidatedTextFieldLayout {
 
     public void setOnValidStateChangeListener(OnValidStateChangeListener onValidStateChangeListener) {
         this.onValidStateChangeListener = onValidStateChangeListener;
+        if (onValidStateChangeListener != null) onValidStateChangeListener.onValidStateChange(isValid);
     }
 }

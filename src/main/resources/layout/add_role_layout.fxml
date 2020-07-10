@@ -20,9 +20,12 @@
             <Insets right="8" bottom="8" left="8"/>
         </padding>
         <Label text="Role Name:"/>
-        <!--<TextField fx:id="role_name_text_field" GridPane.columnIndex="0" GridPane.rowIndex="0" HBox.hgrow="ALWAYS"/>-->
         <fx:include fx:id="roleNameTextField" source="validated_text_field_layout.fxml" HBox.hgrow="ALWAYS" />
     </HBox>
     <ListView fx:id="commands_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="600"/>
-    <Button fx:id="ok_button" GridPane.columnIndex="0" GridPane.rowIndex="2" text="Save" GridPane.halignment="CENTER"/>
+    <Button fx:id="ok_button" GridPane.columnIndex="0" GridPane.rowIndex="2" text="Save" GridPane.halignment="CENTER">
+        <GridPane.margin>
+            <Insets top="8" />
+        </GridPane.margin>
+    </Button>
 </GridPane>
