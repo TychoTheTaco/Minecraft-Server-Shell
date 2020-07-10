@@ -9,7 +9,7 @@
 <?import javafx.scene.control.Button?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.module.permission.ui.EditRoleLayout" style="-fx-background-color: #505050" prefWidth="500">
+          fx:controller="com.tycho.mss.module.permission.ui.EditRoleLayout" style="-fx-background-color: #505050">
 
     <padding>
         <Insets top="8" bottom="8"/>
@@ -20,8 +20,9 @@
             <Insets right="8" bottom="8" left="8"/>
         </padding>
         <Label text="Role Name:"/>
-        <TextField fx:id="role_name_text_field" GridPane.columnIndex="0" GridPane.rowIndex="0" HBox.hgrow="ALWAYS"/>
+        <!--<TextField fx:id="role_name_text_field" GridPane.columnIndex="0" GridPane.rowIndex="0" HBox.hgrow="ALWAYS"/>-->
+        <fx:include fx:id="roleNameTextField" source="validated_text_field_layout.fxml" HBox.hgrow="ALWAYS" />
     </HBox>
-    <ListView fx:id="commands_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS"/>
+    <ListView fx:id="commands_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="600"/>
     <Button fx:id="ok_button" GridPane.columnIndex="0" GridPane.rowIndex="2" text="Save" GridPane.halignment="CENTER"/>
 </GridPane>

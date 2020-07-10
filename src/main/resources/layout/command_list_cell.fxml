@@ -10,9 +10,9 @@
                 <Insets left="8" right="8"/>
             </padding>
             <GridPane fx:id="grid_pane" HBox.hgrow="ALWAYS">
-                <CheckBox fx:id="toggle_button" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2" />
-                <Label fx:id="command_name_label" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                <Label fx:id="description_label" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" style="-fx-font-size: 0.95em; -fx-text-fill: gray;"/>
+                <CheckBox fx:id="toggle_button" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2" prefWidth="32" prefHeight="32"/>
+                <Label fx:id="command_name_label" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="description_label" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" style="-fx-text-fill: gray;"/>
             </GridPane>
         </HBox>
     </graphic>
