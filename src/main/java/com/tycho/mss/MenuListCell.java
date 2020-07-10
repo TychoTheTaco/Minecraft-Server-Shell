@@ -5,11 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.ColorInput;
+import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
@@ -20,6 +18,9 @@ public class MenuListCell extends ListCell<MenuItem> {
 
     @FXML
     private ImageView error_icon;
+
+    private final Effect errorEffect;
+    private final Effect warningEffect;
 
     public MenuListCell() {
         try {
@@ -32,7 +33,7 @@ public class MenuListCell extends ListCell<MenuItem> {
         }
 
         //Apply red tint
-        error_icon.setEffect(new Blend(
+        errorEffect = new Blend(
                 BlendMode.SRC_ATOP,
                 new ColorAdjust(0, 0, 0, 0),
                 new ColorInput(
@@ -42,7 +43,19 @@ public class MenuListCell extends ListCell<MenuItem> {
                         error_icon.getImage().getHeight(),
                         CustomColor.RED
                 )
-        ));
+        );
+        warningEffect = new Blend(
+                BlendMode.SRC_ATOP,
+                new ColorAdjust(0, 0, 0, 0),
+                new ColorInput(
+                        0,
+                        0,
+                        error_icon.getImage().getWidth(),
+                        error_icon.getImage().getHeight(),
+                        Color.YELLOW
+                )
+        );
+
     }
 
     @Override
@@ -56,6 +69,12 @@ public class MenuListCell extends ListCell<MenuItem> {
             error_icon.setVisible(false);
             switch (((MenuPage) item.getLoader().getController()).getStatus()) {
                 case ERROR:
+                    error_icon.setEffect(errorEffect);
+                    error_icon.setVisible(true);
+                    break;
+
+                case WARNING:
+                    error_icon.setEffect(warningEffect);
                     error_icon.setVisible(true);
                     break;
             }

@@ -28,7 +28,7 @@ public class FileInputLayout extends ValidatedTextFieldLayout{
 
         setValidator(new PathValidator() {
             @Override
-            protected boolean isPathValid(Path path) {
+            protected boolean isPathValid(Path path, StringBuilder invalidReason) {
                 return true;
             }
         });
@@ -97,10 +97,10 @@ public class FileInputLayout extends ValidatedTextFieldLayout{
                 invalidReason.append("Invalid Path!");
                 return false;
             }
-            return super.isTextValid(string, invalidReason) && isPathValid(path);
+            return super.isTextValid(string, invalidReason) && isPathValid(path, invalidReason);
         }
 
-        protected abstract boolean isPathValid(final Path path);
+        protected abstract boolean isPathValid(final Path path, final StringBuilder invalidReason);
     }
 
     private OnPathChangedListener onPathChangedListener;

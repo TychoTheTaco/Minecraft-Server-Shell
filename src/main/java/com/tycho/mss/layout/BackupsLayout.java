@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,33 @@ public class BackupsLayout extends MenuPage {
                 save_button.setDisable(false);
             }
         });
+        backupDirectoryInputController.setValidator(new FileInputLayout.PathValidator() {
+            @Override
+            protected boolean isPathValid(Path path, StringBuilder invalidReason) {
+                System.out.println("RESOLVE: " + Paths.get(System.getProperty("user.dir")).resolve(path));
+                if (path.toString().length() == 0){
+                    invalidReason.append("Path cannot be empty");
+                    return false;
+                }
+
+                if (path.toAbsolutePath().toString().contains(".")){
+                    return false;
+                }
+
+                return true;
+            }
+        });
+        backupDirectoryInputController.setOnValidStateChangeListener(new ValidatedTextFieldLayout.OnValidStateChangeListener() {
+            @Override
+            public void onValidStateChange(boolean isValid) {
+                System.out.println("SET STATUS");
+                if (isValid){
+                    setStatus(Status.OK);
+                }else{
+                    setStatus(Status.WARNING);
+                }
+            }
+        });
 
         save_button.setDisable(true);
         save_button.setOnAction(event -> {
@@ -60,7 +88,7 @@ public class BackupsLayout extends MenuPage {
                 }
 
                 //Update location
-                Preferences.setBackupDirectory(backupDirectoryInputController.getPath());
+                Preferences.setBackupDirectory(Paths.get(System.getProperty("user.dir")).resolve(backupDirectoryInputController.getPath()));
                 Preferences.save();
                 refreshBackupsList();
             }

@@ -51,7 +51,7 @@ public class LocationCommand extends Command {
                 final JSONObject root = Utils.createText("", "white");
                 final JSONArray extra = new JSONArray();
                 for (int i = 0; i < savedLocations.size(); i++){
-                    extra.add("[" + i + "]: (");
+                    extra.add("[" + (i + 1) + "]: (");
                     extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getX()), "yellow"));
                     extra.add(Utils.createText(", ", "white"));
                     extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getY()), "yellow"));
@@ -71,7 +71,7 @@ public class LocationCommand extends Command {
             }
 
             try {
-                final int index = Integer.parseInt(parameters[1]);
+                final int index = Integer.parseInt(parameters[1]) - 1;
                 context.getPlayer(player).getSavedLocations().remove(index);
                 final JSONObject root = Utils.createText("Location removed!", "green");
                 context.tellraw(player, root);

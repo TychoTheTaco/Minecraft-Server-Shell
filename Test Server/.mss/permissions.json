@@ -1,1 +1,1 @@
-{"permissions":[{"players":["TychoTheTaco"],"name":"Default","commands":["HelpCommand","LocationCommand","HereCommand","GuideCommand"]}]}
+{"permissions":[{"players":["TychoTheTaco"],"name":"Default","commands":["LocationCommand","GuideCommand","HereCommand","HelpCommand"]},{"players":["TychoTheTaco"],"name":"Admin","commands":["PermissionCommand","LocationCommand","GuideCommand","BackupCommand","GiveRandomItemCommand","HereCommand","HelpCommand"]}]}

@@ -68,6 +68,7 @@ public class MiniDashboardController extends MenuPage{
                 final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Please specify a backup directory in the settings!", ButtonType.OK);
                 alert.show();
                 create_backup_button.setDisable(false);
+                create_backup_button.setText("Create Backup");
                 return;
             }
 

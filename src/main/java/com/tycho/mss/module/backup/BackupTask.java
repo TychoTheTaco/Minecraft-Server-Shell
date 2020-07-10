@@ -30,8 +30,8 @@ public class BackupTask extends Task {
             final List<Path> files = Files.walk(source).filter(Files::isRegularFile).collect(Collectors.toList());
 
             //Create ZIP file
-            final Path destinationZip = Files.createFile(destination);
-            final ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(destinationZip));
+            Files.createDirectories(destination.getParent());
+            final ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(destination));
             for (int i = 0; i < files.size(); i++){
                 ZipEntry zipEntry = new ZipEntry(source.relativize(files.get(i)).toString());
                 try {
@@ -46,6 +46,7 @@ public class BackupTask extends Task {
             zipOutputStream.close();
 
             this.isSuccessful = true;
+            System.out.println("Saved backup to " + destination.toAbsolutePath());
         }catch (IOException e){
             e.printStackTrace();
         }
