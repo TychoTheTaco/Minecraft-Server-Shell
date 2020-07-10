@@ -12,7 +12,9 @@ import javafx.scene.control.TextField;
 import org.json.simple.JSONObject;
 
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,17 +45,23 @@ public class ConfigurationLayout extends MenuPage {
         //Server JAR
         serverJarInputController.setValidator(new FileInputLayout.Validator(){
             @Override
-            boolean isValid(Path path, final StringBuilder stringBuilder) {
-                if (!Files.exists(path)){
-                    if (stringBuilder != null) stringBuilder.append("File does not exist!");
+            protected boolean isTextValid(String string, StringBuilder invalidReason) {
+                try {
+                    final Path path = Paths.get(string);
+
+                    if (!Files.exists(path)){
+                        if (invalidReason != null) invalidReason.append("File does not exist!");
+                        return false;
+                    }
+
+                    if (!path.getFileName().toString().toLowerCase().endsWith("jar")){
+                        if (invalidReason != null) invalidReason.append("Not a valid JAR file!");
+                        return false;
+                    }
+                }catch (InvalidPathException e){
+                    invalidReason.append("Invalid Path!");
                     return false;
                 }
-
-                if (!path.getFileName().toString().toLowerCase().endsWith("jar")){
-                    if (stringBuilder != null) stringBuilder.append("Not a valid JAR file!");
-                    return false;
-                }
-
                 return true;
             }
         });
@@ -63,9 +71,13 @@ public class ConfigurationLayout extends MenuPage {
         setDefaults();
         initialConfiguration = getConfiguration();
 
-        /*serverJarInputController.setOnTextChanged(() -> {
-            setDirty(!initialConfiguration.get("server_jar").toString().equals(serverJarInputController.getPath().getAbsolutePath()));
-        });*/
+        serverJarInputController.setOnPathChangedListener((path) -> {
+            if (path == null){
+                setDirty(true);
+                return;
+            }
+            setDirty(!initialConfiguration.get("server_jar").toString().equals(path.toString()));
+        });
 
         launch_options_text_field.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -124,7 +136,9 @@ public class ConfigurationLayout extends MenuPage {
         if (dirty){
             revert_button.setVisible(true);
             revert_button.setManaged(true);
+            save_button.setDisable(false);
         }else{
+            save_button.setDisable(true);
             revert_button.setVisible(false);
             revert_button.setManaged(false);
         }

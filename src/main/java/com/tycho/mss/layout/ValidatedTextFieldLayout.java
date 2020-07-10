@@ -31,7 +31,7 @@ public class ValidatedTextFieldLayout {
     private boolean isValid = false;
 
     @FXML
-    private void initialize() {
+    protected void initialize() {
         error_icon.setEffect(new Blend(
                 BlendMode.SRC_ATOP,
                 new ColorAdjust(0, 0, 0, 0),
@@ -49,7 +49,12 @@ public class ValidatedTextFieldLayout {
 
         this.input.textProperty().addListener((observable, oldValue, newValue) -> {
             checkValidity();
+            onTextChanged(oldValue, newValue);
         });
+    }
+
+    protected void onTextChanged(final String oldText, final String newText){
+
     }
 
     private void checkValidity(){
@@ -101,6 +106,10 @@ public class ValidatedTextFieldLayout {
         this.validator = validator;
 
         checkValidity();
+    }
+
+    protected Validator getValidator(){
+        return this.validator;
     }
 
     public interface OnValidStateChangeListener{
