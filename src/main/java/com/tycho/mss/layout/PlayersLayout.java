@@ -78,8 +78,6 @@ public class PlayersLayout extends MenuPage {
         });*/
         pingColumn.setPrefWidth(100);
         players_table_view.getColumns().add(pingColumn);
-
-        //players_table_view.getItems().add(new Player("TychoTheTaco", "192.168.1.7"));
     }
 
     @Override

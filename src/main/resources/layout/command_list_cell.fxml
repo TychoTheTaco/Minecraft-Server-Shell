@@ -12,7 +12,7 @@
             <GridPane fx:id="grid_pane" HBox.hgrow="ALWAYS">
                 <CheckBox fx:id="toggle_button" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2" prefWidth="32" prefHeight="32"/>
                 <Label fx:id="command_name_label" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
-                <Label fx:id="description_label" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" style="-fx-text-fill: gray;"/>
+                <Label fx:id="description_label" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" style="-fx-text-fill: lightgray;"/>
             </GridPane>
         </HBox>
     </graphic>

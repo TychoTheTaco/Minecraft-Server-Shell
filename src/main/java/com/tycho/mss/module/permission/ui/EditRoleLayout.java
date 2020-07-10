@@ -63,6 +63,12 @@ public class EditRoleLayout {
 
     public void setServerShell(final ServerShell serverShell){
         commands_list_view.getItems().setAll(serverShell.getCustomCommands());
+        for (Command command : commands_list_view.getItems()){
+            if (command.getCommand().equals("help")){
+                commands_list_view.getSelectionModel().select(command);
+                break;
+            }
+        }
     }
 
     public void setStage(Stage stage) {
