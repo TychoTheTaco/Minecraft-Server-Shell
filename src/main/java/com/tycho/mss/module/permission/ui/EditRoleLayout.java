@@ -111,5 +111,6 @@ public class EditRoleLayout {
                 //commands_list_view.getSelectionModel().getSelectedItems().add(command);
             }
         }
+        auto_assign_check_boxController.setSelected(role.isAutoAssign());
     }
 }

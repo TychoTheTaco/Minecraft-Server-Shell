@@ -33,6 +33,7 @@ public class Role {
                 e.printStackTrace();
             }
         }
+        this.autoAssign = (boolean) jsonObject.get("autoAssign");
     }
 
     public String getName() {
@@ -66,6 +67,7 @@ public class Role {
             commandsArray.add(cls.getSimpleName());
         }
         root.put("commands", commandsArray);
+        root.put("autoAssign", autoAssign);
         return root;
     }
 

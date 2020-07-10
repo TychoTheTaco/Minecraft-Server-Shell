@@ -65,7 +65,6 @@ public class BackupsLayout extends MenuPage {
         backupDirectoryInputController.setOnValidStateChangeListener(new ValidatedTextFieldLayout.OnValidStateChangeListener() {
             @Override
             public void onValidStateChange(boolean isValid) {
-                System.out.println("SET STATUS");
                 if (isValid){
                     setStatus(Status.OK);
                 }else{

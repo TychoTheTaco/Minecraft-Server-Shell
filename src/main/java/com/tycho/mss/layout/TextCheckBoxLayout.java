@@ -16,7 +16,6 @@ public class TextCheckBoxLayout extends MenuPage {
     @FXML
     private Label label;
 
-
     @FXML
     private void initialize() {
        final Parent root = label.getParent();
@@ -34,5 +33,9 @@ public class TextCheckBoxLayout extends MenuPage {
 
     public boolean isSelected(){
         return check_box.isSelected();
+    }
+
+    public void setSelected(final boolean selected){
+        this.check_box.setSelected(selected);
     }
 }
