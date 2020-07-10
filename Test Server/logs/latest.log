@@ -1,34 +1,679 @@
-[22:27:29] [main/WARN]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[22:27:29] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[22:27:29] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[22:27:29] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[22:27:29] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[22:27:29] [Server thread/INFO]: Starting minecraft server version 1.15.1
-[22:27:29] [Server thread/INFO]: Loading properties
-[22:27:29] [Server thread/INFO]: Default game type: SPECTATOR
-[22:27:29] [Server thread/INFO]: Generating keypair
-[22:27:29] [Server thread/INFO]: Starting Minecraft server on *:25565
-[22:27:29] [Server thread/INFO]: Using default channel type
-[22:27:33] [Server thread/INFO]: Preparing level "world"
-[22:27:33] [Server thread/INFO]: Reloading ResourceManager: Default
-[22:27:33] [Server thread/INFO]: Loaded 6 recipes
-[22:27:34] [Server thread/INFO]: Loaded 825 advancements
-[22:27:34] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[22:27:35] [Server thread/INFO]: Preparing spawn area: 0%
-[22:27:35] [Server thread/INFO]: Preparing spawn area: 0%
-[22:27:35] [Server thread/INFO]: Preparing spawn area: 0%
-[22:27:36] [Server thread/INFO]: Time elapsed: 1397 ms
-[22:27:36] [Server thread/INFO]: Done (3.037s)! For help, type "help"
-[22:37:57] [Server thread/INFO]: Stopping the server
-[22:37:57] [Server thread/INFO]: Stopping server
-[22:37:57] [Server thread/INFO]: Saving players
-[22:37:57] [Server thread/INFO]: Saving worlds
-[22:37:57] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:the_end
-[22:37:57] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[22:37:57] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:the_nether
-[22:37:57] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[22:37:57] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:overworld
-[22:37:57] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
-[22:37:57] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[22:37:57] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[22:37:57] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[00:00:17] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[00:00:17] [main/WARN]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[00:00:17] [main/WARN]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[00:00:17] [main/WARN]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[00:00:17] [Server thread/INFO]: Starting minecraft server version 1.15.1
+[00:00:17] [Server thread/INFO]: Loading properties
+[00:00:17] [Server thread/INFO]: Default game type: SPECTATOR
+[00:00:17] [Server thread/INFO]: Generating keypair
+[00:00:17] [Server thread/INFO]: Starting Minecraft server on *:25565
+[00:00:17] [Server thread/INFO]: Using default channel type
+[00:00:18] [Server thread/INFO]: Preparing level "world"
+[00:00:19] [Server thread/INFO]: Reloading ResourceManager: Default
+[00:00:19] [Server thread/INFO]: Loaded 6 recipes
+[00:00:20] [Server thread/INFO]: Loaded 825 advancements
+[00:00:20] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[00:00:22] [Server thread/INFO]: Preparing spawn area: 0%
+[00:00:22] [Server thread/INFO]: Preparing spawn area: 0%
+[00:00:22] [Server thread/INFO]: Preparing spawn area: 0%
+[00:00:22] [Server-Worker-7/INFO]: Preparing spawn area: 0%
+[00:00:22] [Server-Worker-7/INFO]: Preparing spawn area: 0%
+[00:00:23] [Server thread/INFO]: Time elapsed: 2358 ms
+[00:00:23] [Server thread/INFO]: Done (4.331s)! For help, type "help"
+[00:00:25] [User Authenticator #1/INFO]: UUID of player TychoTheTaco is ade89a5f-46f6-4d74-88bf-174ff1e917e8
+[00:00:25] [Server thread/INFO]: TychoTheTaco[/127.0.0.1:65516] logged in with entity id 127 at (-222.97325042116933, 76.0, -78.30000001192093)
+[00:00:25] [Server thread/INFO]: TychoTheTaco joined the game
+[00:00:32] [Server thread/INFO]: <TychoTheTaco> !help
+[00:01:00] [Server thread/INFO]: <TychoTheTaco> !help
+[00:01:11] [Server thread/INFO]: <TychoTheTaco> !here
+[00:01:11] [Server thread/INFO]: TychoTheTaco has the following entity data: [-222.97325042116933d, 76.0d, -78.30000001192093d]
+[00:01:11] [Server thread/INFO]: Summoned new Firework Rocket
+[00:01:20] [Server thread/INFO]: <TychoTheTaco> !guide
+[00:01:35] [Server thread/INFO]: <TychoTheTaco> !guide 0 60 0
+[00:01:35] [Server thread/INFO]: TychoTheTaco has the following entity data: [-226.86703929301225d, 77.0d, -80.12991674615799d]
+[00:01:35] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:35] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:35] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:35] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:36] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:36] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:36] [Server thread/INFO]: TychoTheTaco has the following entity data: [-226.86703929301225d, 77.0d, -80.12991674615799d]
+[00:01:36] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:36] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:36] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:36] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:36] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:36] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:36] [Server thread/INFO]: TychoTheTaco has the following entity data: [-227.6224595853601d, 77.0d, -79.2943535185272d]
+[00:01:36] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:37] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:37] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:37] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:37] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:37] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:37] [Server thread/INFO]: TychoTheTaco has the following entity data: [-228.95112049403417d, 77.0d, -80.6241916988115d]
+[00:01:37] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:37] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:37] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:37] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:38] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:38] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:38] [Server thread/INFO]: TychoTheTaco has the following entity data: [-228.97058965884221d, 77.0d, -80.65111493383455d]
+[00:01:38] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:38] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:38] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:38] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:38] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:38] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:38] [Server thread/INFO]: TychoTheTaco has the following entity data: [-228.30608908159562d, 77.0d, -80.27473961575195d]
+[00:01:38] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: TychoTheTaco has the following entity data: [-227.0919329539937d, 77.0d, -79.6466275309849d]
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:39] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:40] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:40] [Server thread/INFO]: TychoTheTaco has the following entity data: [-224.59377332683516d, 77.0d, -78.40420467371975d]
+[00:01:40] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:40] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:40] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:40] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:40] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:40] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:40] [Server thread/INFO]: TychoTheTaco has the following entity data: [-221.76485559468446d, 79.47613547085977d, -77.05991904473896d]
+[00:01:40] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:40] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:41] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:41] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:41] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:41] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:41] [Server thread/INFO]: TychoTheTaco has the following entity data: [-217.72614045183852d, 79.49390748022948d, -75.18318499942231d]
+[00:01:41] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:41] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:41] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:41] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:41] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: TychoTheTaco has the following entity data: [-212.84648489511798d, 79.49390748022948d, -72.91550350682729d]
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: TychoTheTaco has the following entity data: [-209.668585797498d, 79.49390748022948d, -71.40837995764329d]
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:42] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: TychoTheTaco has the following entity data: [-208.72187034882216d, 79.49390748022948d, -70.95908176116647d]
+[00:01:43] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:43] [Server thread/INFO]: TychoTheTaco has the following entity data: [-206.87670321065391d, 81.20765154832755d, -70.04706065642694d]
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:44] [Server thread/INFO]: TychoTheTaco has the following entity data: [-202.36006976459635d, 83.96772078547848d, -67.84768986330614d]
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:44] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:45] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:45] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:45] [Server thread/INFO]: TychoTheTaco has the following entity data: [-196.4265570070252d, 83.98825129435339d, -65.02668402961172d]
+[00:01:45] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:45] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:45] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:45] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:45] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:45] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:45] [Server thread/INFO]: TychoTheTaco has the following entity data: [-190.1599906909133d, 83.98825129435339d, -62.07071419139546d]
+[00:01:45] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:46] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:46] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:46] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:46] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:46] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:46] [Server thread/INFO]: TychoTheTaco has the following entity data: [-184.0461344746734d, 83.98825129435339d, -59.192915649210555d]
+[00:01:46] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:46] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:46] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:46] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:47] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:47] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:47] [Server thread/INFO]: TychoTheTaco has the following entity data: [-181.4056829964273d, 83.98825129435339d, -57.95041781831645d]
+[00:01:47] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:47] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:47] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:47] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:47] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:47] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:47] [Server thread/INFO]: TychoTheTaco has the following entity data: [-180.63083510765475d, 83.98825129435339d, -57.58580334650943d]
+[00:01:47] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: TychoTheTaco has the following entity data: [-180.3591122569518d, 83.98825129435339d, -57.45795373338021d]
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:48] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:49] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:49] [Server thread/INFO]: TychoTheTaco has the following entity data: [-177.4957143096869d, 83.98825129435339d, -56.11136618601623d]
+[00:01:49] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:49] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:49] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:49] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:49] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:49] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:49] [Server thread/INFO]: TychoTheTaco has the following entity data: [-176.0023974020047d, 83.98825129435339d, -55.40909943720449d]
+[00:01:49] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:49] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: TychoTheTaco has the following entity data: [-174.28751888363803d, 83.98825129435339d, -54.60264320713493d]
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:50] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:51] [Server thread/INFO]: TychoTheTaco has the following entity data: [-173.32042024360194d, 83.98825129435339d, -54.14784592333975d]
+[00:01:51] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:51] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:51] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:51] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:51] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:51] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:51] [Server thread/INFO]: TychoTheTaco has the following entity data: [-171.83345398301455d, 83.98825129435339d, -53.44857127411071d]
+[00:01:51] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:51] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:51] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:52] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:52] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:52] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:52] [Server thread/INFO]: TychoTheTaco has the following entity data: [-170.16353551549014d, 83.98825129435339d, -52.66325994273424d]
+[00:01:52] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:52] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:52] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:52] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:52] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:52] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: TychoTheTaco has the following entity data: [-169.48248222006865d, 83.98825129435339d, -52.2313560827532d]
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: TychoTheTaco has the following entity data: [-166.04133170201078d, 83.98825129435339d, -50.46165496721123d]
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:53] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:54] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:54] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:54] [Server thread/INFO]: TychoTheTaco has the following entity data: [-163.5913835048069d, 83.98825129435339d, -49.66726210604733d]
+[00:01:54] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:54] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:54] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:54] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:54] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:54] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:54] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.8724393379304d, 83.98825129435339d, -49.43414529386577d]
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:55] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.67965276960518d, 83.98825129435339d, -49.37163447270613d]
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:55] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:56] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:56] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:56] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.61504377858267d, 83.98825129435339d, -49.36854653509624d]
+[00:01:56] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:56] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:56] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:56] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:56] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:56] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:56] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.61504377858267d, 83.98825129435339d, -49.36854653509624d]
+[00:01:56] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:57] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:57] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:57] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:57] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:57] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:57] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:01:57] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:57] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:57] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:57] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:58] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:59] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:59] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:59] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:59] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:59] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:01:59] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:59] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:59] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:59] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:01:59] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:00] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:00] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:00] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:00] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:00] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:00] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:00] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:00] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:00] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:00] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:00] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:01] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:01] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:01] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:01] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:01] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:01] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:01] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:01] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:01] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:01] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:02] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:02] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:02] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:02] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:02] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:02] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:02] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:02] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:02] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:02] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:02] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:03] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:04] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:04] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:04] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:04] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:04] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:04] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:04] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:04] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:04] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:04] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:04] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:05] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:05] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:06] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:06] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:07] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:07] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:07] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:07] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:07] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:07] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:07] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:07] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:07] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:07] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:07] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:08] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:08] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:08] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:08] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:08] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:08] [Server thread/INFO]: TychoTheTaco has the following entity data: [-162.60488939765673d, 83.98825129435339d, -49.36854653509624d]
+[00:02:08] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:08] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:08] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:08] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: TychoTheTaco has the following entity data: [-160.322654076258d, 83.98825129435339d, -48.52249304324781d]
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: TychoTheTaco has the following entity data: [-155.45808934167792d, 83.98825129435339d, -46.653411595848794d]
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:09] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:10] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:10] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:10] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:10] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:10] [Server thread/INFO]: TychoTheTaco has the following entity data: [-149.27090219792248d, 83.98825129435339d, -44.26221315261912d]
+[00:02:10] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:10] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:10] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:10] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:10] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: TychoTheTaco has the following entity data: [-142.7919777061947d, 83.98825129435339d, -41.754490439960236d]
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: TychoTheTaco has the following entity data: [-136.22744207182154d, 83.98825129435339d, -39.212573353762636d]
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:11] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:12] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:12] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:12] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:12] [Server thread/INFO]: TychoTheTaco has the following entity data: [-129.63778360762902d, 83.98825129435339d, -36.660621832786504d]
+[00:02:12] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:12] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:12] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:12] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:12] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:12] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: TychoTheTaco has the following entity data: [-123.54832644907333d, 83.98825129435339d, -34.30229999218734d]
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: TychoTheTaco has the following entity data: [-117.45675084806365d, 87.92697589092823d, -31.94351836955324d]
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:13] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:14] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:14] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:14] [Server thread/INFO]: TychoTheTaco has the following entity data: [-110.84130697039635d, 91.79035320358476d, -29.42885266324567d]
+[00:02:14] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:14] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:14] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:14] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:14] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:14] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:14] [Server thread/INFO]: TychoTheTaco has the following entity data: [-106.83695438120537d, 91.85758302740662d, -27.934951201495053d]
+[00:02:14] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:15] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:15] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:15] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:15] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:15] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:15] [Server thread/INFO]: TychoTheTaco has the following entity data: [-105.66186588774193d, 91.85758302740662d, -27.49656162940544d]
+[00:02:15] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:15] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:15] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:15] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:16] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:16] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:16] [Server thread/INFO]: TychoTheTaco has the following entity data: [-105.31703287498536d, 91.85758302740662d, -27.367914980454636d]
+[00:02:16] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:16] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:16] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:16] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:16] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:16] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:16] [Server thread/INFO]: TychoTheTaco has the following entity data: [-105.2158406606558d, 91.85758302740662d, -27.344825687502933d]
+[00:02:16] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: TychoTheTaco has the following entity data: [-104.94549087373011d, 91.85758302740662d, -27.24996703707457d]
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:17] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:18] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:18] [Server thread/INFO]: TychoTheTaco has the following entity data: [-101.44827235258211d, 91.85758302740662d, -25.974002841438782d]
+[00:02:18] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:18] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:18] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:18] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:18] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:18] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:18] [Server thread/INFO]: TychoTheTaco has the following entity data: [-95.67520148732581d, 91.85758302740662d, -23.905757262049946d]
+[00:02:18] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:18] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: TychoTheTaco has the following entity data: [-89.24787644441429d, 91.85758302740662d, -21.684989929869936d]
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:19] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:20] [Server thread/INFO]: TychoTheTaco has the following entity data: [-82.62674265549194d, 91.85758302740662d, -19.4247426435487d]
+[00:02:20] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:20] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:20] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:20] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:20] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:20] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:20] [Server thread/INFO]: TychoTheTaco has the following entity data: [-77.30931663590252d, 91.85758302740662d, -17.62254245234839d]
+[00:02:20] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:20] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:20] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: TychoTheTaco has the following entity data: [-75.65448795595555d, 91.85758302740662d, -17.06201019877404d]
+[00:02:21] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:21] [Server thread/INFO]: TychoTheTaco has the following entity data: [-74.67357051223951d, 91.85758302740662d, -16.730542636787696d]
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:22] [Server thread/INFO]: TychoTheTaco has the following entity data: [-70.33047943072975d, 91.85758302740662d, -15.267247022883716d]
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:22] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:23] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:23] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:23] [Server thread/INFO]: TychoTheTaco has the following entity data: [-64.80431297517438d, 91.85758302740662d, -13.405646578563559d]
+[00:02:23] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:23] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:23] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:23] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:23] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:23] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:23] [Server thread/INFO]: TychoTheTaco has the following entity data: [-58.32060326430133d, 91.85758302740662d, -11.221550359435138d]
+[00:02:23] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: TychoTheTaco has the following entity data: [-51.67880873824715d, 91.85758302740662d, -8.984222972037735d]
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:24] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:25] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:25] [Server thread/INFO]: TychoTheTaco has the following entity data: [-45.41503998715996d, 91.85758302740662d, -6.874241292187752d]
+[00:02:25] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:25] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:25] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:25] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:25] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:25] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:25] [Server thread/INFO]: TychoTheTaco has the following entity data: [-42.89302586001569d, 91.85758302740662d, -6.0246885526938865d]
+[00:02:25] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:25] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:26] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:26] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:26] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:26] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:26] [Server thread/INFO]: TychoTheTaco has the following entity data: [-42.15293374396198d, 91.85758302740662d, -5.775384919576182d]
+[00:02:26] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:26] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:26] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:26] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:26] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: TychoTheTaco has the following entity data: [-41.954476303353815d, 91.85758302740662d, -5.708533564333168d]
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: TychoTheTaco has the following entity data: [-39.47879469865251d, 89.41063509017366d, -5.268858952073798d]
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:27] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:28] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:28] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:28] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:28] [Server thread/INFO]: TychoTheTaco has the following entity data: [-34.23608766908314d, 88.11321730613354d, -4.370963168676185d]
+[00:02:28] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:28] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:28] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:28] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:28] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:28] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:29] [Server thread/INFO]: TychoTheTaco has the following entity data: [-31.274149056676478d, 88.11321730613354d, -3.8668875972783354d]
+[00:02:29] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:29] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:29] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:29] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:29] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:29] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:29] [Server thread/INFO]: TychoTheTaco has the following entity data: [-30.13304367037263d, 86.39947323803547d, -3.6674298083988637d]
+[00:02:29] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:29] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:29] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: TychoTheTaco has the following entity data: [-25.797436249125745d, 85.10372720311487d, -2.886768812544407d]
+[00:02:30] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:30] [Server thread/INFO]: TychoTheTaco has the following entity data: [-19.592913192428448d, 80.43096253838208d, -1.8326094865110842d]
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:31] [Server thread/INFO]: TychoTheTaco has the following entity data: [-13.48264888173513d, 75.55622647830327d, -0.8111156984528959d]
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:31] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:32] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:32] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:32] [Server thread/INFO]: TychoTheTaco has the following entity data: [-11.155218637709083d, 74.99939550212368d, -0.4226416821157814d]
+[00:02:32] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:32] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:32] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:32] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:32] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:32] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:32] [Server thread/INFO]: TychoTheTaco has the following entity data: [-9.597665056780563d, 73.28565143402561d, -0.15588460948356742d]
+[00:02:32] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: TychoTheTaco has the following entity data: [-4.599299996064131d, 68.43686096486661d, 0.7062083547295369d]
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:33] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:34] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:34] [Server thread/INFO]: TychoTheTaco has the following entity data: [-0.25415598770423325d, 63.95189501836798d, 1.435872738625063d]
+[00:02:34] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:34] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:34] [Server thread/INFO]: Displaying particle minecraft:composter
+[00:02:44] [Server thread/INFO]: <TychoTheTaco> !help
+[00:02:48] [Server thread/INFO]: <TychoTheTaco> !location
+[00:02:59] [Server thread/INFO]: <TychoTheTaco> !location save
+[00:02:59] [Server thread/INFO]: TychoTheTaco has the following entity data: [2.813739380283656d, 70.87618035560871d, 26.699999988079067d]
+[00:03:02] [Server thread/INFO]: <TychoTheTaco> !location
+[00:03:06] [Server thread/INFO]: <TychoTheTaco> !location list

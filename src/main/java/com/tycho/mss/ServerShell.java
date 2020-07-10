@@ -3,6 +3,7 @@ package com.tycho.mss;
 import com.tycho.mss.command.*;
 import com.tycho.mss.module.backup.RestoreBackupTask;
 import com.tycho.mss.module.permission.PermissionsManager;
+import com.tycho.mss.module.permission.Role;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
@@ -350,6 +351,13 @@ public class ServerShell implements Context{
                             playerDatabaseManager.get(player);
                             players.add(player);
                             notifyOnPlayerConnected(player);
+
+                            //Auto assign roles
+                            for (Role role : permissionsManager.getRoles()){
+                                if (role.isAutoAssign()){
+                                    permissionsManager.assign(player.getUsername(), role);
+                                }
+                            }
 
                             //Send welcome message
                             tellraw("@a", Utils.createText("Welcome to the server ", "aqua", player.getUsername(), Colors.PLAYER_COLOR, "! Type ", "aqua", "!help", Colors.COMMAND_COLOR, " for a list of commands.", "aqua"));

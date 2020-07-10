@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.Button?>
-<GridPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.module.permission.ui.EditRoleLayout" style="-fx-background-color: #505050">
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.tycho.mss.module.permission.ui.EditRoleLayout" style="-fx-background-color: #505050" alignment="TOP_CENTER">
 
     <padding>
-        <Insets top="8" bottom="8"/>
+        <Insets top="8" right="8" bottom="8" left="8"/>
     </padding>
 
-    <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10" alignment="CENTER_LEFT" GridPane.hgrow="ALWAYS">
+    <HBox spacing="10" alignment="CENTER_LEFT">
         <padding>
-            <Insets right="8" bottom="8" left="8"/>
+            <Insets  bottom="8" />
         </padding>
         <Label text="Role Name:"/>
         <fx:include fx:id="roleNameTextField" source="validated_text_field_layout.fxml" HBox.hgrow="ALWAYS" />
     </HBox>
-    <ListView fx:id="commands_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="600"/>
-    <Button fx:id="ok_button" GridPane.columnIndex="0" GridPane.rowIndex="2" text="Save" GridPane.halignment="CENTER">
+
+    <fx:include source="text_checkbox.fxml" fx:id="auto_assign_check_box"/>
+
+    <Separator style="-fx-border-color: gray; -fx-border-width: 1 0 0 0;">
+        <VBox.margin>
+            <Insets bottom="8" top="8" />
+        </VBox.margin>
+    </Separator>
+
+    <ListView fx:id="commands_list_view" prefWidth="600"/>
+
+    <Button fx:id="ok_button" text="Save">
         <GridPane.margin>
             <Insets top="8" />
         </GridPane.margin>
     </Button>
-</GridPane>
+</VBox>

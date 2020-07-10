@@ -8,19 +8,20 @@ import java.util.*;
 
 public class Role {
 
-    private final UUID id = UUID.randomUUID();
-
     private String name;
 
     private Set<Class<? extends Command>> commands = new HashSet<>();
 
+    private boolean autoAssign = false;
+
     public Role(final String name, Class<? extends Command>... classes) {
-        this(name, Arrays.asList(classes));
+        this(name, Arrays.asList(classes), false);
     }
 
-    public Role(final String name, final List<Class<? extends Command>> commands){
+    public Role(final String name, final List<Class<? extends Command>> commands, final boolean autoAssign){
         this.name = name;
         this.commands.addAll(commands);
+        this.autoAssign = autoAssign;
     }
 
     public Role(final JSONObject jsonObject){
@@ -42,15 +43,19 @@ public class Role {
         return commands;
     }
 
+    public void setAutoAssign(boolean autoAssign) {
+        this.autoAssign = autoAssign;
+    }
+
+    public boolean isAutoAssign() {
+        return autoAssign;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return id.equals(role.getId());
-    }
-
-    public UUID getId() {
-        return id;
+        return name.equals(role.getName());
     }
 
     public JSONObject toJson(){

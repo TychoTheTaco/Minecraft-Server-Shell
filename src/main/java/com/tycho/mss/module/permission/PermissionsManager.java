@@ -133,7 +133,7 @@ public class PermissionsManager {
 
     private void assignNoSave(final String player, final Role role) {
         if (!permissions.containsKey(role) && !isUnique(role)){
-            System.out.println("ROLE IS NOT UNIQUE: " + role);
+            //System.out.println("ROLE IS NOT UNIQUE: " + role);
             return;
         }
         permissions.computeIfAbsent(role, k -> new HashSet<>());

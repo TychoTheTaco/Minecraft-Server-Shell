@@ -34,8 +34,8 @@ public class ConfigurationLayout extends MenuPage {
     @FXML
     private Button save_button;
 
-    @FXML
-    private Button revert_button;
+    //@FXML
+    //private Button revert_button;
 
     //private List<Property<?>> properties = new ArrayList<>();
 
@@ -95,9 +95,9 @@ public class ConfigurationLayout extends MenuPage {
 
         //server_properties_table_view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        revert_button.setOnAction(event -> {
+        /*revert_button.setOnAction(event -> {
             setDefaults();
-        });
+        });*/
 
         save_button.setOnAction(event -> {
             save_button.setDisable(true);
@@ -143,13 +143,13 @@ public class ConfigurationLayout extends MenuPage {
 
     private void setDirty(final boolean dirty) {
         if (dirty) {
-            revert_button.setVisible(true);
-            revert_button.setManaged(true);
+            //revert_button.setVisible(true);
+            //revert_button.setManaged(true);
             if (serverJarInputController.isValid()) save_button.setDisable(false);
         } else {
             save_button.setDisable(true);
-            revert_button.setVisible(false);
-            revert_button.setManaged(false);
+            //revert_button.setVisible(false);
+            //revert_button.setManaged(false);
         }
     }
 

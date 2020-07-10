@@ -2,6 +2,7 @@ package com.tycho.mss.module.permission.ui;
 
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.command.Command;
+import com.tycho.mss.layout.TextCheckBoxLayout;
 import com.tycho.mss.layout.ValidatedTextFieldLayout;
 import com.tycho.mss.module.permission.Role;
 import javafx.fxml.FXML;
@@ -24,12 +25,17 @@ public class EditRoleLayout {
     @FXML
     private Button ok_button;
 
+    @FXML
+    private TextCheckBoxLayout auto_assign_check_boxController;
+
     private Stage stage;
 
     private Role role;
 
     @FXML
     private void initialize() {
+        auto_assign_check_boxController.setText("Automatically assign this role to new players.");
+
         commands_list_view.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         commands_list_view.setCellFactory(param -> new CommandListCell());
@@ -89,10 +95,11 @@ public class EditRoleLayout {
             role.setName(roleNameTextFieldController.getText().trim());
             role.getCommands().clear();
             role.getCommands().addAll(commands);
+            role.setAutoAssign(auto_assign_check_boxController.isSelected());
             return role;
         }
 
-        return new Role(roleNameTextFieldController.getText().trim(), commands);
+        return new Role(roleNameTextFieldController.getText().trim(), commands, auto_assign_check_boxController.isSelected());
     }
 
     public void setRole(final Role role){

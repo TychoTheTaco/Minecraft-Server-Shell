@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public class Preferences {
 
@@ -33,13 +35,19 @@ public class Preferences {
             }
 
             //Try to find a server JAR in the current directory
-            for (Path path : Paths.get(System.getProperty("user.dir"))){
-                System.out.println("PATH: " + path);
-                //TODO: Check potential server jar for META_INF?
-                final String name = path.getFileName().toString();
-                if (name.contains("server") && name.endsWith("jar")){
-                    setServerJar(path);
-                }
+            try {
+                final Optional<Path> path = Files.walk(Paths.get(System.getProperty("user.dir"))).filter(new Predicate<Path>() {
+                    @Override
+                    public boolean test(Path path) {
+                        //TODO: Check potential server jar for META_INF?
+                        final String name = path.getFileName().toString();
+                        return name.contains("server") && name.endsWith("jar");
+                    }
+                }).findAny();
+
+                path.ifPresent(Preferences::setServerJar);
+            }catch (IOException e){
+                e.printStackTrace();
             }
 
             //Set default values

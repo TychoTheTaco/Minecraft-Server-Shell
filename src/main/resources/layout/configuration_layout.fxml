@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<GridPane fx:id="root" xmlns="http://javafx.com/javafx"
+<GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.ConfigurationLayout">
 
@@ -49,7 +49,7 @@
             <padding>
                 <Insets top="8" right="8" bottom="8" left="8"/>
             </padding>
-            <Button fx:id="revert_button" text="Revert" visible="false" managed="false"/>
+            <!--<Button fx:id="revert_button" text="Revert" visible="false" managed="false"/>-->
             <Button fx:id="save_button" text="Save"/>
         </HBox>
     </GridPane>
