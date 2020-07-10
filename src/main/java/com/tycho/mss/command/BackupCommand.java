@@ -30,7 +30,7 @@ public class BackupCommand extends Command {
     }
 
     @Override
-    public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
+    public void execute(String player, Context context, String... parameters) throws Exception {
         if (parameters.length < 1) {
             throw new InvalidParametersException();
         }
@@ -38,14 +38,14 @@ public class BackupCommand extends Command {
         if ("create".equals(parameters[0])) {
             if (Preferences.getBackupDirectory() == null){
                 final JSONObject root = Utils.createText("Cannot create backup: No backup directory is specified in the settings!", "red");
-                serverShell.tellraw(player, root);
+                context.tellraw(player, root);
                 return;
             }
 
             //Save the world
-            serverShell.tellraw("@a", Utils.createText("Saving world...", Colors.STATUS_MESSAGE_COLOR));
-            serverShell.awaitResult("save-all flush", Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: Saved the game$"));
-            serverShell.tellraw("@a", Utils.createText("Creating backup...", Colors.STATUS_MESSAGE_COLOR));
+            context.tellraw("@a", Utils.createText("Saving world...", Colors.STATUS_MESSAGE_COLOR));
+            context.awaitResult("save-all flush", Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: Saved the game$"));
+            context.tellraw("@a", Utils.createText("Creating backup...", Colors.STATUS_MESSAGE_COLOR));
 
             final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile().toPath(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").toPath());
             final UiUpdater progressUpdater = new UiUpdater(3000) {
@@ -54,7 +54,7 @@ public class BackupCommand extends Command {
 
                 @Override
                 protected void onUiUpdate() {
-                    serverShell.tellraw("@a", Utils.createText(DECIMAL_FORMAT.format(backupTask.getProgress()), Colors.STATUS_MESSAGE_COLOR));
+                    context.tellraw("@a", Utils.createText(DECIMAL_FORMAT.format(backupTask.getProgress()), Colors.STATUS_MESSAGE_COLOR));
                 }
             };
             backupTask.addTaskListener(new TaskAdapter() {
@@ -77,7 +77,7 @@ public class BackupCommand extends Command {
                     } else {
                         root = Utils.createText("Backup failed!", "red");
                     }
-                    serverShell.tellraw(player, root);
+                    context.tellraw(player, root);
                 }
             });
             backupTask.startOnNewThread();
@@ -89,7 +89,7 @@ public class BackupCommand extends Command {
                 final Path backup = getBackups().get(index);
 
                 //serverShell.tellraw(player, Utils.createText("Are you sure you want to restore the backup from " + backup.toFile().getName() + "?","white"));
-                serverShell.restore(backup);
+                context.restore(backup);
             }catch (NumberFormatException e){
                 e.printStackTrace();
             }
@@ -100,7 +100,7 @@ public class BackupCommand extends Command {
             }
             final List<Path> backups = getBackups();
             for (int i = 0; i < backups.size(); i++){
-                serverShell.tellraw(player, Utils.createText("[" + i + "]: " + SIMPLE_DATE_FORMAT.format(new Date(backups.get(i).toFile().lastModified())), "white"));
+                context.tellraw(player, Utils.createText("[" + i + "]: " + SIMPLE_DATE_FORMAT.format(new Date(backups.get(i).toFile().lastModified())), "white"));
             }
         }else{
             throw new InvalidParametersException();

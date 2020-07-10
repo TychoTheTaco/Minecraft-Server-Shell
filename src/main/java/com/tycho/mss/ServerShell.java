@@ -3,7 +3,6 @@ package com.tycho.mss;
 import com.tycho.mss.command.*;
 import com.tycho.mss.module.backup.RestoreBackupTask;
 import com.tycho.mss.module.permission.PermissionsManager;
-import com.tycho.mss.module.permission.Role;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
@@ -24,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * This is a custom shell that wraps around the standard Minecraft server. It can read chat messages and execute custom commands.
  */
-public class ServerShell {
+public class ServerShell implements Context{
 
     /**
      * Possible states for the Minecraft server.
@@ -123,13 +122,13 @@ public class ServerShell {
 
         playerDatabaseManager = new PlayerDatabaseManager(getDirectory());
 
-        final Role pleb = new Role("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
+        /*final Role pleb = new Role("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
         final Role admin = new Role("admin", GiveRandomItemCommand.class, BackupCommand.class, PermissionCommand.class);
         admin.getCommands().addAll(pleb.getCommands());
 
         permissionsManager.assign("TychoTheTaco", admin);
         permissionsManager.assign("Metroscorpio", pleb);
-        permissionsManager.assign("Assassin_Actual7", pleb);
+        permissionsManager.assign("Assassin_Actual7", pleb);*/
 
         //Add custom commands
         addCustomCommand(new HereCommand());
@@ -383,7 +382,19 @@ public class ServerShell {
         this.customCommands.add(command);
     }
 
-    public void tellraw(final String player, final JSONObject jsonObject) {
+    /*********************************************************************************************************************************
+     * Context
+     ********************************************************************************************************************************/
+
+    @Override
+    public void execute(String command) throws IOException {
+        this.serverInputWriter.write(command);
+        this.serverInputWriter.write("\n");
+        this.serverInputWriter.flush();
+    }
+
+    @Override
+    public void tellraw(String player, JSONObject jsonObject) {
         try {
             this.execute("tellraw " + player + " " + jsonObject.toString());
         } catch (IOException e) {
@@ -391,52 +402,42 @@ public class ServerShell {
         }
     }
 
-    public PlayerDatabaseManager getPlayerDatabaseManager() {
-        return playerDatabaseManager;
-    }
+    @Override
+    public Matcher awaitResult(String command, Pattern pattern) throws InterruptedException {
+        final Object LOCK = new Object();
+        final Container container = new Container();
 
-    private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
-        //Make sure the player is authorized to use this command
-        if (!permissionsManager.isAuthorized(player, command)) {
-            final JSONObject root = Utils.createText("Unauthorized: ", "red");
-            final JSONArray extra = new JSONArray();
-            extra.add(Utils.createText("You are not authorized to use this command!", "gray"));
-            root.put("extra", extra);
-            this.tellraw(player, root);
-            return;
+        //Add pending result
+        synchronized (pendingResults) {
+            pendingResults.add(new PendingResult(command, pattern) {
+                @Override
+                boolean onResult(Matcher matcher) {
+                    System.out.println("RESULT FOUND: " + matcher.group());
+                    container.matcher = matcher;
+                    synchronized (LOCK) {
+                        LOCK.notify();
+                    }
+                    return false;
+                }
+            });
         }
 
-        //Execute the command
-        new Thread(() -> {
+        synchronized (LOCK) {
+            System.out.println("WAITING...");
             try {
-                command.execute(player, ServerShell.this, parameters);
-            } catch (Command.InvalidParametersException e) {
-                tellraw(player, e.getJson());
-            } catch (Exception e) {
+                execute(command);
+            } catch (IOException e) {
                 e.printStackTrace();
-                this.tellraw(player, Utils.createText("Error executing command: " + e.toString(), "red"));
             }
-        }).start();
+            LOCK.wait();
+        }
+        System.out.println("FINISHED!");
+
+        return container.matcher;
     }
 
-    /**
-     * Execute the specified command in the Minecraft server process.
-     *
-     * @param command The command to execute.
-     * @throws IOException
-     */
-    public void execute(final String command) throws IOException {
-        this.serverInputWriter.write(command);
-        this.serverInputWriter.write("\n");
-        this.serverInputWriter.flush();
-    }
-
-    /**
-     * Restore the world from the specified backup. This method will automatically stop and restart the server if it was already running when this method was called.
-     *
-     * @param backup The path to a ZIP file containing a backup of the server.
-     */
-    public void restore(final Path backup) {
+    @Override
+    public void restore(Path backup) {
         //Remember the initial state to restore later
         final State initialState = this.state;
 
@@ -489,6 +490,49 @@ public class ServerShell {
         }
     }
 
+    @Override
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    @Override
+    public PermissionsManager getPermissionsManager() {
+        return permissionsManager;
+    }
+
+    @Override
+    public PlayerDatabaseManager getPlayerDatabaseManager() {
+        return playerDatabaseManager;
+    }
+
+    /*********************************************************************************************************************************
+     * Misc.
+     ********************************************************************************************************************************/
+
+    private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
+        //Make sure the player is authorized to use this command
+        if (!permissionsManager.isAuthorized(player, command)) {
+            final JSONObject root = Utils.createText("Unauthorized: ", "red");
+            final JSONArray extra = new JSONArray();
+            extra.add(Utils.createText("You are not authorized to use this command!", "gray"));
+            root.put("extra", extra);
+            this.tellraw(player, root);
+            return;
+        }
+
+        //Execute the command
+        new Thread(() -> {
+            try {
+                command.execute(player, ServerShell.this, parameters);
+            } catch (Command.InvalidParametersException e) {
+                tellraw(player, e.getJson());
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.tellraw(player, Utils.createText("Error executing command: " + e.toString(), "red"));
+            }
+        }).start();
+    }
+
     private String[] clean(final String parameters) {
         if (parameters == null) return new String[]{};
         final String[] split = parameters.split(" +");
@@ -505,49 +549,8 @@ public class ServerShell {
         return array;
     }
 
-    public Matcher awaitResult(final String command, final Pattern pattern) throws InterruptedException {
-        final Object LOCK = new Object();
-        final Container container = new Container();
-
-        //Add pending result
-        synchronized (pendingResults) {
-            pendingResults.add(new PendingResult(command, pattern) {
-                @Override
-                boolean onResult(Matcher matcher) {
-                    System.out.println("RESULT FOUND: " + matcher.group());
-                    container.matcher = matcher;
-                    synchronized (LOCK) {
-                        LOCK.notify();
-                    }
-                    return false;
-                }
-            });
-        }
-
-        synchronized (LOCK) {
-            System.out.println("WAITING...");
-            try {
-                execute(command);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            LOCK.wait();
-        }
-        System.out.println("FINISHED!");
-
-        return container.matcher;
-    }
-
     static class Container {
         Matcher matcher;
-    }
-
-    public PermissionsManager getPermissionsManager() {
-        return permissionsManager;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
     }
 
     abstract class PendingResult {

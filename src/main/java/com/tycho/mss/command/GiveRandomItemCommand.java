@@ -1,10 +1,9 @@
 package com.tycho.mss.command;
 
 import com.tycho.mss.Colors;
+import com.tycho.mss.Context;
 import com.tycho.mss.Player;
-import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Utils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 public class GiveRandomItemCommand extends Command {
 
@@ -33,7 +31,7 @@ public class GiveRandomItemCommand extends Command {
     }
 
     @Override
-    public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
+    public void execute(String player, Context context, String... parameters) throws Exception {
         if (parameters.length < 2) throw new InvalidParametersException();
 
         final String targetPlayer = parameters[0];
@@ -41,14 +39,14 @@ public class GiveRandomItemCommand extends Command {
 
         //Check for player selectors
         if (targetPlayer.equals("@a")) {
-            final List<Player> players = serverShell.getPlayers();
+            final List<Player> players = context.getPlayers();
             for (Player p : players) {
-                serverShell.tellraw("@a", give(p.getUsername(), maxCount, serverShell));
+                context.tellraw("@a", give(p.getUsername(), maxCount, context));
             }
             return;
         }
 
-        serverShell.tellraw("@a", give(targetPlayer, maxCount, serverShell));
+        context.tellraw("@a", give(targetPlayer, maxCount, context));
     }
 
     @Override
@@ -61,10 +59,10 @@ public class GiveRandomItemCommand extends Command {
         return "Gives <player> up to <maxCount> random items.";
     }
 
-    private JSONObject give(final String player, final int maxCount, final ServerShell serverShell) throws IOException {
+    private JSONObject give(final String player, final int maxCount, final Context context) throws IOException {
         final String item = this.ids.get(RANDOM.nextInt(ids.size()));
         final int count = RANDOM.nextInt(maxCount) + 1;
-        serverShell.execute("give " + player + " " + item + " " + count);
+        context.execute("give " + player + " " + item + " " + count);
 
         //Create message
         return Utils.createText("Gave ", "white", String.valueOf(count), "dark_green", " " + item, Colors.ITEM_COLOR, " to ", "white", player, Colors.PLAYER_COLOR);

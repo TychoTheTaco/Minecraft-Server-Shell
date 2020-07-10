@@ -1,6 +1,6 @@
 package com.tycho.mss.command;
 
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.Context;
 import com.tycho.mss.util.Utils;
 import easytasks.Task;
 import org.json.simple.JSONObject;
@@ -28,7 +28,7 @@ public class GuideCommand extends Command {
     }
 
     @Override
-    public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
+    public void execute(String player, Context context, String... parameters) throws Exception {
         if (parameters.length < 1){
             throw new InvalidParametersException();
         }
@@ -44,18 +44,18 @@ public class GuideCommand extends Command {
         if (parameters.length == 1){
             try {
                 final int index = Integer.parseInt(parameters[0]);
-                final SavedLocation savedLocation = serverShell.getPlayer(player).getSavedLocations().get(index);
+                final SavedLocation savedLocation = context.getPlayer(player).getSavedLocations().get(index);
                 final int dx = savedLocation.getX();
                 final int dy = savedLocation.getY();
                 final int dz = savedLocation.getZ();
 
                 if (tasks.get(player) != null) tasks.get(player).stop();
-                final GuideTask guideTask = new GuideTask(player, dx + " " + dy + " " + dz, serverShell);
+                final GuideTask guideTask = new GuideTask(player, dx + " " + dy + " " + dz, context);
                 this.tasks.put(player, guideTask);
                 guideTask.startOnNewThread();
             }catch (NumberFormatException e){
                 if (tasks.get(player) != null) tasks.get(player).stop();
-                final GuideTask guideTask = new GuideTask(player, parameters[0], serverShell);
+                final GuideTask guideTask = new GuideTask(player, parameters[0], context);
                 this.tasks.put(player, guideTask);
                 guideTask.startOnNewThread();
             }
@@ -66,7 +66,7 @@ public class GuideCommand extends Command {
                 final int dz = Integer.parseInt(parameters[2]);
 
                 if (tasks.get(player) != null) tasks.get(player).stop();
-                final GuideTask guideTask = new GuideTask(player, dx + " " + dy + " " + dz, serverShell);
+                final GuideTask guideTask = new GuideTask(player, dx + " " + dy + " " + dz, context);
                 this.tasks.put(player, guideTask);
                 guideTask.startOnNewThread();
             }catch (NumberFormatException e){
@@ -93,12 +93,12 @@ public class GuideCommand extends Command {
 
         private final String target;
 
-        private final ServerShell serverShell;
+        private final Context context;
 
-        public GuideTask(String player, String target, ServerShell serverShell) {
+        public GuideTask(String player, String target, Context context) {
             this.player = player;
             this.target = target;
-            this.serverShell = serverShell;
+            this.context = context;
         }
 
         @Override
@@ -106,7 +106,7 @@ public class GuideCommand extends Command {
             while (isRunning()){
                 try {
                     //Get player position
-                    Matcher matcher = serverShell.awaitResult("data get entity " + player + " Pos", POSITION_PATTERN);
+                    Matcher matcher = context.awaitResult("data get entity " + player + " Pos", POSITION_PATTERN);
                     final double x = Double.parseDouble(matcher.group("x"));
                     final double y = Double.parseDouble(matcher.group("y"));
                     final double z = Double.parseDouble(matcher.group("z"));
@@ -122,7 +122,7 @@ public class GuideCommand extends Command {
                         dz = Integer.parseInt(split[2]);
                     }else{
                         //Get player position
-                        matcher = serverShell.awaitResult("data get entity " + target + " Pos", POSITION_PATTERN);
+                        matcher = context.awaitResult("data get entity " + target + " Pos", POSITION_PATTERN);
                         dx = Integer.parseInt(matcher.group("x"));
                         dy = Integer.parseInt(matcher.group("y"));
                         dz = Integer.parseInt(matcher.group("z"));
@@ -136,12 +136,12 @@ public class GuideCommand extends Command {
                     if (distance <= DEACTIVATE_RANGE){
                         stop();
                         final JSONObject root = Utils.createText("Destination reached!", "green");
-                        serverShell.tellraw(player, root);
+                        context.tellraw(player, root);
                     }
 
                     //Spawn particles
                     for (int i = 1; i < Math.min((int) distance, PARTICLE_COUNT); i++){
-                        serverShell.execute("execute positioned " + x + " " + y + " " + z + " run particle composter"
+                        context.execute("execute positioned " + x + " " + y + " " + z + " run particle composter"
                                 + " ~" + String.format("%.2f", i * Math.cos(direction))
                                 + " ~" + String.format("%.2f", i * Math.tan(angle) + VERTICAL_OFFSET)
                                 + " ~" + String.format("%.2f", i * Math.sin(direction))

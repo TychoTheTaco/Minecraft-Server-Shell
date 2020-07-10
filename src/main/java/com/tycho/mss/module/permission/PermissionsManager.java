@@ -58,7 +58,7 @@ public class PermissionsManager {
 
     private void addRoleNoSave(final Role role){
         if (!isUnique(role)){
-            System.out.println("ROLE IS NOT UNIQUE: " + role);
+            //System.out.println("ROLE IS NOT UNIQUE: " + role);
             return;
         }
         this.permissions.put(role, new HashSet<>());

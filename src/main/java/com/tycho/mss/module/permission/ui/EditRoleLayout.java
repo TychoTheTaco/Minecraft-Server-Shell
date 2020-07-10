@@ -70,19 +70,23 @@ public class EditRoleLayout {
     }
 
     public Role getRole(){
+        if (!roleNameTextFieldController.isValid()){
+            return null;
+        }
+
         final List<Class<? extends Command>> commands = new ArrayList<>();
         for (Command command : commands_list_view.getSelectionModel().getSelectedItems()){
             commands.add(command.getClass());
         }
 
         if (role != null){
-            role.setName(roleNameTextFieldController.getText());
+            role.setName(roleNameTextFieldController.getText().trim());
             role.getCommands().clear();
             role.getCommands().addAll(commands);
             return role;
         }
 
-        return new Role(roleNameTextFieldController.getText(), commands);
+        return new Role(roleNameTextFieldController.getText().trim(), commands);
     }
 
     public void setRole(final Role role){

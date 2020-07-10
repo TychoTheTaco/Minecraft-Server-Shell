@@ -1,7 +1,6 @@
 package com.tycho.mss.command;
 
-import com.tycho.mss.PlayerDatabaseManager;
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.Context;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,7 +18,7 @@ public class LocationCommand extends Command {
     }
 
     @Override
-    public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
+    public void execute(String player, Context context, String... parameters) throws Exception {
         if (parameters.length < 1){
             throw new InvalidParametersException();
         }
@@ -28,7 +27,7 @@ public class LocationCommand extends Command {
         final String type = parameters[0];
         if ("save".equals(type)){
             //Get player position
-            final Matcher matcher = serverShell.awaitResult("data get entity " + player + " Pos", POSITION_PATTERN);
+            final Matcher matcher = context.awaitResult("data get entity " + player + " Pos", POSITION_PATTERN);
             final int x = Integer.parseInt(matcher.group("x"));
             final int y = Integer.parseInt(matcher.group("y"));
             final int z = Integer.parseInt(matcher.group("z"));
@@ -39,15 +38,15 @@ public class LocationCommand extends Command {
                 stringBuilder.append(parameters[i]).append(' ');
             }
 
-            serverShell.getPlayer(player).getSavedLocations().add(new SavedLocation(x, y, z, stringBuilder.toString().trim()));
-            serverShell.getPlayerDatabaseManager().save(serverShell.getPlayer(player));
+            context.getPlayer(player).getSavedLocations().add(new SavedLocation(x, y, z, stringBuilder.toString().trim()));
+            context.getPlayerDatabaseManager().save(context.getPlayer(player));
 
             final JSONObject root = Utils.createText("Location saved!", "green");
-            serverShell.tellraw(player, root);
+            context.tellraw(player, root);
         }else if ("list".equals(type)){
-            final List<SavedLocation> savedLocations = serverShell.getPlayer(player).getSavedLocations();
+            final List<SavedLocation> savedLocations = context.getPlayer(player).getSavedLocations();
             if (savedLocations.isEmpty()){
-                serverShell.tellraw(player, Utils.createText("You haven't saved any locations!", "white"));
+                context.tellraw(player, Utils.createText("You haven't saved any locations!", "white"));
             }else{
                 final JSONObject root = Utils.createText("", "white");
                 final JSONArray extra = new JSONArray();
@@ -64,7 +63,7 @@ public class LocationCommand extends Command {
                 }
                 extra.remove(extra.size() - 1);
                 root.put("extra", extra);
-                serverShell.tellraw(player, root);
+                context.tellraw(player, root);
             }
         }else if ("remove".equals(type)){
             if (parameters.length < 2){
@@ -73,10 +72,10 @@ public class LocationCommand extends Command {
 
             try {
                 final int index = Integer.parseInt(parameters[1]);
-                serverShell.getPlayer(player).getSavedLocations().remove(index);
+                context.getPlayer(player).getSavedLocations().remove(index);
                 final JSONObject root = Utils.createText("Location removed!", "green");
-                serverShell.tellraw(player, root);
-                serverShell.getPlayerDatabaseManager().save(serverShell.getPlayer(player));
+                context.tellraw(player, root);
+                context.getPlayerDatabaseManager().save(context.getPlayer(player));
             }catch (NumberFormatException e){
                 throw new InvalidParametersException();
             }

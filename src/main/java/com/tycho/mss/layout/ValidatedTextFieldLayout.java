@@ -76,6 +76,10 @@ public class ValidatedTextFieldLayout {
         }
     }
 
+    public boolean isValid() {
+        return isValid;
+    }
+
     public void setText(final String string){
         this.input.setText(string);
     }

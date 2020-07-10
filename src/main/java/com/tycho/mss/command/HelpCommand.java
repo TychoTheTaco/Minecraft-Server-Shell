@@ -2,7 +2,7 @@ package com.tycho.mss.command;
 
 
 import com.tycho.mss.Colors;
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.Context;
 import com.tycho.mss.util.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -17,11 +17,11 @@ public class HelpCommand extends Command {
     }
 
     @Override
-    public void execute(String player, ServerShell serverShell, String... parameters) throws Exception {
+    public void execute(String player, Context context, String... parameters) throws Exception {
         if (parameters.length > 0){
             //Find target command
             Command target = null;
-            for (Command command : serverShell.getCustomCommands()){
+            for (Command command : context.getCustomCommands()){
                 if (command.getCommand().equals(parameters[0])){
                     target = command;
                     break;
@@ -41,13 +41,13 @@ public class HelpCommand extends Command {
 
                 //Display text to user
                 root.put("extra", extras);
-                serverShell.tellraw(player, root);
+                context.tellraw(player, root);
             }else{
                 final JSONObject root = Utils.createText("Unknown command: ", "red");
                 final JSONArray extras = new JSONArray();
                 extras.add(Utils.createText(parameters[0], "white"));
                 root.put("extra", extras);
-                serverShell.tellraw(player, root);
+                context.tellraw(player, root);
             }
         }else{
             //Create root object with standard formatting. All extras will inherit these properties.
@@ -60,12 +60,12 @@ public class HelpCommand extends Command {
             extras.add(title);
 
             //Sort commands alphabetically
-            final List<Command> commands = serverShell.getCustomCommands();
+            final List<Command> commands = context.getCustomCommands();
             commands.sort(Comparator.comparing(Command::getCommand));
 
             //List commands and descriptions
             for (Command command : commands){
-                if (serverShell.getPermissionsManager().isAuthorized(player, command)){
+                if (context.getPermissionsManager().isAuthorized(player, command)){
                     extras.add(Utils.createText(command.getCommand(), Colors.COMMAND_COLOR));
                     extras.add(Utils.createText(": " + command.getDescription(), ""));
                     extras.add(Utils.createText("\n", ""));
@@ -77,7 +77,7 @@ public class HelpCommand extends Command {
             root.put("extra", extras);
 
             //Display text to user
-            serverShell.tellraw(player, root);
+            context.tellraw(player, root);
         }
     }
 
