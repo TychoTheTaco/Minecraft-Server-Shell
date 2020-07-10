@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import org.json.simple.JSONObject;
 
 import java.nio.file.Files;
@@ -42,47 +43,53 @@ public class ConfigurationLayout extends MenuPage {
 
     @FXML
     private void initialize() {
+        //Load the saved configuration
+        setDefaults();
+        initialConfiguration = getConfiguration();
+
         //Server JAR
-        serverJarInputController.setValidator(new FileInputLayout.Validator(){
+        serverJarInputController.setValidator(new FileInputLayout.Validator() {
             @Override
             protected boolean isTextValid(String string, StringBuilder invalidReason) {
                 try {
                     final Path path = Paths.get(string);
 
-                    if (!Files.exists(path)){
+                    if (!Files.exists(path)) {
                         if (invalidReason != null) invalidReason.append("File does not exist!");
                         return false;
                     }
 
-                    if (!path.getFileName().toString().toLowerCase().endsWith("jar")){
+                    if (!path.getFileName().toString().toLowerCase().endsWith("jar")) {
                         if (invalidReason != null) invalidReason.append("Not a valid JAR file!");
                         return false;
                     }
-                }catch (InvalidPathException e){
+                } catch (InvalidPathException e) {
                     invalidReason.append("Invalid Path!");
                     return false;
                 }
                 return true;
             }
         });
-        //serverJarInputController.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
-
-        //Load the saved configuration
-        setDefaults();
-        initialConfiguration = getConfiguration();
-
-        serverJarInputController.setOnPathChangedListener((path) -> {
-            if (path == null){
-                setDirty(true);
-                return;
+        serverJarInputController.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
+        serverJarInputController.setOnValidStateChangeListener(new ValidatedTextFieldLayout.OnValidStateChangeListener() {
+            @Override
+            public void onValidStateChange(boolean isValid) {
+                if (isValid && isDirty()) {
+                    save_button.setDisable(false);
+                } else {
+                    save_button.setDisable(true);
+                }
             }
-            setDirty(!initialConfiguration.get("server_jar").toString().equals(path.toString()));
+        });
+        serverJarInputController.setOnPathChangedListener((path) -> {
+            setDirty(isDirty());
         });
 
+        //Launch options
         launch_options_text_field.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                setDirty(!initialConfiguration.get("launch_options").toString().equals(newValue));
+                setDirty(isDirty());
             }
         });
 
@@ -93,13 +100,10 @@ public class ConfigurationLayout extends MenuPage {
         });
 
         save_button.setOnAction(event -> {
-            if (serverJarInputController.isValid()){
-                Preferences.setServerJar(serverJarInputController.getPath());
-                MinecraftServerManager.refresh();
-                setStatus(Status.OK);
-            }else{
-                setStatus(Status.ERROR);
-            }
+            save_button.setDisable(true);
+            Preferences.setServerJar(serverJarInputController.getPath());
+            MinecraftServerManager.refresh();
+            setStatus(Status.OK);
             Preferences.setLaunchOptions(launch_options_text_field.getText());
             Preferences.save();
             initialConfiguration = getConfiguration();
@@ -132,24 +136,29 @@ public class ConfigurationLayout extends MenuPage {
         setStatus(serverJarInputController.isValid() ? Status.OK : Status.ERROR);
     }
 
-    private void setDirty(final boolean dirty){
-        if (dirty){
+    private boolean isDirty() {
+        final Path path = serverJarInputController.getPath();
+        return !(path != null && initialConfiguration.get("server_jar").toString().equals(serverJarInputController.getPath().toString()) && initialConfiguration.get("launch_options").toString().equals(launch_options_text_field.getText()));
+    }
+
+    private void setDirty(final boolean dirty) {
+        if (dirty) {
             revert_button.setVisible(true);
             revert_button.setManaged(true);
-            save_button.setDisable(false);
-        }else{
+            if (serverJarInputController.isValid()) save_button.setDisable(false);
+        } else {
             save_button.setDisable(true);
             revert_button.setVisible(false);
             revert_button.setManaged(false);
         }
     }
 
-    private void setDefaults(){
+    private void setDefaults() {
         serverJarInputController.setPath(Preferences.getServerJar());
         launch_options_text_field.setText(String.join(" ", Preferences.getLaunchOptions()));
     }
 
-    private JSONObject getConfiguration(){
+    private JSONObject getConfiguration() {
         final JSONObject root = new JSONObject();
         root.put("server_jar", serverJarInputController.getPath().toString());
         root.put("launch_options", launch_options_text_field.getText().trim());
@@ -202,12 +211,12 @@ public class ConfigurationLayout extends MenuPage {
         }*/
     }
 
-    private List<Property<?>> getProperties(){
+    private List<Property<?>> getProperties() {
         final List<Property<?>> properties = new ArrayList<>();
 
         final Map<String, String> propertyMap = getServerShell().getProperties();
-        for (String key : propertyMap.keySet()){
-            switch (key){
+        for (String key : propertyMap.keySet()) {
+            switch (key) {
                 case "allow-flight":
                 case "allow-nether":
                 case "enable-command-block":
@@ -235,7 +244,7 @@ public class ConfigurationLayout extends MenuPage {
                 case "max-players":
                 case "player-idle-timeout":
                 case "spawn-protection":
-                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))){
+                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))) {
                         @Override
                         public boolean isValidValue(Integer value) {
                             return 0 <= value;
@@ -245,7 +254,7 @@ public class ConfigurationLayout extends MenuPage {
 
                 case "function-permission-level":
                 case "op-permission-level":
-                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))){
+                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))) {
                         @Override
                         public boolean isValidValue(Integer value) {
                             return 1 <= value && value <= 4;
@@ -254,7 +263,7 @@ public class ConfigurationLayout extends MenuPage {
                     break;
 
                 case "max-world-size":
-                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))){
+                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))) {
                         @Override
                         public boolean isValidValue(Integer value) {
                             return 1 <= value && value <= 29999984;
@@ -263,7 +272,7 @@ public class ConfigurationLayout extends MenuPage {
                     break;
 
                 case "network-compression-threshold":
-                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))){
+                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))) {
                         @Override
                         public boolean isValidValue(Integer value) {
                             return -1 <= value;
@@ -274,7 +283,7 @@ public class ConfigurationLayout extends MenuPage {
                 case "query.port":
                 case "rcon.port":
                 case "server-port":
-                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))){
+                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))) {
                         @Override
                         public boolean isValidValue(Integer value) {
                             return 1 <= value && value <= 65534;
@@ -283,7 +292,7 @@ public class ConfigurationLayout extends MenuPage {
                     break;
 
                 case "view-distance":
-                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))){
+                    properties.add(new IntegerProperty(key, Integer.valueOf(propertyMap.get(key))) {
                         @Override
                         public boolean isValidValue(Integer value) {
                             return 3 <= value && value <= 32;
@@ -294,7 +303,7 @@ public class ConfigurationLayout extends MenuPage {
                 //////////////////////////////////////////////// Long Integers ////////////////////////////////////////////////
 
                 case "max-tick-time":
-                    properties.add(new LongProperty(key, Long.valueOf(propertyMap.get(key))){
+                    properties.add(new LongProperty(key, Long.valueOf(propertyMap.get(key))) {
                         @Override
                         public boolean isValidValue(Long value) {
                             // TODO: Allow -1 after 14w32a
@@ -314,7 +323,7 @@ public class ConfigurationLayout extends MenuPage {
                 case "resource-pack":
                 case "resource-pack-sha1":
                 case "server-ip":
-                    properties.add(new StringProperty(key, propertyMap.get(key)){
+                    properties.add(new StringProperty(key, propertyMap.get(key)) {
                         @Override
                         public boolean isValidValue(String value) {
                             return true;
@@ -323,7 +332,7 @@ public class ConfigurationLayout extends MenuPage {
                     break;
 
                 case "difficulty":
-                    properties.add(new StringProperty(key, propertyMap.get(key)){
+                    properties.add(new StringProperty(key, propertyMap.get(key)) {
                         @Override
                         protected String[] getValidValues() {
                             return new String[]{
@@ -337,7 +346,7 @@ public class ConfigurationLayout extends MenuPage {
                     break;
 
                 case "gamemode":
-                    properties.add(new StringProperty(key, propertyMap.get(key)){
+                    properties.add(new StringProperty(key, propertyMap.get(key)) {
                         @Override
                         protected String[] getValidValues() {
                             return new String[]{
@@ -351,7 +360,7 @@ public class ConfigurationLayout extends MenuPage {
                     break;
 
                 case "level-type":
-                    properties.add(new StringProperty(key, propertyMap.get(key)){
+                    properties.add(new StringProperty(key, propertyMap.get(key)) {
                         @Override
                         protected String[] getValidValues() {
                             return new String[]{
@@ -370,7 +379,7 @@ public class ConfigurationLayout extends MenuPage {
         return properties;
     }
 
-    private abstract static class Property<T>{
+    private abstract static class Property<T> {
 
         private final String key;
 
@@ -393,33 +402,33 @@ public class ConfigurationLayout extends MenuPage {
             return key;
         }
 
-        public boolean isValidValue(final T value){
+        public boolean isValidValue(final T value) {
             return true;
         }
     }
 
-    private static class BooleanProperty extends Property<Boolean>{
+    private static class BooleanProperty extends Property<Boolean> {
 
         public BooleanProperty(String key, Boolean value) {
             super(key, value);
         }
     }
 
-    private static class IntegerProperty extends Property<Integer>{
+    private static class IntegerProperty extends Property<Integer> {
 
         public IntegerProperty(String key, Integer value) {
             super(key, value);
         }
     }
 
-    private static class LongProperty extends Property<Long>{
+    private static class LongProperty extends Property<Long> {
 
         public LongProperty(String key, Long value) {
             super(key, value);
         }
     }
 
-    private static class StringProperty extends Property<String>{
+    private static class StringProperty extends Property<String> {
 
         public StringProperty(String key, String value) {
             super(key, value);
@@ -427,13 +436,13 @@ public class ConfigurationLayout extends MenuPage {
 
         @Override
         public boolean isValidValue(String value) {
-            for (String string : getValidValues()){
+            for (String string : getValidValues()) {
                 if (string.equals(value)) return true;
             }
             return false;
         }
 
-        protected String[] getValidValues(){
+        protected String[] getValidValues() {
             return new String[1];
         }
     }

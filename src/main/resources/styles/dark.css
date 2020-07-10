@@ -40,7 +40,7 @@
     -fx-font-size: 0.9em;
     -fx-font-weight: bold;
     -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box, #00000080, 6, 0, 0, 0);
+
 }
 
 .button:hover{

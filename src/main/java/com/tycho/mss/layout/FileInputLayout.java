@@ -60,6 +60,10 @@ public class FileInputLayout extends ValidatedTextFieldLayout{
         if (onPathChangedListener != null) onPathChangedListener.onPathChanged(getPath());
     }
 
+    public void addExtensionFilter(final FileChooser.ExtensionFilter filter){
+        fileChooser.getExtensionFilters().add(filter);
+    }
+
     public Path getPath(){
         if (isValid()){
             return Paths.get(getText());
