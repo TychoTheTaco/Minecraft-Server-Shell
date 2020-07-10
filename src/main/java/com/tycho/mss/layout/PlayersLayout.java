@@ -8,9 +8,11 @@ import com.tycho.mss.util.Utils;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Region;
 
 import java.util.HashMap;
 
@@ -18,6 +20,9 @@ public class PlayersLayout extends MenuPage {
 
     @FXML
     private TableView<Player> players_table_view;
+
+    @FXML
+    private Region offline_overlay;
 
     private final UiUpdater uiUpdater = new UiUpdater(1000) {
         @Override
@@ -28,7 +33,10 @@ public class PlayersLayout extends MenuPage {
 
     @FXML
     private void initialize() {
+        offline_overlay.managedProperty().bind(offline_overlay.visibleProperty());
+
         players_table_view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        players_table_view.setPlaceholder(new Label("No players online."));
 
         //Username
         final TableColumn<Player, String> usernameColumn = new TableColumn<>("Username");
@@ -96,9 +104,17 @@ public class PlayersLayout extends MenuPage {
             serverShell.addEventListener(new ServerShell.EventAdapter() {
 
                 @Override
+                public void onServerStarted() {
+                    Platform.runLater(() -> {
+                        offline_overlay.setVisible(false);
+                    });
+                }
+
+                @Override
                 public void onServerStopped() {
                     Platform.runLater(() -> {
                         players_table_view.getItems().clear();
+                        offline_overlay.setVisible(true);
                     });
                 }
 

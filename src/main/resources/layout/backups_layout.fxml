@@ -23,6 +23,8 @@
     </Separator>
 
     <Label fx:id="no_backups_found_label" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.halignment="CENTER" text="No Backups Found"/>
+    <Label fx:id="loading_label" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.halignment="CENTER" text="Loading..."/>
+
     <ListView fx:id="backups_list_view" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
 
 </GridPane>

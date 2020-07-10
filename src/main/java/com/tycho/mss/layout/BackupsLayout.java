@@ -15,8 +15,8 @@ import javafx.scene.layout.GridPane;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BackupsLayout extends MenuPage {
 
@@ -31,6 +31,9 @@ public class BackupsLayout extends MenuPage {
 
     @FXML
     private Label no_backups_found_label;
+
+    @FXML
+    private Label loading_label;
 
     @FXML
     private void initialize() {
@@ -96,37 +99,38 @@ public class BackupsLayout extends MenuPage {
     }
 
     private void refreshBackupsList() {
+        loading_label.setVisible(true);
+        no_backups_found_label.setVisible(false);
         backups_list_view.getItems().clear();
-        final Path backupsDirectory = Preferences.getBackupDirectory();
-        if (backupsDirectory != null && Files.exists(backupsDirectory)) {
-            try {
-                Files.walk(backupsDirectory).filter(new Predicate<Path>() {
-                    @Override
-                    public boolean test(Path path) {
-                        return path.getFileName().toString().endsWith("zip");
-                    }
-                }).forEach(new Consumer<Path>() {
-                    @Override
-                    public void accept(Path path) {
-                        backups_list_view.getItems().add(path);
-                    }
-                });
-            }catch (IOException e){
-                e.printStackTrace();
+        new Thread(() -> {
+            final Path backupsDirectory = Preferences.getBackupDirectory();
+            final List<Path> backups = new ArrayList<>();
+            if (backupsDirectory != null && Files.exists(backupsDirectory)) {
+                try {
+                    Files.walk(backupsDirectory).filter(path -> path.getFileName().toString().endsWith("zip")).forEach(backups::add);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
             }
-        }
 
-        backups_list_view.getItems().sort((a, b) -> {
-            try {
-                return -Long.compare(Files.getLastModifiedTime(a).toMillis(), Files.getLastModifiedTime(b).toMillis());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return 0;
-        });
+            backups.sort((a, b) -> {
+                try {
+                    return -Long.compare(Files.getLastModifiedTime(a).toMillis(), Files.getLastModifiedTime(b).toMillis());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            });
 
-        if (!backups_list_view.getItems().isEmpty() && no_backups_found_label.getParent() != null){
-            ((GridPane) no_backups_found_label.getParent()).getChildren().remove(no_backups_found_label);
-        }
+            Platform.runLater(() -> {
+                backups_list_view.getItems().addAll(backups);
+                loading_label.setVisible(false);
+
+                if (!backups_list_view.getItems().isEmpty() && no_backups_found_label.getParent() != null){
+                    ((GridPane) no_backups_found_label.getParent()).getChildren().remove(no_backups_found_label);
+                }
+            });
+
+        }).start();
     }
 }

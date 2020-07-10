@@ -7,11 +7,16 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.TableView?>
-<GridPane xmlns="http://javafx.com/javafx"
+<StackPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.PlayersLayout">
 
-    <TableView fx:id="players_table_view" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+    <TableView fx:id="players_table_view" />
+
+    <!-- Server offline overlay -->
+    <StackPane fx:id="offline_overlay" style="-fx-background-color: #171717" >
+        <Label text="The players list is unavailable while the server is offline."/>
+    </StackPane>
 
     <!--<VBox>
         <Label text="Online Players" style="-fx-font-weight: bold;">
@@ -29,4 +34,4 @@
         <ListView fx:id="offline_players_list_view"/>
     </VBox>-->
 
-</GridPane>
+</StackPane>

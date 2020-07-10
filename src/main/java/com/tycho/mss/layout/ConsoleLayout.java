@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ public class ConsoleLayout extends MenuPage {
     @FXML
     private TextField console_input;
 
+    @FXML
+    private Region offline_overlay;
+
     private static final List<String> dictionary = new ArrayList<>();
     static{
         dictionary.add("say");
@@ -32,13 +36,15 @@ public class ConsoleLayout extends MenuPage {
 
     @FXML
     private void initialize() {
+        offline_overlay.managedProperty().bind(offline_overlay.visibleProperty());
+
         //Console input
         console_input.setOnAction(event -> {
             if (getServerShell() != null) {
                 try {
                     //Add command to history
                     commandHistory.add(console_input.getText());
-                    commandHistoryIndex = commandHistory.size() - 1;
+                    commandHistoryIndex = commandHistory.size();
 
                     //Execute command
                     getServerShell().execute(console_input.getText());
@@ -83,9 +89,34 @@ public class ConsoleLayout extends MenuPage {
         super.setServerShell(serverShell);
         if (serverShell != null){
             serverShell.addEventListener(new ServerShell.EventAdapter() {
+
                 @Override
-                public void onServerIoReady() {
-                    console_input.setDisable(false);
+                public void onServerStarting() {
+                    Platform.runLater(() -> {
+                        offline_overlay.setVisible(false);
+                    });
+                }
+
+                @Override
+                public void onServerStarted() {
+                    Platform.runLater(() -> {
+                        console_input.setDisable(false);
+                        console_input.setText("");
+                    });
+                }
+
+                @Override
+                public void onServerStopping() {
+                    Platform.runLater(() -> {
+                        console_input.setDisable(true);
+                    });
+                }
+
+                @Override
+                public void onServerStopped() {
+                    Platform.runLater(() -> {
+                        offline_overlay.setVisible(true);
+                    });
                 }
 
                 @Override
@@ -100,6 +131,14 @@ public class ConsoleLayout extends MenuPage {
 
         //Console input
         console_input.setDisable(serverShell == null || serverShell.getState() != ServerShell.State.ONLINE);
+    }
+
+    @Override
+    public void onPageSelected() {
+        super.onPageSelected();
+        Platform.runLater(() -> {
+            console.setScrollTop(Double.MAX_VALUE);
+        });
     }
 
     private String autocomplete(final String input){
