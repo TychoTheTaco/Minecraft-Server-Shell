@@ -48,7 +48,7 @@ public class MiniDashboardController extends MenuPage{
         //Set up "start/stop" button
         start_stop_button.setOnAction(event -> {
             if (getServerShell() == null || getServerShell().getState() == ServerShell.State.OFFLINE){
-                getServerShell().start();
+                getServerShell().startOnNewThread();
             }else if (getServerShell().getState() == ServerShell.State.ONLINE){
                 getServerShell().stop();
             }

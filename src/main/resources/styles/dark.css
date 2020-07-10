@@ -193,6 +193,7 @@
 
 #console{
     -fx-font-family: Consolas;
+    -fx-font-size: 0.9em;
     -fx-highlight-fill: #e6e6e6;
     -fx-highlight-text-fill: #000000;
     -fx-text-fill: white;

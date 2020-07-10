@@ -7,9 +7,6 @@ import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -211,10 +208,10 @@ public class ServerShell implements Context{
                         break;
                     }
 
-                    Platform.runLater(() -> {
+                    /*Platform.runLater(() -> {
                         final Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to start server. Launch options may be invalid.", ButtonType.OK);
                         alert.showAndWait();
-                    });
+                    });*/
                 }catch (IOException e){
                     e.printStackTrace();
                 }
