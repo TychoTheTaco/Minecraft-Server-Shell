@@ -354,3 +354,28 @@
     -fx-border-style: solid;
     -fx-border-width: 0 0 1 0;
 }
+
+/* ------------------------------------------------------------------------------- Server List Item ----------------------------------------------------------------------------- */
+
+.server_list{
+    -fx-background-color: #222222, #737373;
+    -fx-background-insets: 0, 1;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+}
+
+.server_list:hover{
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, #000000, 10, 0, 0, 0);
+}
+
+.server_list_add{
+    -fx-background-color: #00000040;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+}
+
+.server_list_add:hover{
+    -fx-cursor: hand;
+    -fx-background-color: #00000080;
+}

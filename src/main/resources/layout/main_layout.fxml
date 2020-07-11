@@ -17,7 +17,7 @@
                 <Insets top="8" bottom="8" right="8"/>
             </padding>
 
-            <StackPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2">
+            <StackPane fx:id="icon" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2">
                 <padding>
                     <Insets top="8" left="12" bottom="8" right="12"/>
                 </padding>
@@ -36,7 +36,6 @@
     <fx:include fx:id="miniDashboard" source="mini_dashboard_layout.fxml" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-background-color: #3d3d3d;"/>
 
     <!-- Layout Container -->
-    <BorderPane fx:id="container" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800"
-                prefHeight="500"/>
+    <BorderPane fx:id="container" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
 
 </GridPane>

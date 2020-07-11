@@ -1,11 +1,11 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.MenuItem;
-import com.tycho.mss.MenuListCell;
-import com.tycho.mss.MenuPage;
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.*;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
@@ -29,12 +29,22 @@ public class MainLayout {
     private ServerShell serverShell;
 
     @FXML
+    private Node icon;
+
+    @FXML
     private void initialize() {
         loadMenuItems();
         menu_items_list_view.getSelectionModel().select(getMenuItemIndex("Console"));
 
         //Mini dashboard
         miniDashboard.managedProperty().bind(miniDashboard.visibleProperty());
+
+        icon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                MinecraftServerManager.setPage("server_list");
+            }
+        });
     }
 
     private void loadMenuItems(){
