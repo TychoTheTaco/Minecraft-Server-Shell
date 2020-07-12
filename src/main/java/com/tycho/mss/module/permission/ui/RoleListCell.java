@@ -53,7 +53,6 @@ public class RoleListCell extends ListCell<Role> {
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setTitle("Edit Role");
                     final EditRoleLayout editRoleLayout = fxmlLoader.getController();
-                    editRoleLayout.setStage(stage);
                     editRoleLayout.setServerShell(serverShell);
                     editRoleLayout.setRole(getItem());
                     final Scene scene = new Scene(root);

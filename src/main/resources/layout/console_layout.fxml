@@ -18,7 +18,7 @@
 
     <!-- Server offline overlay -->
     <StackPane fx:id="offline_overlay" style="-fx-background-color: #171717">
-        <Label text="The console is unavailable while the server is offline."/>
+        <Label text="The console is unavailable when the server is offline."/>
     </StackPane>
 
 </StackPane>

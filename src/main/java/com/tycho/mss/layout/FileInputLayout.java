@@ -103,6 +103,13 @@ public class FileInputLayout extends ValidatedTextField {
                 invalidReason.append("Invalid Path!");
                 return false;
             }
+
+            //The path name cannot end in a period
+            if (path.getFileName() != null && path.getFileName().toString().endsWith(".")){
+                invalidReason.append("Invalid Path!");
+                return false;
+            }
+
             return super.isTextValid(string, invalidReason) && isPathValid(path, invalidReason);
         }
 

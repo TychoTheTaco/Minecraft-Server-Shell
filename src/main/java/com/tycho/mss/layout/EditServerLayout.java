@@ -1,27 +1,35 @@
 package com.tycho.mss.layout;
 
+import com.tycho.mss.ServerConfiguration;
+import com.tycho.mss.ServerManager;
+import easytasks.Task;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -40,16 +48,31 @@ public class EditServerLayout extends VBox {
     @FXML
     private Pane download_option_container;
 
+    ////////////////////////////// Auto download //////////////////////////////
+
+    @FXML
+    private ProgressIndicator progress_indicator;
+
     @FXML
     private ComboBox<String> minecraft_version_input;
 
     @FXML
-    private Label loading_label;
+    private FileInputLayout server_directory_input;
+
+    ////////////////////////////// Custom Jar //////////////////////////////
 
     @FXML
     private FileInputLayout custom_jar_input;
 
+    @FXML
+    private Button create_server_button;
+
     private Node currentNode;
+
+    private AndValidGroup form = new AndValidGroup();
+    AndValidGroup downloadJarGroup = new AndValidGroup();
+    OrValidGroup radio = new OrValidGroup();
+    AndValidGroup customJarGroup = new AndValidGroup();
 
     public EditServerLayout() {
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/edit_server_layout.fxml"));
@@ -61,6 +84,28 @@ public class EditServerLayout extends VBox {
             throw new RuntimeException(e);
         }
 
+        downloadJarGroup.add(new Valid() {
+            @Override
+            public boolean isValid() {
+                return server_directory_input.isValid();
+            }
+        });
+
+        customJarGroup.add(new Valid() {
+            @Override
+            public boolean isValid() {
+                return custom_jar_input.isValid();
+            }
+        });
+        form.add(radio);
+        form.add(new Valid() {
+            @Override
+            public boolean isValid() {
+                return server_name_input.isValid();
+            }
+        });
+
+        //Server name
         server_name_input.setValidator(new ValidatedTextField.Validator() {
             @Override
             protected boolean isTextValid(String string, StringBuilder invalidReason) {
@@ -69,6 +114,57 @@ public class EditServerLayout extends VBox {
                     return false;
                 }
                 return super.isTextValid(string, invalidReason);
+            }
+        });
+        server_name_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
+            @Override
+            public void onValidStateChange(boolean isValid) {
+                create_server_button.setDisable(!form.isValid());
+            }
+        });
+
+        create_server_button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                Path serverDirectory;
+
+                //Download server JAR if we have to
+                if (auto_download_jar_button.isSelected()){
+                    serverDirectory = server_directory_input.getPath();
+
+                    final String versionCode = minecraft_version_input.getValue();
+
+                    String url = null;
+                    for (Object object : versions){
+                        if (((JSONObject) object).get("id").equals(versionCode)){
+                            final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"));
+                            url = (String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url");
+
+                            final DownloadJarTask downloadJarTask = new DownloadJarTask(url, Paths.get(System.getProperty("user.dir")).resolve(serverDirectory).resolve("server.jar"));
+                            downloadJarTask.start();
+                            break;
+                        }
+                    }
+
+                    System.out.println("URL: " + url);
+                }else if (custom_jar_button.isSelected()){
+                    serverDirectory = custom_jar_input.getPath().getParent();
+                }
+
+                ((Stage) create_server_button.getScene().getWindow()).close();
+                ServerManager.add(new ServerConfiguration(server_name_input.getText(), Paths.get("mah_jars")));
+                ServerManager.save();
+
+                /*final EditServerLayout editServerLayout = new EditServerLayout();
+                final Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("New Server");
+
+                final Scene scene = new Scene(editServerLayout);
+                scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
+                stage.setScene(scene);
+                stage.showAndWait();*/
             }
         });
 
@@ -94,6 +190,33 @@ public class EditServerLayout extends VBox {
             }
         });
 
+        server_directory_input.setIsDirectory(true);
+        server_directory_input.setValidator(new FileInputLayout.PathValidator() {
+            @Override
+            protected boolean isPathValid(Path path, StringBuilder invalidReason) {
+                System.out.println(path.toAbsolutePath() + " VS " + Paths.get(System.getProperty("user.dir")));
+
+                if (Files.exists(path) && Files.isDirectory(path)){
+                    try {
+                        if (Files.list(path).count() > 0){
+                            invalidReason.append("Directory must be empty!");
+                            return false;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return true;
+            }
+        });
+        server_directory_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
+            @Override
+            public void onValidStateChange(boolean isValid) {
+                create_server_button.setDisable(!form.isValid());
+            }
+        });
+
         auto_download_jar_button.setSelected(true);
 
         new Thread(new Runnable() {
@@ -103,7 +226,7 @@ public class EditServerLayout extends VBox {
                 System.out.println("RESULT: " + result);
 
                 final List<String> versionCodes = new ArrayList<>();
-                final JSONArray versions = (JSONArray) result.get("versions");
+                versions = (JSONArray) result.get("versions");
                 for (Object object : versions) {
                     versionCodes.add((String) ((JSONObject) object).get("id"));
                 }
@@ -111,19 +234,28 @@ public class EditServerLayout extends VBox {
                 Platform.runLater(() -> {
                     minecraft_version_input.getItems().addAll(versionCodes);
                     minecraft_version_input.getSelectionModel().selectFirst();
-                    loading_label.setVisible(false);
-                    loading_label.setManaged(false);
+                    progress_indicator.setVisible(false);
+                    progress_indicator.setManaged(false);
                 });
             }
         }).start();
+
+        create_server_button.setDisable(true);
+
     }
+
+    private JSONArray versions;
 
     private void setOption(final String option) {
         final String id;
         if (option.equals("download")) {
             id = "option_download_jar";
+            radio.remove(customJarGroup);
+            radio.add(downloadJarGroup);
         } else {
             id = "option_custom_jar";
+            radio.remove(downloadJarGroup);
+            radio.add(customJarGroup);
         }
         if (currentNode != null) {
             currentNode.setVisible(false);
@@ -170,5 +302,98 @@ public class EditServerLayout extends VBox {
         bufferedReader.close();
         if (stringBuilder.toString().length() == 0) return new JSONObject();
         return (JSONObject) new JSONParser().parse(stringBuilder.toString());
+    }
+
+    private interface Valid{
+        boolean isValid();
+    }
+
+    private class AndValidGroup implements Valid{
+
+        private final List<Valid> items = new ArrayList<>();
+
+        public void add(final Valid item){
+            if (!items.contains(item)) items.add(item);
+        }
+
+        public void remove(final Valid item){
+            items.remove(item);
+        }
+
+        @Override
+        public boolean isValid() {
+            for (Valid item : items){
+                if (!item.isValid()){
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    private class OrValidGroup implements Valid{
+
+        private final List<Valid> items = new ArrayList<>();
+
+        public void add(final Valid item){
+            if (!items.contains(item)) items.add(item);
+        }
+
+        public void remove(final Valid item){
+            items.remove(item);
+        }
+
+        @Override
+        public boolean isValid() {
+            for (Valid item : items){
+                if (item.isValid()){
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    private class DownloadJarTask extends Task{
+
+        private final String url;
+
+        private final Path destination;
+
+        public DownloadJarTask(final String url, final Path destination){
+            this.url = url;
+            this.destination = destination;
+            System.out.println("DESTINATION: " + destination);
+        }
+
+        @Override
+        protected void run() {
+            try {
+                final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setRequestMethod("GET");
+                connection.connect();
+
+                //Get response code
+                if (connection.getResponseCode() == 200) {
+
+                    try {
+                        Files.createDirectories(destination.getParent());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+
+                    System.out.println("prepare copy");
+
+                    Files.copy(connection.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+                    connection.getInputStream().close();
+
+                    System.out.println("finished");
+                } else {
+                    System.out.println("ERROR RESPONSE CODE: " + connection.getResponseCode());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

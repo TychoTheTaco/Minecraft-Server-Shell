@@ -28,8 +28,6 @@ public class EditRoleLayout {
     @FXML
     private TextCheckBoxLayout auto_assign_check_boxController;
 
-    private Stage stage;
-
     private Role role;
 
     @FXML
@@ -40,7 +38,7 @@ public class EditRoleLayout {
 
         commands_list_view.setCellFactory(param -> new CommandListCell());
 
-        ok_button.setOnAction(event -> stage.close());
+        ok_button.setOnAction(event -> ((Stage) ok_button.getScene().getWindow()).close());
 
         roleNameTextFieldController.setValidator(new ValidatedTextField.Validator(){
             @Override
@@ -75,10 +73,6 @@ public class EditRoleLayout {
                 break;
             }
         }
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     public Role getRole(){

@@ -55,7 +55,7 @@
                 </padding>
                 <Label text="Minecraft Version:"/>
                 <ComboBox fx:id="minecraft_version_input" HBox.hgrow="ALWAYS"/>
-                <Label fx:id="loading_label" text="Loading..."/>
+                <ProgressIndicator fx:id="progress_indicator" prefWidth="24" prefHeight="24" style="-fx-progress-color: white;"/>
             </HBox>
 
             <HBox spacing="10" alignment="CENTER_LEFT">
@@ -63,7 +63,7 @@
                     <Insets bottom="8"/>
                 </padding>
                 <Label text="Save Location:"/>
-                <FileInputLayout fx:id="server_directory" HBox.hgrow="ALWAYS"/>
+                <FileInputLayout fx:id="server_directory_input" HBox.hgrow="ALWAYS"/>
             </HBox>
         </VBox>
 
@@ -79,13 +79,15 @@
 
     </StackPane>
 
+    <Pane VBox.vgrow="ALWAYS"/>
+
     <Separator style="-fx-border-color: gray; -fx-border-width: 1 0 0 0;">
         <VBox.margin>
             <Insets bottom="8" top="8"/>
         </VBox.margin>
     </Separator>
 
-    <Button fx:id="ok_button" text="Create Server">
+    <Button fx:id="create_server_button" text="Create Server">
         <GridPane.margin>
             <Insets top="8"/>
         </GridPane.margin>

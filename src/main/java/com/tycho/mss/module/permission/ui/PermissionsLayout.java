@@ -72,7 +72,6 @@ public class PermissionsLayout implements Page, ServerShellConnection {
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setTitle("Add Role");
                     final EditRoleLayout editRoleLayout = fxmlLoader.getController();
-                    editRoleLayout.setStage(stage);
                     editRoleLayout.setServerShell(serverShellContainer.getServerShell());
                     final Scene scene = new Scene(root);
                     scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
@@ -99,7 +98,6 @@ public class PermissionsLayout implements Page, ServerShellConnection {
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setTitle("Add Player");
                     final AddPlayerLayout addPlayerLayout = fxmlLoader.getController();
-                    addPlayerLayout.setStage(stage);
                     final Scene scene = new Scene(root);
                     scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
                     stage.setScene(scene);

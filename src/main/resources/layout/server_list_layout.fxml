@@ -16,6 +16,6 @@
     </padding>
 
     <Label GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold; -fx-font-size: 2em;" text="Servers"/>
-    <TilePane fx:id="servers_tile_pane" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" hgap="16" vgap="16"/>
+    <TilePane fx:id="servers_tile_pane" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" hgap="16" vgap="16" prefTileWidth="200" prefTileHeight="100"/>
 
 </GridPane>

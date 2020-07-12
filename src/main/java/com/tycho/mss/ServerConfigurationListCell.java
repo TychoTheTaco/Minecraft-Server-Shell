@@ -1,5 +1,6 @@
 package com.tycho.mss;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -16,7 +17,9 @@ public class ServerConfigurationListCell extends GridPane {
     private Label server_name_label;
 
     @FXML
-    private Label server_state_label;
+    private Label server_version_label;
+
+    private ServerConfiguration serverConfiguration;
 
     public ServerConfigurationListCell() {
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/server_configuration_list_cell.fxml"));
@@ -27,8 +30,13 @@ public class ServerConfigurationListCell extends GridPane {
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        server_name_label.setText("Server Name");
-        server_state_label.setText("Online");
+    public void setServerConfiguration(ServerConfiguration serverConfiguration) {
+        this.serverConfiguration = serverConfiguration;
+        Platform.runLater(() -> {
+            server_name_label.setText(serverConfiguration.getName());
+            server_version_label.setText("1.16.1");
+        });
     }
 }

@@ -15,8 +15,8 @@
     <HBox spacing="4" alignment="CENTER_LEFT">
         <ImageView
                 fx:id="state_icon"
-                fitHeight="24"
-                fitWidth="24"
+                fitHeight="20"
+                fitWidth="20"
                 preserveRatio="true">
             <Image url="/icons/circle_white.png"/>
         </ImageView>
@@ -24,5 +24,5 @@
         <Label fx:id="server_name_label" style="-fx-font-weight: bold;"/>
     </HBox>
 
-    <Label fx:id="server_state_label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <Label fx:id="server_version_label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
 </fx:root>
