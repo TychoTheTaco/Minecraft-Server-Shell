@@ -182,27 +182,18 @@ public class EditServerLayout extends VBox {
                             }
                         }
 
-                        Platform.runLater(() -> {
-                            stage.close();
-                        });
+                        Platform.runLater(stage::close);
                     }).start();
                 }else if (custom_jar_button.isSelected()){
                     serverDirectory = custom_jar_input.getPath().getParent();
                 }
 
-                ((Stage) create_server_button.getScene().getWindow()).close();
+                //Save server configuration
                 ServerManager.add(new ServerConfiguration(server_name_input.getText(), Paths.get("mah_jars")));
                 ServerManager.save();
 
-                /*final EditServerLayout editServerLayout = new EditServerLayout();
-                final Stage stage = new Stage();
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setTitle("New Server");
-
-                final Scene scene = new Scene(editServerLayout);
-                scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
-                stage.setScene(scene);
-                stage.showAndWait();*/
+                //Close window
+                ((Stage) create_server_button.getScene().getWindow()).close();
             }
         });
 
