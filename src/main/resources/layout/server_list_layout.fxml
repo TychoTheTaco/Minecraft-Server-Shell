@@ -7,15 +7,19 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import com.tycho.mss.ServerConfigurationListCell?>
-<GridPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.layout.ServerListLayout" style="-fx-background-color: #3d3d3d;" vgap="8">
+<?import javafx.scene.control.ScrollPane?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.tycho.mss.layout.ServerListLayout" style="-fx-background-color: #3d3d3d;" spacing="8">
 
     <padding>
         <Insets top="8" right="16" bottom="8" left="16" />
     </padding>
 
-    <Label GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold; -fx-font-size: 2em;" text="Servers"/>
-    <TilePane fx:id="servers_tile_pane" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" hgap="16" vgap="16" prefTileWidth="200" prefTileHeight="100"/>
+    <Label style="-fx-font-weight: bold; -fx-font-size: 2em;" text="Servers"/>
+    <ScrollPane fx:id="scroll_pane" VBox.vgrow="ALWAYS">
+        <TilePane fx:id="servers_tile_pane" hgap="16" vgap="16" prefTileWidth="200" prefTileHeight="100"/>
+    </ScrollPane>
 
-</GridPane>
+
+</VBox>

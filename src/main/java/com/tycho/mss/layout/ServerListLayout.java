@@ -1,8 +1,12 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.*;
+import com.tycho.mss.AddNewListItem;
+import com.tycho.mss.Page;
+import com.tycho.mss.ServerConfigurationListCell;
+import com.tycho.mss.ServerManager;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -15,7 +19,12 @@ public class ServerListLayout implements Page {
     private TilePane servers_tile_pane;
 
     @FXML
+    private ScrollPane scroll_pane;
+
+    @FXML
     private void initialize() {
+        servers_tile_pane.maxWidthProperty().bind(scroll_pane.widthProperty().subtract(16));
+
         //Load servers
         refreshServerList();
     }

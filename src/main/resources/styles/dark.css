@@ -63,6 +63,14 @@
     -fx-background-color: white;
 }
 
+.scroll-pane{
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
 /* ------------------------------------------------------------------------------------ BUTTON ---------------------------------------------------------------------------------- */
 
 .button{
@@ -354,7 +362,7 @@
   visibility: hidden;
 }
 
-.scroll-bar:vertical {
+.scroll-bar {
   -fx-background-color: transparent;
 }
 

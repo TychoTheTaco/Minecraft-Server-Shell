@@ -10,20 +10,26 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.RadioButton;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -133,21 +139,53 @@ public class EditServerLayout extends VBox {
                 if (auto_download_jar_button.isSelected()){
                     serverDirectory = server_directory_input.getPath();
 
-                    final String versionCode = minecraft_version_input.getValue();
-
-                    String url = null;
-                    for (Object object : versions){
-                        if (((JSONObject) object).get("id").equals(versionCode)){
-                            final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"));
-                            url = (String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url");
-
-                            final DownloadJarTask downloadJarTask = new DownloadJarTask(url, Paths.get(System.getProperty("user.dir")).resolve(serverDirectory).resolve("server.jar"));
-                            downloadJarTask.start();
-                            break;
+                    //Show progress dialog
+                    final HBox root = new HBox();
+                    root.setAlignment(Pos.CENTER_LEFT);
+                    root.setStyle("-fx-background-color: #3d3d3d;");
+                    root.setSpacing(8);
+                    root.setPadding(new Insets(16));
+                    final ProgressIndicator progressIndicator = new ProgressIndicator();
+                    progressIndicator.setPrefSize(24, 24);
+                    final Label label = new Label("Downloading...");
+                    label.setStyle("-fx-font-size: 1.1em;");
+                    root.getChildren().addAll(progressIndicator, label);
+                    final Stage stage = new Stage();
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setTitle("Downloading...");
+                    stage.setResizable(false);
+                    stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                        @Override
+                        public void handle(WindowEvent event) {
+                            event.consume();
                         }
-                    }
+                    });
 
-                    System.out.println("URL: " + url);
+                    final Scene scene = new Scene(root);
+                    scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.sizeToScene();
+                    stage.show();
+
+                    //Start download
+                    new Thread(() -> {
+                        final String versionCode = minecraft_version_input.getValue();
+                        String url = null;
+                        for (Object object : versions){
+                            if (((JSONObject) object).get("id").equals(versionCode)){
+                                final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"));
+                                url = (String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url");
+
+                                final DownloadJarTask downloadJarTask = new DownloadJarTask(url, Paths.get(System.getProperty("user.dir")).resolve(serverDirectory).resolve("server.jar"));
+                                downloadJarTask.start();
+                                break;
+                            }
+                        }
+
+                        Platform.runLater(() -> {
+                            stage.close();
+                        });
+                    }).start();
                 }else if (custom_jar_button.isSelected()){
                     serverDirectory = custom_jar_input.getPath().getParent();
                 }
