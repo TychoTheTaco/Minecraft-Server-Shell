@@ -1,8 +1,13 @@
 package com.tycho.mss;
 
 import com.tycho.mss.module.permission.PermissionsManager;
+import com.tycho.mss.util.Utils;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -20,6 +25,8 @@ public class ServerConfiguration {
     private String launchOptions = "";
 
     private final PermissionsManager permissionsManager;
+
+    private String minecraftVersion = null;
 
     public ServerConfiguration(final UUID id, final String name, final Path jar){
         this.id = id;
@@ -66,5 +73,20 @@ public class ServerConfiguration {
 
     public PermissionsManager getPermissionsManager() {
         return permissionsManager;
+    }
+
+    public String getMinecraftVersion() {
+        //Try to read minecraft version from server JAR file
+        if (minecraftVersion == null){
+            try {
+                final JarURLConnection connection = (JarURLConnection) new URL("jar:file:/" + this.jar.toAbsolutePath().toString() + "!/version.json").openConnection();
+                final JSONObject jsonObject = Utils.readStreamAsJson(connection.getInputStream());
+                minecraftVersion = (String) jsonObject.get("name");
+            }catch (IOException | ParseException e){
+                e.printStackTrace();
+                return "Unknown";
+            }
+        }
+        return minecraftVersion;
     }
 }

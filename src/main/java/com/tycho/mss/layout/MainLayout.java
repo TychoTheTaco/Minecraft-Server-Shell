@@ -4,6 +4,7 @@ import com.tycho.mss.*;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -22,7 +23,11 @@ public class MainLayout {
     @FXML
     private BorderPane container;
 
-    private ServerShell serverShell;
+    @FXML
+    private Label server_name_label;
+
+    @FXML
+    private Label server_version_label;
 
     @FXML
     private Node icon;
@@ -46,7 +51,6 @@ public class MainLayout {
     private void loadMenuItems(){
         menu_items_list_view.setCellFactory(param -> new MenuListCell());
         try {
-            //menu_items_list_view.getItems().add(new MenuItem("Dashboard", "dashboard_layout"));
             menu_items_list_view.getItems().add(new MenuItem("Players", "players_layout"));
             menu_items_list_view.getItems().add(new MenuItem("Console", "console_layout"));
             menu_items_list_view.getItems().add(new MenuItem("Configuration", "configuration_layout"));
@@ -67,6 +71,7 @@ public class MainLayout {
         menu_items_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             ((Page) newValue.getLoader().getController()).onPageSelected();
             container.setCenter(newValue.getNode());
+            newValue.getNode().setId(newValue.getTitle());
             if (oldValue != null) ((Page) oldValue.getLoader().getController()).onPageHidden();
         });
     }
@@ -78,6 +83,20 @@ public class MainLayout {
         }
     }
 
+    public void triggerOnHide(){
+        if (container.getCenter() != null){
+            MenuItem item = menu_items_list_view.getItems().get(getMenuItemIndex(container.getCenter().getId()));
+            if (item.getLoader().getController() instanceof Page) ((Page) item.getLoader().getController()).onPageHidden();
+        }
+    }
+
+    public void onVisible(){
+        if (container.getCenter() != null){
+            MenuItem item = menu_items_list_view.getItems().get(getMenuItemIndex(container.getCenter().getId()));
+            if (item.getLoader().getController() instanceof Page) ((Page) item.getLoader().getController()).onPageSelected();
+        }
+    }
+
     private int getMenuItemIndex(final String title) {
         for (MenuItem menuItem : menu_items_list_view.getItems()) {
             if (menuItem.getTitle().equals(title)) return menu_items_list_view.getItems().indexOf(menuItem);
@@ -86,8 +105,6 @@ public class MainLayout {
     }
 
     public void setServerShell(ServerShell serverShell) {
-        this.serverShell = serverShell;
-
         //Update modules
         for (MenuItem menuItem : menu_items_list_view.getItems()){
             if (menuItem.getLoader().getController() instanceof ServerShellConnection){
@@ -102,5 +119,11 @@ public class MainLayout {
             mini_dashboard.setVisible(true);
         }
         mini_dashboard.getServerShellContainer().setServerShell(serverShell);
+
+        //Update top left
+        if (serverShell != null){
+            server_name_label.setText(serverShell.getServerConfiguration().getName());
+            server_version_label.setText(serverShell.getServerConfiguration().getMinecraftVersion());
+        }
     }
 }

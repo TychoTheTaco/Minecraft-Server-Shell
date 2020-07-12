@@ -37,7 +37,7 @@ public class ServerConfigurationListCell extends GridPane {
 
             //Get Minecraft version from JAR
             if (Files.exists(serverConfiguration.getJar())){
-                server_version_label.setText("1.16.1");
+                server_version_label.setText(serverConfiguration.getMinecraftVersion());
             }else{
                 setStyle("-fx-background-color: -red;");
                 server_version_label.setText("Server JAR not found!");

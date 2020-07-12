@@ -110,7 +110,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
 
     private boolean isDirty() {
         final Path path = server_jar_input.getPath();
-        return !(path != null && initialConfiguration.get("server_jar").equals(server_jar_input.getPath()) && initialConfiguration.get("launch_options").toString().equals(launch_options_text_field.getText()));
+        return !(path != null && initialConfiguration.get("jar").equals(server_jar_input.getPath()) && initialConfiguration.get("launch_options").toString().equals(launch_options_text_field.getText()));
     }
 
     private void setDirty(final boolean dirty) {
@@ -139,6 +139,8 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
 
     @Override
     public void onPageSelected() {
+        System.out.println("ON PAGE SELECTED");
+
         //Load the saved configuration
         initialConfiguration = getServerShellContainer().getServerShell().getServerConfiguration().toJson();
         setDefaults();

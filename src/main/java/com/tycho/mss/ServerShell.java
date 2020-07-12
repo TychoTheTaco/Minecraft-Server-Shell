@@ -117,14 +117,6 @@ public class ServerShell implements Context{
 
         playerDatabaseManager = new PlayerDatabaseManager(getDirectory());
 
-        /*final Role pleb = new Role("pleb", HereCommand.class, HelpCommand.class, LocationCommand.class, GuideCommand.class);
-        final Role admin = new Role("admin", GiveRandomItemCommand.class, BackupCommand.class, PermissionCommand.class);
-        admin.getCommands().addAll(pleb.getCommands());
-
-        permissionsManager.assign("TychoTheTaco", admin);
-        permissionsManager.assign("Metroscorpio", pleb);
-        permissionsManager.assign("Assassin_Actual7", pleb);*/
-
         //Add custom commands
         addCustomCommand(new HereCommand());
         addCustomCommand(new HelpCommand());

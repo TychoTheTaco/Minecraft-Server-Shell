@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -63,8 +62,13 @@ public class MinecraftServerManager extends Application{
         stackPane.setPrefWidth(900);
         stackPane.setPrefHeight(500);
 
+        //Load main layout
+        FXMLLoader loader = new FXMLLoader(MinecraftServerManager.class.getResource("/layout/main_layout.fxml"));
+        mainLayout = loader.load();
+        mainLayoutController = loader.getController();
+
         //Load server list layout
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/server_list_layout.fxml"));
+        loader = new FXMLLoader(getClass().getResource("/layout/server_list_layout.fxml"));
         serverListLayout = loader.load();
         serverListLayoutController = loader.getController();
 
@@ -85,17 +89,9 @@ public class MinecraftServerManager extends Application{
     }
 
     public static void setServer(final ServerConfiguration configuration){
-        if (mainLayout == null){
-            try {
-                final FXMLLoader loader = new FXMLLoader(MinecraftServerManager.class.getResource("/layout/main_layout.fxml"));
-                mainLayout = loader.load();
-                mainLayoutController = loader.getController();
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-        }
         setPage("main");
         mainLayoutController.setServerShell(ServerManager.getOrCreate(configuration));
+        mainLayoutController.onVisible();
     }
 
     public static void setPage(final String id){
@@ -111,6 +107,11 @@ public class MinecraftServerManager extends Application{
 
         if (currentPage != requestedPage){
             stackPane.getChildren().remove(currentPage);
+
+            if (currentPage == mainLayout){
+                mainLayoutController.triggerOnHide();
+            }
+
             stackPane.getChildren().add(requestedPage);
             currentPage = requestedPage;
         }

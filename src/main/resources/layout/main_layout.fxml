@@ -28,8 +28,8 @@
                 </ImageView>
             </StackPane>
 
-            <Label text="Server Name" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
-            <Label text="1.16" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-font-size: 0.8em;"/>
+            <Label fx:id="server_name_label" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+            <Label fx:id="server_version_label" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-font-size: 0.8em;"/>
         </GridPane>
         <ListView fx:id="menu_items_list_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
     </GridPane>

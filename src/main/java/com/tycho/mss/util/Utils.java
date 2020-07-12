@@ -2,11 +2,10 @@ package com.tycho.mss.util;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -167,5 +166,17 @@ public class Utils {
         zis.closeEntry();
         zis.close();
         fis.close();
+    }
+
+    public static JSONObject readStreamAsJson(final InputStream inputStream) throws IOException, ParseException {
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        final StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        bufferedReader.close();
+        if (stringBuilder.toString().length() == 0) return new JSONObject();
+        return (JSONObject) new JSONParser().parse(stringBuilder.toString());
     }
 }

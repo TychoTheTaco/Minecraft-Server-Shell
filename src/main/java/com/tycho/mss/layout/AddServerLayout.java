@@ -2,6 +2,7 @@ package com.tycho.mss.layout;
 
 import com.tycho.mss.ServerConfiguration;
 import com.tycho.mss.ServerManager;
+import com.tycho.mss.util.Utils;
 import easytasks.Task;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -23,13 +24,10 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -133,6 +131,8 @@ public class AddServerLayout extends VBox {
             @Override
             public void handle(ActionEvent event) {
 
+                final boolean autoAcceptEula = true;
+
                 //Download server JAR if we have to
                 if (auto_download_jar_button.isSelected()){
 
@@ -188,6 +188,14 @@ public class AddServerLayout extends VBox {
                                 System.err.println("ERROR DOWNLOADING JAR!");
                             }
 
+                            if (autoAcceptEula){
+                                try {
+                                    createAndAcceptEula(server_directory_input.getPath());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
                             //Close windows
                             stage.close();
                             ((Stage) create_server_button.getScene().getWindow()).close();
@@ -198,6 +206,14 @@ public class AddServerLayout extends VBox {
                     //Save server configuration
                     ServerManager.add(new ServerConfiguration(server_name_input.getText(), custom_jar_input.getPath()));
                     ServerManager.save();
+
+                    if (autoAcceptEula){
+                        try {
+                            createAndAcceptEula(custom_jar_input.getPath().toAbsolutePath().getParent());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
                     //Close window
                     ((Stage) create_server_button.getScene().getWindow()).close();
@@ -285,6 +301,12 @@ public class AddServerLayout extends VBox {
 
     }
 
+    private void createAndAcceptEula(final Path serverDirectory) throws IOException {
+        final PrintStream printStream = new PrintStream(Files.newOutputStream(serverDirectory.resolve(Paths.get("eula.txt"))));
+        printStream.println("eula=true");
+        printStream.close();
+    }
+
     private JSONArray versions;
 
     private void setOption(final String option) {
@@ -322,7 +344,7 @@ public class AddServerLayout extends VBox {
 
             //Get response code
             if (connection.getResponseCode() == 200) {
-                return readAsJsonObject(connection.getInputStream());
+                return Utils.readStreamAsJson(connection.getInputStream());
             } else {
                 System.out.println("ERROR RESPONSE CODE: " + connection.getResponseCode());
             }
@@ -330,18 +352,6 @@ public class AddServerLayout extends VBox {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private static JSONObject readAsJsonObject(final InputStream inputStream) throws IOException, ParseException {
-        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        final StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-        bufferedReader.close();
-        if (stringBuilder.toString().length() == 0) return new JSONObject();
-        return (JSONObject) new JSONParser().parse(stringBuilder.toString());
     }
 
     private interface Valid{
