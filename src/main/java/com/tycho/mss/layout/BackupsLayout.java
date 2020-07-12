@@ -1,6 +1,8 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.MenuPage;
+import com.tycho.mss.Page;
+import com.tycho.mss.StatusContainer;
+import com.tycho.mss.StatusHost;
 import com.tycho.mss.module.backup.BackupListCell;
 import com.tycho.mss.module.backup.MoveFilesTask;
 import com.tycho.mss.util.Preferences;
@@ -19,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackupsLayout extends MenuPage {
+public class BackupsLayout implements Page, StatusHost {
 
     @FXML
     private FileInputLayout backupDirectoryInputController;
@@ -35,6 +37,8 @@ public class BackupsLayout extends MenuPage {
 
     @FXML
     private Label loading_label;
+
+    private StatusContainer statusContainer = new StatusContainer();
 
     @FXML
     private void initialize() {
@@ -66,9 +70,9 @@ public class BackupsLayout extends MenuPage {
             @Override
             public void onValidStateChange(boolean isValid) {
                 if (isValid){
-                    setStatus(Status.OK);
+                    statusContainer.setStatus(StatusContainer.Status.OK);
                 }else{
-                    setStatus(Status.WARNING);
+                    statusContainer.setStatus(StatusContainer.Status.WARNING);
                 }
             }
         });
@@ -103,6 +107,11 @@ public class BackupsLayout extends MenuPage {
     @Override
     public void onPageSelected() {
         refreshBackupsList();
+    }
+
+    @Override
+    public void onPageHidden() {
+
     }
 
     private void moveBackupDirectory(final Path source, final Path destination){
@@ -159,5 +168,10 @@ public class BackupsLayout extends MenuPage {
             });
 
         }).start();
+    }
+
+    @Override
+    public StatusContainer getStatusManager() {
+        return statusContainer;
     }
 }

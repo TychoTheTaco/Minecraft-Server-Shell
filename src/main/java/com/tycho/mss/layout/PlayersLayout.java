@@ -1,8 +1,6 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.MenuPage;
-import com.tycho.mss.Player;
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.*;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
 import javafx.application.Platform;
@@ -16,13 +14,49 @@ import javafx.scene.layout.Region;
 
 import java.util.HashMap;
 
-public class PlayersLayout extends MenuPage {
+public class PlayersLayout implements Page, ServerShellConnection {
 
     @FXML
     private TableView<Player> players_table_view;
 
     @FXML
     private Region offline_overlay;
+
+    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
+        @Override
+        public void setServerShell(ServerShell serverShell) {
+            super.setServerShell(serverShell);
+            if (serverShell != null){
+                serverShell.addEventListener(new ServerShell.EventAdapter() {
+
+                    @Override
+                    public void onServerStarted() {
+                        Platform.runLater(() -> {
+                            offline_overlay.setVisible(false);
+                        });
+                    }
+
+                    @Override
+                    public void onServerStopped() {
+                        Platform.runLater(() -> {
+                            players_table_view.getItems().clear();
+                            offline_overlay.setVisible(true);
+                        });
+                    }
+
+                    @Override
+                    public void onPlayerConnected(Player player) {
+                        Platform.runLater(() -> players_table_view.getItems().add(player));
+                    }
+
+                    @Override
+                    public void onPlayerDisconnected(Player player) {
+                        Platform.runLater(() -> players_table_view.getItems().remove(player));
+                    }
+                });
+            }
+        }
+    };
 
     private final UiUpdater uiUpdater = new UiUpdater(1000) {
         @Override
@@ -96,41 +130,12 @@ public class PlayersLayout extends MenuPage {
     }
 
     @Override
-    public void setServerShell(ServerShell serverShell) {
-        super.setServerShell(serverShell);
-        if (serverShell != null){
-            serverShell.addEventListener(new ServerShell.EventAdapter() {
-
-                @Override
-                public void onServerStarted() {
-                    Platform.runLater(() -> {
-                        offline_overlay.setVisible(false);
-                    });
-                }
-
-                @Override
-                public void onServerStopped() {
-                    Platform.runLater(() -> {
-                        players_table_view.getItems().clear();
-                        offline_overlay.setVisible(true);
-                    });
-                }
-
-                @Override
-                public void onPlayerConnected(Player player) {
-                    Platform.runLater(() -> players_table_view.getItems().add(player));
-                }
-
-                @Override
-                public void onPlayerDisconnected(Player player) {
-                    Platform.runLater(() -> players_table_view.getItems().remove(player));
-                }
-            });
-        }
+    public void onPageHidden() {
+        uiUpdater.stop();
     }
 
     @Override
-    public void onPageHidden() {
-        uiUpdater.stop();
+    public ServerShellContainer getServerShellContainer() {
+        return serverShellContainer;
     }
 }

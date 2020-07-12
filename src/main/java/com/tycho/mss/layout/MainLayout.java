@@ -7,7 +7,6 @@ import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -18,10 +17,7 @@ public class MainLayout {
     private ListView<MenuItem> menu_items_list_view;
 
     @FXML
-    private Pane miniDashboard;
-
-    @FXML
-    private MiniDashboardController miniDashboardController;
+    private MiniDashboard mini_dashboard;
 
     @FXML
     private BorderPane container;
@@ -37,7 +33,7 @@ public class MainLayout {
         menu_items_list_view.getSelectionModel().select(getMenuItemIndex("Console"));
 
         //Mini dashboard
-        miniDashboard.managedProperty().bind(miniDashboard.visibleProperty());
+        mini_dashboard.managedProperty().bind(mini_dashboard.visibleProperty());
 
         icon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -63,20 +59,22 @@ public class MainLayout {
         }
 
         for (MenuItem menuItem : menu_items_list_view.getItems()) {
-            ((MenuPage) menuItem.getLoader().getController()).addStatusChangedListener((previous, status) -> menu_items_list_view.refresh());
+            if (menuItem.getLoader().getController() instanceof StatusHost){
+                ((StatusHost) menuItem.getLoader().getController()).getStatusManager().addStatusChangedListener((previous, status) -> menu_items_list_view.refresh());
+            }
         }
 
         menu_items_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            ((MenuPage) newValue.getLoader().getController()).onPageSelected();
+            ((Page) newValue.getLoader().getController()).onPageSelected();
             container.setCenter(newValue.getNode());
-            if (oldValue != null) ((MenuPage) oldValue.getLoader().getController()).onPageHidden();
+            if (oldValue != null) ((Page) oldValue.getLoader().getController()).onPageHidden();
         });
     }
 
     public void onHidden() {
-        miniDashboardController.onPageHidden();
+        mini_dashboard.onPageHidden();
         for (MenuItem menuItem : menu_items_list_view.getItems()) {
-            ((MenuPage) menuItem.getLoader().getController()).onPageHidden();
+            ((Page) menuItem.getLoader().getController()).onPageHidden();
         }
     }
 
@@ -92,15 +90,17 @@ public class MainLayout {
 
         //Update modules
         for (MenuItem menuItem : menu_items_list_view.getItems()){
-            ((MenuPage) menuItem.getLoader().getController()).setServerShell(serverShell);
+            if (menuItem.getLoader().getController() instanceof ServerShellConnection){
+                ((ServerShellConnection) menuItem.getLoader().getController()).getServerShellContainer().setServerShell(serverShell);
+            }
         }
 
         //Update mini dashboard
         if (serverShell == null){
-            miniDashboard.setVisible(false);
+            mini_dashboard.setVisible(false);
         }else{
-            miniDashboard.setVisible(true);
+            mini_dashboard.setVisible(true);
         }
-        miniDashboardController.setServerShell(serverShell);
+        mini_dashboard.getServerShellContainer().setServerShell(serverShell);
     }
 }

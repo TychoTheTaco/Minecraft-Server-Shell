@@ -3,9 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.layout.MiniDashboardController">
+<fx:root type="javafx.scene.layout.GridPane"  xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml">
 
     <padding>
         <Insets top="6" right="6" bottom="6" left="6"/>
@@ -28,4 +27,4 @@
         </GridPane>
     </VBox>
 
-</GridPane>
+</fx:root>

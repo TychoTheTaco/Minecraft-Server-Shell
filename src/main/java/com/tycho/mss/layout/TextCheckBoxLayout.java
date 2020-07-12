@@ -1,6 +1,5 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.MenuPage;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -8,7 +7,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
-public class TextCheckBoxLayout extends MenuPage {
+public class TextCheckBoxLayout {
 
     @FXML
     private CheckBox check_box;

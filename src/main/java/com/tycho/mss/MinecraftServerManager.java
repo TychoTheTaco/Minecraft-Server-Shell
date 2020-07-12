@@ -61,7 +61,7 @@ public class MinecraftServerManager extends Application{
         //Load user preferences
         Preferences.load();
 
-        stackPane.setPrefWidth(800);
+        stackPane.setPrefWidth(900);
         stackPane.setPrefHeight(500);
 
         //Load main layout

@@ -1,17 +1,32 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.MenuPage;
+import com.tycho.mss.Page;
 import com.tycho.mss.ServerShell;
+import com.tycho.mss.ServerShellConnection;
+import com.tycho.mss.ServerShellContainer;
 import com.tycho.mss.command.Command;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-public class CustomCommandsLayout extends MenuPage {
+public class CustomCommandsLayout implements Page, ServerShellConnection {
 
     @FXML
     private TableView<Command> custom_commands_table_view;
+
+    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
+        @Override
+        public void setServerShell(ServerShell serverShell) {
+            super.setServerShell(serverShell);
+            custom_commands_table_view.getItems().clear();
+            if (serverShell != null){
+                for (Command command : serverShell.getCustomCommands()){
+                    custom_commands_table_view.getItems().add(command);
+                }
+            }
+        }
+    };
 
     @FXML
     private void initialize() {
@@ -38,13 +53,17 @@ public class CustomCommandsLayout extends MenuPage {
     }
 
     @Override
-    public void setServerShell(ServerShell serverShell) {
-        super.setServerShell(serverShell);
-        custom_commands_table_view.getItems().clear();
-        if (serverShell != null){
-            for (Command command : serverShell.getCustomCommands()){
-                custom_commands_table_view.getItems().add(command);
-            }
-        }
+    public void onPageSelected() {
+
+    }
+
+    @Override
+    public void onPageHidden() {
+
+    }
+
+    @Override
+    public ServerShellContainer getServerShellContainer() {
+        return serverShellContainer;
     }
 }

@@ -1,8 +1,6 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.MenuPage;
-import com.tycho.mss.MinecraftServerManager;
-import com.tycho.mss.ServerShell;
+import com.tycho.mss.*;
 import com.tycho.mss.util.Preferences;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,11 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-public class ConfigurationLayout extends MenuPage {
+public class ConfigurationLayout implements Page, StatusHost, ServerShellConnection {
 
     @FXML
     private FileInputLayout serverJarInputController;
@@ -40,6 +35,9 @@ public class ConfigurationLayout extends MenuPage {
     //private List<Property<?>> properties = new ArrayList<>();
 
     private JSONObject initialConfiguration;
+
+    private final StatusContainer statusContainer = new StatusContainer();
+    private final ServerShellContainer serverShellContainer = new ServerShellContainer();
 
     @FXML
     private void initialize() {
@@ -103,7 +101,7 @@ public class ConfigurationLayout extends MenuPage {
             save_button.setDisable(true);
             Preferences.setServerJar(serverJarInputController.getPath());
             MinecraftServerManager.refresh();
-            setStatus(Status.OK);
+            statusContainer.setStatus(StatusContainer.Status.OK);
             Preferences.setLaunchOptions(launch_options_text_field.getText());
             Preferences.save();
             initialConfiguration = getConfiguration();
@@ -133,7 +131,7 @@ public class ConfigurationLayout extends MenuPage {
         });*/
         //server_properties_table_view.getColumns().add(valueColumn);
 
-        setStatus(serverJarInputController.isValid() ? Status.OK : Status.ERROR);
+        statusContainer.setStatus(serverJarInputController.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
     }
 
     private boolean isDirty() {
@@ -163,6 +161,26 @@ public class ConfigurationLayout extends MenuPage {
         root.put("server_jar", serverJarInputController.getPath().toString());
         root.put("launch_options", launch_options_text_field.getText().trim());
         return root;
+    }
+
+    @Override
+    public void onPageSelected() {
+
+    }
+
+    @Override
+    public void onPageHidden() {
+
+    }
+
+    @Override
+    public ServerShellContainer getServerShellContainer() {
+        return serverShellContainer;
+    }
+
+    @Override
+    public StatusContainer getStatusManager() {
+        return statusContainer;
     }
 
     /*private ServerShell.LaunchConfiguration loadConfiguration(){
@@ -200,18 +218,7 @@ public class ConfigurationLayout extends MenuPage {
         return null;
     }*/
 
-    @Override
-    public void setServerShell(ServerShell serverShell) {
-        super.setServerShell(serverShell);
-        //this.properties = getProperties();
-
-        /*server_properties_table_view.getItems().clear();
-        for (Property<?> property : this.properties){
-            server_properties_table_view.getItems().add(property);
-        }*/
-    }
-
-    private List<Property<?>> getProperties() {
+    /*private List<Property<?>> getProperties() {
         final List<Property<?>> properties = new ArrayList<>();
 
         final Map<String, String> propertyMap = getServerShell().getProperties();
@@ -377,7 +384,7 @@ public class ConfigurationLayout extends MenuPage {
         }
 
         return properties;
-    }
+    }*/
 
     private abstract static class Property<T> {
 

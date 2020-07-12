@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class PermissionsLayout extends MenuPage {
+public class PermissionsLayout implements Page, ServerShellConnection {
 
     @FXML
     private ListView<Role> roles_list_view;
@@ -29,15 +29,38 @@ public class PermissionsLayout extends MenuPage {
     @FXML
     private Button add_player_button;
 
+    private ServerShellContainer serverShellContainer = new ServerShellContainer(){
+        @Override
+        public void setServerShell(ServerShell serverShell) {
+            super.setServerShell(serverShell);
+            if (serverShell != null){
+                for (Role role : serverShell.getPermissionsManager().getRoles()){
+                    roles_list_view.getItems().add(role);
+                }
+            }
+            Platform.runLater(() -> roles_list_view.getSelectionModel().select(0));
+        }
+    };
+
+    @Override
+    public void onPageHidden() {
+
+    }
+
+    @Override
+    public ServerShellContainer getServerShellContainer() {
+        return serverShellContainer;
+    }
+
     @FXML
     private void initialize() {
-        roles_list_view.setCellFactory(param -> new RoleListCell(getServerShell(), getServerShell().getPermissionsManager()));
+        roles_list_view.setCellFactory(param -> new RoleListCell(serverShellContainer.getServerShell(), serverShellContainer.getServerShell().getPermissionsManager()));
         roles_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             players_list_view.getItems().clear();
-            players_list_view.getItems().addAll(getServerShell().getPermissionsManager().getPlayers(newValue));
+            players_list_view.getItems().addAll(serverShellContainer.getServerShell().getPermissionsManager().getPlayers(newValue));
         });
 
-        players_list_view.setCellFactory(param -> new PlayerListCell(roles_list_view.getSelectionModel().getSelectedItem(), getServerShell().getPermissionsManager()));
+        players_list_view.setCellFactory(param -> new PlayerListCell(roles_list_view.getSelectionModel().getSelectedItem(), serverShellContainer.getServerShell().getPermissionsManager()));
 
         add_role_button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -50,14 +73,14 @@ public class PermissionsLayout extends MenuPage {
                     stage.setTitle("Add Role");
                     final EditRoleLayout editRoleLayout = fxmlLoader.getController();
                     editRoleLayout.setStage(stage);
-                    editRoleLayout.setServerShell(getServerShell());
+                    editRoleLayout.setServerShell(serverShellContainer.getServerShell());
                     final Scene scene = new Scene(root);
                     scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
                     stage.setScene(scene);
                     stage.showAndWait();
                     final Role role = editRoleLayout.getRole();
                     if (role != null){
-                        getServerShell().getPermissionsManager().addRole(role);
+                        serverShellContainer.getServerShell().getPermissionsManager().addRole(role);
                         roles_list_view.getItems().add(role);
                     }
                 }catch (IOException e){
@@ -82,7 +105,7 @@ public class PermissionsLayout extends MenuPage {
                     stage.setScene(scene);
                     stage.showAndWait();
                     if (addPlayerLayout.getPlayer() != null){
-                        getServerShell().getPermissionsManager().assign(addPlayerLayout.getPlayer(), roles_list_view.getSelectionModel().getSelectedItem());
+                        serverShellContainer.getServerShell().getPermissionsManager().assign(addPlayerLayout.getPlayer(), roles_list_view.getSelectionModel().getSelectedItem());
                         players_list_view.getItems().add(addPlayerLayout.getPlayer());
                     }
                 }catch (IOException e){
@@ -93,22 +116,11 @@ public class PermissionsLayout extends MenuPage {
     }
 
     @Override
-    public void setServerShell(ServerShell serverShell) {
-        super.setServerShell(serverShell);
-        if (serverShell != null){
-            for (Role role : serverShell.getPermissionsManager().getRoles()){
-                roles_list_view.getItems().add(role);
-            }
-        }
-        Platform.runLater(() -> roles_list_view.getSelectionModel().select(0));
-    }
-
-    @Override
     public void onPageSelected() {
         Platform.runLater(() -> {
             roles_list_view.getItems().clear();
-            if (getServerShell() != null){
-                for (Role role : getServerShell().getPermissionsManager().getRoles()){
+            if (serverShellContainer.getServerShell() != null){
+                for (Role role : serverShellContainer.getServerShell().getPermissionsManager().getRoles()){
                     roles_list_view.getItems().add(role);
                 }
             }

@@ -67,16 +67,18 @@ public class MenuListCell extends ListCell<MenuItem> {
         } else {
             title.setText(item.getTitle());
             error_icon.setVisible(false);
-            switch (((MenuPage) item.getLoader().getController()).getStatus()) {
-                case ERROR:
-                    error_icon.setEffect(errorEffect);
-                    error_icon.setVisible(true);
-                    break;
+            if (item.getLoader().getController() instanceof StatusHost){
+                switch (((StatusHost) item.getLoader().getController()).getStatusManager().getStatus()) {
+                    case ERROR:
+                        error_icon.setEffect(errorEffect);
+                        error_icon.setVisible(true);
+                        break;
 
-                case WARNING:
-                    error_icon.setEffect(warningEffect);
-                    error_icon.setVisible(true);
-                    break;
+                    case WARNING:
+                        error_icon.setEffect(warningEffect);
+                        error_icon.setVisible(true);
+                        break;
+                }
             }
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

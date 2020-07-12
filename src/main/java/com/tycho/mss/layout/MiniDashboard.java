@@ -9,17 +9,20 @@ import easytasks.ITask;
 import easytasks.TaskAdapter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 
-public class MiniDashboardController extends MenuPage{
+public class MiniDashboard extends GridPane implements Page, ServerShellConnection {
 
     @FXML
     private Label status_label;
@@ -36,6 +39,73 @@ public class MiniDashboardController extends MenuPage{
     @FXML
     private Button create_backup_button;
 
+    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
+
+        @Override
+        public void setServerShell(ServerShell serverShell) {
+            super.setServerShell(serverShell);
+            System.out.println("SET SERVER SHELL: " + serverShell);
+            if (serverShell != null) {
+                Platform.runLater(() -> {
+                    System.out.println("UPDATE");
+                    updateStatus();
+                    updateUptime();
+                    updatePlayerCount();
+                    updateStartStopButton();
+                });
+
+                serverShell.addEventListener(new ServerShell.EventAdapter() {
+                    @Override
+                    public void onServerStarting() {
+                        Platform.runLater(() -> {
+                            updateStatus();
+                            updateStartStopButton();
+                        });
+                    }
+
+                    @Override
+                    public void onServerStarted() {
+                        Platform.runLater(() -> {
+                            updateStatus();
+                            updateStartStopButton();
+                            updateUptime();
+                        });
+                    }
+
+                    @Override
+                    public void onServerStopping() {
+                        Platform.runLater(() -> {
+                            updateStatus();
+                            updateUptime();
+                            updateStartStopButton();
+                        });
+                    }
+
+                    @Override
+                    public void onServerStopped() {
+                        Platform.runLater(() -> {
+                            updateStatus();
+                            updatePlayerCount();
+                            updateUptime();
+                            updateStartStopButton();
+                        });
+                    }
+
+                    @Override
+                    public void onPlayerConnected(Player player) {
+                        Platform.runLater(() -> updatePlayerCount());
+                    }
+
+                    @Override
+                    public void onPlayerDisconnected(Player player) {
+                        Platform.runLater(() -> updatePlayerCount());
+                    }
+                });
+                uiUpdater.startOnNewThread();
+            }
+        }
+    };
+
     private final UiUpdater uiUpdater = new UiUpdater(1000) {
         @Override
         protected void onUiUpdate() {
@@ -43,14 +113,22 @@ public class MiniDashboardController extends MenuPage{
         }
     };
 
-    @FXML
-    private void initialize() {
+    public MiniDashboard(){
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/mini_dashboard_layout.fxml"));
+        loader.setController(this);
+        loader.setRoot(this);
+        try {
+            loader.load();
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         //Set up "start/stop" button
         start_stop_button.setOnAction(event -> {
-            if (getServerShell() == null || getServerShell().getState() == ServerShell.State.OFFLINE){
-                getServerShell().startOnNewThread();
-            }else if (getServerShell().getState() == ServerShell.State.ONLINE){
-                getServerShell().stop();
+            if (serverShellContainer.getServerShell() == null || serverShellContainer.getServerShell().getState() == ServerShell.State.OFFLINE){
+                serverShellContainer.getServerShell().startOnNewThread();
+            }else if (serverShellContainer.getServerShell().getState() == ServerShell.State.ONLINE){
+                serverShellContainer.getServerShell().stop();
             }
         });
 
@@ -108,65 +186,13 @@ public class MiniDashboardController extends MenuPage{
     }
 
     @Override
-    public void setServerShell(ServerShell serverShell) {
-        super.setServerShell(serverShell);
-        if (serverShell != null){
-            Platform.runLater(() -> {
-                updateStatus();
-                updateUptime();
-                updatePlayerCount();
-                updateStartStopButton();
-            });
+    public ServerShellContainer getServerShellContainer() {
+        return serverShellContainer;
+    }
 
-            serverShell.addEventListener(new ServerShell.EventAdapter(){
-                @Override
-                public void onServerStarting() {
-                    Platform.runLater(() -> {
-                        updateStatus();
-                        updateStartStopButton();
-                    });
-                }
+    @Override
+    public void onPageSelected() {
 
-                @Override
-                public void onServerStarted() {
-                    Platform.runLater(() -> {
-                        updateStatus();
-                        updateStartStopButton();
-                        updateUptime();
-                    });
-                }
-
-                @Override
-                public void onServerStopping() {
-                    Platform.runLater(() -> {
-                        updateStatus();
-                        updateUptime();
-                        updateStartStopButton();
-                    });
-                }
-
-                @Override
-                public void onServerStopped() {
-                    Platform.runLater(() -> {
-                        updateStatus();
-                        updatePlayerCount();
-                        updateUptime();
-                        updateStartStopButton();
-                    });
-                }
-
-                @Override
-                public void onPlayerConnected(Player player) {
-                    Platform.runLater(() -> updatePlayerCount());
-                }
-
-                @Override
-                public void onPlayerDisconnected(Player player) {
-                    Platform.runLater(() -> updatePlayerCount());
-                }
-            });
-            uiUpdater.startOnNewThread();
-        }
     }
 
     @Override
@@ -175,7 +201,8 @@ public class MiniDashboardController extends MenuPage{
     }
 
     private void updateStatus(){
-        switch (getServerShell().getState()){
+        System.out.println("STATE: " + serverShellContainer.getServerShell().getState());
+        switch (serverShellContainer.getServerShell().getState()){
             case STARTING:
                 this.status_label.setText("Starting Server...");
                 this.status_label.setTextFill(Paint.valueOf("white"));
@@ -199,19 +226,19 @@ public class MiniDashboardController extends MenuPage{
     }
 
     private void updatePlayerCount(){
-        this.player_count_label.setText(getServerShell().getPlayers().size() + " / " + getServerShell().getProperties().get("max-players") + " Players");
+        this.player_count_label.setText(serverShellContainer.getServerShell().getPlayers().size() + " / " + serverShellContainer.getServerShell().getProperties().get("max-players") + " Players");
     }
 
     private void updateUptime(){
-        if (getServerShell().getState() == ServerShell.State.ONLINE){
-            uptime_label.setText(Utils.formatTimeStopwatch(getServerShell().getUptime(), 3));
+        if (serverShellContainer.getServerShell().getState() == ServerShell.State.ONLINE){
+            uptime_label.setText(Utils.formatTimeStopwatch(serverShellContainer.getServerShell().getUptime(), 3));
         }else{
             uptime_label.setText("");
         }
     }
 
     private void updateStartStopButton(){
-        switch (getServerShell().getState()){
+        switch (serverShellContainer.getServerShell().getState()){
             case OFFLINE:
                 start_stop_button.setDisable(false);
                 start_stop_button.setText("Start");
