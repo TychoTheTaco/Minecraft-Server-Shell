@@ -4,6 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import com.tycho.mss.layout.ValidatedTextField?>
+<?import com.tycho.mss.layout.FileInputLayout?>
+<?import com.tycho.mss.layout.JarInputField?>
 <fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #505050" alignment="TOP_CENTER">
 
@@ -61,7 +63,7 @@
                     <Insets bottom="8"/>
                 </padding>
                 <Label text="Save Location:"/>
-                <ValidatedTextField fx:id="server_directory" HBox.hgrow="ALWAYS"/>
+                <FileInputLayout fx:id="server_directory" HBox.hgrow="ALWAYS"/>
             </HBox>
         </VBox>
 
@@ -71,7 +73,7 @@
                     <Insets bottom="8"/>
                 </padding>
                 <Label text="Server JAR:"/>
-                <ValidatedTextField fx:id="a" HBox.hgrow="ALWAYS"/>
+                <JarInputField fx:id="custom_jar_input" HBox.hgrow="ALWAYS"/>
             </HBox>
         </VBox>
 

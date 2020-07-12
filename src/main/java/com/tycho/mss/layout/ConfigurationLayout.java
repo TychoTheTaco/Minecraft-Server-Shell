@@ -7,13 +7,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
 import org.json.simple.JSONObject;
 
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class ConfigurationLayout implements Page, StatusHost, ServerShellConnection {
 
@@ -46,29 +42,6 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
         initialConfiguration = getConfiguration();
 
         //Server JAR
-        server_jar_input.setValidator(new FileInputLayout.Validator() {
-            @Override
-            protected boolean isTextValid(String string, StringBuilder invalidReason) {
-                try {
-                    final Path path = Paths.get(string);
-
-                    if (!Files.exists(path)) {
-                        if (invalidReason != null) invalidReason.append("File does not exist!");
-                        return false;
-                    }
-
-                    if (!path.getFileName().toString().toLowerCase().endsWith("jar")) {
-                        if (invalidReason != null) invalidReason.append("Not a valid JAR file!");
-                        return false;
-                    }
-                } catch (InvalidPathException e) {
-                    invalidReason.append("Invalid Path!");
-                    return false;
-                }
-                return true;
-            }
-        });
-        server_jar_input.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
         server_jar_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
             @Override
             public void onValidStateChange(boolean isValid) {

@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import com.tycho.mss.layout.FileInputLayout?>
+<?import com.tycho.mss.layout.JarInputField?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.ConfigurationLayout">
@@ -22,7 +23,7 @@
                 <Insets right="8" left="8"/>
             </padding>
             <Label text="Server JAR:"/>
-            <FileInputLayout fx:id="server_jar_input" HBox.hgrow="ALWAYS"/>
+            <JarInputField fx:id="server_jar_input" HBox.hgrow="ALWAYS"/>
         </HBox>
 
         <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" spacing="10" alignment="CENTER_LEFT">

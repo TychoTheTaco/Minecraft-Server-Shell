@@ -46,17 +46,31 @@ public class EditServerLayout extends VBox {
     @FXML
     private Label loading_label;
 
+    @FXML
+    private FileInputLayout custom_jar_input;
+
     private Node currentNode;
 
-    public EditServerLayout(){
+    public EditServerLayout() {
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/edit_server_layout.fxml"));
         loader.setController(this);
         loader.setRoot(this);
         try {
             loader.load();
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        server_name_input.setValidator(new ValidatedTextField.Validator() {
+            @Override
+            protected boolean isTextValid(String string, StringBuilder invalidReason) {
+                if (string.length() == 0) {
+                    invalidReason.append("Name cannot be empty!");
+                    return false;
+                }
+                return super.isTextValid(string, invalidReason);
+            }
+        });
 
         download_option_container.getChildren().forEach(new Consumer<Node>() {
             @Override
@@ -90,12 +104,13 @@ public class EditServerLayout extends VBox {
 
                 final List<String> versionCodes = new ArrayList<>();
                 final JSONArray versions = (JSONArray) result.get("versions");
-                for (Object object : versions){
+                for (Object object : versions) {
                     versionCodes.add((String) ((JSONObject) object).get("id"));
                 }
 
                 Platform.runLater(() -> {
                     minecraft_version_input.getItems().addAll(versionCodes);
+                    minecraft_version_input.getSelectionModel().selectFirst();
                     loading_label.setVisible(false);
                     loading_label.setManaged(false);
                 });
@@ -103,21 +118,21 @@ public class EditServerLayout extends VBox {
         }).start();
     }
 
-    private void setOption(final String option){
+    private void setOption(final String option) {
         final String id;
-        if (option.equals("download")){
+        if (option.equals("download")) {
             id = "option_download_jar";
-        }else{
+        } else {
             id = "option_custom_jar";
         }
-        if (currentNode != null){
+        if (currentNode != null) {
             currentNode.setVisible(false);
             currentNode.setManaged(false);
         }
         download_option_container.getChildren().forEach(new Consumer<Node>() {
             @Override
             public void accept(Node node) {
-                if (node.getId().equals(id)){
+                if (node.getId().equals(id)) {
                     node.setVisible(true);
                     node.setManaged(true);
                     currentNode = node;
@@ -126,7 +141,7 @@ public class EditServerLayout extends VBox {
         });
     }
 
-    private JSONObject sendRequest(final String url){
+    private JSONObject sendRequest(final String url) {
         System.out.println("REQUEST: " + url);
         try {
             final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -134,18 +149,18 @@ public class EditServerLayout extends VBox {
             connection.connect();
 
             //Get response code
-            if (connection.getResponseCode() == 200){
+            if (connection.getResponseCode() == 200) {
                 return readAsJsonObject(connection.getInputStream());
-            }else{
+            } else {
                 System.out.println("ERROR RESPONSE CODE: " + connection.getResponseCode());
             }
-        }catch (IOException | ParseException e){
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private static JSONObject readAsJsonObject(final InputStream inputStream) throws IOException, ParseException{
+    private static JSONObject readAsJsonObject(final InputStream inputStream) throws IOException, ParseException {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         final StringBuilder stringBuilder = new StringBuilder();
         String line;

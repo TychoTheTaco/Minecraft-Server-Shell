@@ -62,6 +62,7 @@ public class ValidatedTextField extends StackPane{
             checkValidity();
             onTextChanged(oldValue, newValue);
         });
+        checkValidity();
     }
 
     protected void onTextChanged(final String oldText, final String newText){
