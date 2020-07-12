@@ -3,6 +3,7 @@ package com.tycho.mss.layout;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
@@ -11,10 +12,10 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileInputLayout extends ValidatedTextFieldLayout{
+public class FileInputLayout extends ValidatedTextField {
 
     @FXML
-    private Button button;
+    private Pane button_container;
 
     private final DirectoryChooser directoryChooser = new DirectoryChooser();
 
@@ -22,9 +23,14 @@ public class FileInputLayout extends ValidatedTextFieldLayout{
 
     private boolean isDirectory = false;
 
-    @Override
-    protected void initialize() {
-        super.initialize();
+    public FileInputLayout(){
+        super();
+
+        final Button button = new Button();
+        button.getStyleClass().add("folder_button");
+        button.setMnemonicParsing(false);
+        button.setMinWidth(24);
+        button_container.getChildren().add(button);
 
         setValidator(new PathValidator() {
             @Override
@@ -34,7 +40,7 @@ public class FileInputLayout extends ValidatedTextFieldLayout{
         });
 
         //Folder button
-        this.button.setOnAction(event -> {
+        button.setOnAction(event -> {
             final File file;
             if (isDirectory){
                 file = directoryChooser.showDialog(((Node) event.getTarget()).getScene().getWindow());

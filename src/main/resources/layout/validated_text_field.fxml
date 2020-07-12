@@ -8,12 +8,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<StackPane xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.tycho.mss.layout.ValidatedTextFieldLayout" alignment="CENTER_RIGHT">
+<fx:root type="javafx.scene.layout.StackPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" alignment="CENTER_RIGHT">
 
     <TextField fx:id="input"/>
-    <HBox alignment="CENTER_RIGHT" spacing="8" maxWidth="64">
+    <HBox fx:id="button_container" alignment="CENTER_RIGHT" spacing="8" maxWidth="64">
         <StackPane.margin>
             <Insets right="8"/>
         </StackPane.margin>
@@ -29,4 +27,4 @@
     </HBox>
 
 
-</StackPane>
+</fx:root>

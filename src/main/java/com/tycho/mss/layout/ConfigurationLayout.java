@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 public class ConfigurationLayout implements Page, StatusHost, ServerShellConnection {
 
     @FXML
-    private FileInputLayout serverJarInputController;
+    private FileInputLayout server_jar_input;
 
     @FXML
     private TextField launch_options_text_field;
@@ -46,7 +46,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
         initialConfiguration = getConfiguration();
 
         //Server JAR
-        serverJarInputController.setValidator(new FileInputLayout.Validator() {
+        server_jar_input.setValidator(new FileInputLayout.Validator() {
             @Override
             protected boolean isTextValid(String string, StringBuilder invalidReason) {
                 try {
@@ -68,8 +68,8 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
                 return true;
             }
         });
-        serverJarInputController.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
-        serverJarInputController.setOnValidStateChangeListener(new ValidatedTextFieldLayout.OnValidStateChangeListener() {
+        server_jar_input.addExtensionFilter(new FileChooser.ExtensionFilter("Server JAR file", "*.jar"));
+        server_jar_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
             @Override
             public void onValidStateChange(boolean isValid) {
                 if (isValid && isDirty()) {
@@ -79,7 +79,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
                 }
             }
         });
-        serverJarInputController.setOnPathChangedListener((path) -> {
+        server_jar_input.setOnPathChangedListener((path) -> {
             setDirty(isDirty());
         });
 
@@ -99,7 +99,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
 
         save_button.setOnAction(event -> {
             save_button.setDisable(true);
-            Preferences.setServerJar(serverJarInputController.getPath());
+            Preferences.setServerJar(server_jar_input.getPath());
             MinecraftServerManager.refresh();
             statusContainer.setStatus(StatusContainer.Status.OK);
             Preferences.setLaunchOptions(launch_options_text_field.getText());
@@ -131,19 +131,19 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
         });*/
         //server_properties_table_view.getColumns().add(valueColumn);
 
-        statusContainer.setStatus(serverJarInputController.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
+        statusContainer.setStatus(server_jar_input.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
     }
 
     private boolean isDirty() {
-        final Path path = serverJarInputController.getPath();
-        return !(path != null && initialConfiguration.get("server_jar").toString().equals(serverJarInputController.getPath().toString()) && initialConfiguration.get("launch_options").toString().equals(launch_options_text_field.getText()));
+        final Path path = server_jar_input.getPath();
+        return !(path != null && initialConfiguration.get("server_jar").toString().equals(server_jar_input.getPath().toString()) && initialConfiguration.get("launch_options").toString().equals(launch_options_text_field.getText()));
     }
 
     private void setDirty(final boolean dirty) {
         if (dirty) {
             //revert_button.setVisible(true);
             //revert_button.setManaged(true);
-            if (serverJarInputController.isValid()) save_button.setDisable(false);
+            if (server_jar_input.isValid()) save_button.setDisable(false);
         } else {
             save_button.setDisable(true);
             //revert_button.setVisible(false);
@@ -152,13 +152,13 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     }
 
     private void setDefaults() {
-        serverJarInputController.setPath(Preferences.getServerJar());
+        server_jar_input.setPath(Preferences.getServerJar());
         launch_options_text_field.setText(String.join(" ", Preferences.getLaunchOptions()));
     }
 
     private JSONObject getConfiguration() {
         final JSONObject root = new JSONObject();
-        root.put("server_jar", serverJarInputController.getPath().toString());
+        root.put("server_jar", server_jar_input.getPath().toString());
         root.put("launch_options", launch_options_text_field.getText().trim());
         return root;
     }

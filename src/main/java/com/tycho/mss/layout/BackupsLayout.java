@@ -24,7 +24,7 @@ import java.util.List;
 public class BackupsLayout implements Page, StatusHost {
 
     @FXML
-    private FileInputLayout backupDirectoryInputController;
+    private FileInputLayout backup_directory_input;
 
     @FXML
     private ListView<Path> backups_list_view;
@@ -42,15 +42,15 @@ public class BackupsLayout implements Page, StatusHost {
 
     @FXML
     private void initialize() {
-        backupDirectoryInputController.setIsDirectory(true);
-        backupDirectoryInputController.setPath(Preferences.getBackupDirectory());
-        backupDirectoryInputController.setOnPathChangedListener(new FileInputLayout.OnPathChangedListener() {
+        backup_directory_input.setIsDirectory(true);
+        backup_directory_input.setPath(Preferences.getBackupDirectory());
+        backup_directory_input.setOnPathChangedListener(new FileInputLayout.OnPathChangedListener() {
             @Override
             public void onPathChanged(Path path) {
                 save_button.setDisable(false);
             }
         });
-        backupDirectoryInputController.setValidator(new FileInputLayout.PathValidator() {
+        backup_directory_input.setValidator(new FileInputLayout.PathValidator() {
             @Override
             protected boolean isPathValid(Path path, StringBuilder invalidReason) {
                 System.out.println("RESOLVE: " + Paths.get(System.getProperty("user.dir")).resolve(path));
@@ -66,7 +66,7 @@ public class BackupsLayout implements Page, StatusHost {
                 return true;
             }
         });
-        backupDirectoryInputController.setOnValidStateChangeListener(new ValidatedTextFieldLayout.OnValidStateChangeListener() {
+        backup_directory_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
             @Override
             public void onValidStateChange(boolean isValid) {
                 if (isValid){
@@ -81,17 +81,17 @@ public class BackupsLayout implements Page, StatusHost {
         save_button.setOnAction(event -> {
             //If this is a different backup directory we need to move existing backups to the new location
             final Path oldBackupDirectory = Preferences.getBackupDirectory();
-            if (!backupDirectoryInputController.getPath().equals(oldBackupDirectory)) {
+            if (!backup_directory_input.getPath().equals(oldBackupDirectory)) {
                 if (oldBackupDirectory != null && Files.exists(oldBackupDirectory) && oldBackupDirectory.iterator().hasNext()) {
                     final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to move all existing backups to the new location?", ButtonType.YES, ButtonType.NO);
                     alert.showAndWait();
                     if (alert.getResult() == ButtonType.YES) {
-                        moveBackupDirectory(oldBackupDirectory, backupDirectoryInputController.getPath());
+                        moveBackupDirectory(oldBackupDirectory, backup_directory_input.getPath());
                     }
                 }
 
                 //Update location
-                Preferences.setBackupDirectory(Paths.get(System.getProperty("user.dir")).resolve(backupDirectoryInputController.getPath()));
+                Preferences.setBackupDirectory(Paths.get(System.getProperty("user.dir")).resolve(backup_directory_input.getPath()));
                 Preferences.save();
                 refreshBackupsList();
             }

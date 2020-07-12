@@ -2,6 +2,7 @@ package com.tycho.mss.layout;
 
 import com.tycho.mss.CustomColor;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.Blend;
@@ -12,7 +13,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
-public class ValidatedTextFieldLayout {
+import java.io.IOException;
+
+public class ValidatedTextField extends StackPane{
 
     @FXML
     private TextField input;
@@ -30,8 +33,16 @@ public class ValidatedTextFieldLayout {
 
     private boolean isValid = false;
 
-    @FXML
-    protected void initialize() {
+    public ValidatedTextField(){
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/validated_text_field.fxml"));
+        loader.setController(this);
+        loader.setRoot(this);
+        try {
+            loader.load();
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         error_icon.setEffect(new Blend(
                 BlendMode.SRC_ATOP,
                 new ColorAdjust(0, 0, 0, 0),

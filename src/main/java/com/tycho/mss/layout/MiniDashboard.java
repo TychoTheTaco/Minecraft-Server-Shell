@@ -44,10 +44,8 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
         @Override
         public void setServerShell(ServerShell serverShell) {
             super.setServerShell(serverShell);
-            System.out.println("SET SERVER SHELL: " + serverShell);
             if (serverShell != null) {
                 Platform.runLater(() -> {
-                    System.out.println("UPDATE");
                     updateStatus();
                     updateUptime();
                     updatePlayerCount();
@@ -201,7 +199,6 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
     }
 
     private void updateStatus(){
-        System.out.println("STATE: " + serverShellContainer.getServerShell().getState());
         switch (serverShellContainer.getServerShell().getState()){
             case STARTING:
                 this.status_label.setText("Starting Server...");

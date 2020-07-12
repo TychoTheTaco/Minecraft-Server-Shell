@@ -3,7 +3,7 @@ package com.tycho.mss.module.permission.ui;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.command.Command;
 import com.tycho.mss.layout.TextCheckBoxLayout;
-import com.tycho.mss.layout.ValidatedTextFieldLayout;
+import com.tycho.mss.layout.ValidatedTextField;
 import com.tycho.mss.module.permission.Role;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,7 +17,7 @@ import java.util.List;
 public class EditRoleLayout {
 
     @FXML
-    private ValidatedTextFieldLayout roleNameTextFieldController;
+    private ValidatedTextField roleNameTextFieldController;
 
     @FXML
     private ListView<Command> commands_list_view;
@@ -42,7 +42,7 @@ public class EditRoleLayout {
 
         ok_button.setOnAction(event -> stage.close());
 
-        roleNameTextFieldController.setValidator(new ValidatedTextFieldLayout.Validator(){
+        roleNameTextFieldController.setValidator(new ValidatedTextField.Validator(){
             @Override
             protected boolean isTextValid(String string, StringBuilder invalidReason) {
                 if (string.trim().length() == 0){
@@ -55,7 +55,7 @@ public class EditRoleLayout {
                 return true;
             }
         });
-        roleNameTextFieldController.setOnValidStateChangeListener(new ValidatedTextFieldLayout.OnValidStateChangeListener() {
+        roleNameTextFieldController.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
             @Override
             public void onValidStateChange(boolean isValid) {
                 if (isValid){
