@@ -60,7 +60,6 @@ public class RoleListCell extends ListCell<Role> {
                     stage.setScene(scene);
                     stage.showAndWait();
                     editRoleLayout.getRole();
-                    permissionsManager.save();
                     getListView().refresh();
                     getListView().getSelectionModel().select(getItem());
                 }catch (IOException e){

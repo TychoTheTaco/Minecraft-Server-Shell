@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class EditServerLayout extends VBox {
+public class AddServerLayout extends VBox {
 
     @FXML
     private ValidatedTextField server_name_input;
@@ -80,7 +80,7 @@ public class EditServerLayout extends VBox {
     OrValidGroup radio = new OrValidGroup();
     AndValidGroup customJarGroup = new AndValidGroup();
 
-    public EditServerLayout() {
+    public AddServerLayout() {
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/edit_server_layout.fxml"));
         loader.setController(this);
         loader.setRoot(this);
@@ -133,11 +133,8 @@ public class EditServerLayout extends VBox {
             @Override
             public void handle(ActionEvent event) {
 
-                Path serverDirectory;
-
                 //Download server JAR if we have to
                 if (auto_download_jar_button.isSelected()){
-                    serverDirectory = server_directory_input.getPath();
 
                     //Show progress dialog
                     final HBox root = new HBox();
@@ -170,30 +167,41 @@ public class EditServerLayout extends VBox {
                     //Start download
                     new Thread(() -> {
                         final String versionCode = minecraft_version_input.getValue();
-                        String url = null;
+                        Path serverJarPath = null;
                         for (Object object : versions){
                             if (((JSONObject) object).get("id").equals(versionCode)){
                                 final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"));
-                                url = (String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url");
-
-                                final DownloadJarTask downloadJarTask = new DownloadJarTask(url, Paths.get(System.getProperty("user.dir")).resolve(serverDirectory).resolve("server.jar"));
+                                serverJarPath = Paths.get(System.getProperty("user.dir")).resolve(server_directory_input.getPath()).resolve("server.jar");
+                                final DownloadJarTask downloadJarTask = new DownloadJarTask((String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url"), serverJarPath);
                                 downloadJarTask.start();
                                 break;
                             }
                         }
 
-                        Platform.runLater(stage::close);
+                        final Path finalServerJarPath = serverJarPath;
+                        Platform.runLater(() -> {
+                            //Save server configuration
+                            if (finalServerJarPath != null){
+                                ServerManager.add(new ServerConfiguration(server_name_input.getText(), finalServerJarPath));
+                                ServerManager.save();
+                            }else{
+                                System.err.println("ERROR DOWNLOADING JAR!");
+                            }
+
+                            //Close windows
+                            stage.close();
+                            ((Stage) create_server_button.getScene().getWindow()).close();
+                        });
+
                     }).start();
                 }else if (custom_jar_button.isSelected()){
-                    serverDirectory = custom_jar_input.getPath().getParent();
+                    //Save server configuration
+                    ServerManager.add(new ServerConfiguration(server_name_input.getText(), custom_jar_input.getPath()));
+                    ServerManager.save();
+
+                    //Close window
+                    ((Stage) create_server_button.getScene().getWindow()).close();
                 }
-
-                //Save server configuration
-                ServerManager.add(new ServerConfiguration(server_name_input.getText(), Paths.get("mah_jars")));
-                ServerManager.save();
-
-                //Close window
-                ((Stage) create_server_button.getScene().getWindow()).close();
             }
         });
 
@@ -246,27 +254,31 @@ public class EditServerLayout extends VBox {
             }
         });
 
+        custom_jar_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
+            @Override
+            public void onValidStateChange(boolean isValid) {
+                create_server_button.setDisable(!form.isValid());
+            }
+        });
+
         auto_download_jar_button.setSelected(true);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final JSONObject result = sendRequest("https://launchermeta.mojang.com/mc/game/version_manifest.json");
-                System.out.println("RESULT: " + result);
+        //Download official Minecraft version manifest
+        new Thread(() -> {
+            final JSONObject result = sendRequest("https://launchermeta.mojang.com/mc/game/version_manifest.json");
 
-                final List<String> versionCodes = new ArrayList<>();
-                versions = (JSONArray) result.get("versions");
-                for (Object object : versions) {
-                    versionCodes.add((String) ((JSONObject) object).get("id"));
-                }
-
-                Platform.runLater(() -> {
-                    minecraft_version_input.getItems().addAll(versionCodes);
-                    minecraft_version_input.getSelectionModel().selectFirst();
-                    progress_indicator.setVisible(false);
-                    progress_indicator.setManaged(false);
-                });
+            final List<String> versionCodes = new ArrayList<>();
+            versions = (JSONArray) result.get("versions");
+            for (Object object : versions) {
+                versionCodes.add((String) ((JSONObject) object).get("id"));
             }
+
+            Platform.runLater(() -> {
+                minecraft_version_input.getItems().addAll(versionCodes);
+                minecraft_version_input.getSelectionModel().selectFirst();
+                progress_indicator.setVisible(false);
+                progress_indicator.setManaged(false);
+            });
         }).start();
 
         create_server_button.setDisable(true);
@@ -303,7 +315,6 @@ public class EditServerLayout extends VBox {
     }
 
     private JSONObject sendRequest(final String url) {
-        System.out.println("REQUEST: " + url);
         try {
             final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
@@ -411,12 +422,8 @@ public class EditServerLayout extends VBox {
                         e.printStackTrace();
                     }
 
-                    System.out.println("prepare copy");
-
                     Files.copy(connection.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
                     connection.getInputStream().close();
-
-                    System.out.println("finished");
                 } else {
                     System.out.println("ERROR RESPONSE CODE: " + connection.getResponseCode());
                 }

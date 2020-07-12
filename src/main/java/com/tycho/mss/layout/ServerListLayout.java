@@ -1,12 +1,10 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.AddNewListItem;
-import com.tycho.mss.Page;
-import com.tycho.mss.ServerConfigurationListCell;
-import com.tycho.mss.ServerManager;
+import com.tycho.mss.*;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -44,18 +42,23 @@ public class ServerListLayout implements Page {
         for (UUID uuid : ServerManager.getConfigurations().keySet()){
             final ServerConfigurationListCell cell = new ServerConfigurationListCell();
             cell.setServerConfiguration(ServerManager.getConfigurations().get(uuid));
+            cell.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.PRIMARY){
+                    MinecraftServerManager.setServer(ServerManager.getConfigurations().get(uuid));
+                }
+            });
             servers_tile_pane.getChildren().add(cell);
         }
 
         //Add server item
         final AddNewListItem addNewListItem = new AddNewListItem();
         addNewListItem.setOnMouseClicked(event -> {
-            final EditServerLayout editServerLayout = new EditServerLayout();
+            final AddServerLayout addServerLayout = new AddServerLayout();
             final Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("New Server");
 
-            final Scene scene = new Scene(editServerLayout);
+            final Scene scene = new Scene(addServerLayout);
             scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
             stage.setScene(scene);
             stage.showAndWait();

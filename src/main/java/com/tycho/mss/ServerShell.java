@@ -4,7 +4,6 @@ import com.tycho.mss.command.*;
 import com.tycho.mss.module.backup.RestoreBackupTask;
 import com.tycho.mss.module.permission.PermissionsManager;
 import com.tycho.mss.module.permission.Role;
-import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
@@ -95,8 +94,6 @@ public class ServerShell implements Context{
      */
     private final List<PendingResult> pendingResults = new ArrayList<>();
 
-    private final PermissionsManager permissionsManager;
-
     /**
      * The current state of the Minecraft server.
      */
@@ -112,11 +109,11 @@ public class ServerShell implements Context{
      */
     private long startTime;
 
-    public ServerShell(final Path serverJar) {
-        this.serverJar = serverJar;
+    private final ServerConfiguration serverConfiguration;
 
-        permissionsManager = new PermissionsManager(getDirectory());
-        permissionsManager.load();
+    public ServerShell(final ServerConfiguration serverConfiguration) {
+        this.serverConfiguration = serverConfiguration;
+        this.serverJar = serverConfiguration.getJar();
 
         playerDatabaseManager = new PlayerDatabaseManager(getDirectory());
 
@@ -160,6 +157,8 @@ public class ServerShell implements Context{
                     properties.put(split[0], split[1]);
                 }
             }
+        } catch (FileNotFoundException e){
+           //Ignore
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -180,7 +179,7 @@ public class ServerShell implements Context{
 
         final List<String> command = new ArrayList<>();
         command.add("java");
-        for (String option : Preferences.getLaunchOptions()) {
+        for (String option : serverConfiguration.getLaunchOptions().split(" ")) {
             if (option.length() > 0) command.add(option);
         }
         command.add("-jar");
@@ -236,10 +235,12 @@ public class ServerShell implements Context{
     }
 
     public void stop() {
-        try {
-            execute("stop");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (this.state != State.OFFLINE){
+            try {
+                execute("stop");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -353,9 +354,9 @@ public class ServerShell implements Context{
                             notifyOnPlayerConnected(player);
 
                             //Auto assign roles
-                            for (Role role : permissionsManager.getRoles()){
+                            for (Role role : serverConfiguration.getPermissionsManager().getRoles()){
                                 if (role.isAutoAssign()){
-                                    permissionsManager.assign(player.getUsername(), role);
+                                    serverConfiguration.getPermissionsManager().assign(player.getUsername(), role);
                                 }
                             }
 
@@ -502,7 +503,7 @@ public class ServerShell implements Context{
 
     @Override
     public PermissionsManager getPermissionsManager() {
-        return permissionsManager;
+        return serverConfiguration.getPermissionsManager();
     }
 
     @Override
@@ -510,13 +511,19 @@ public class ServerShell implements Context{
         return playerDatabaseManager;
     }
 
+
+
     /*********************************************************************************************************************************
      * Misc.
      ********************************************************************************************************************************/
 
+    public ServerConfiguration getServerConfiguration() {
+        return serverConfiguration;
+    }
+
     private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
         //Make sure the player is authorized to use this command
-        if (!permissionsManager.isAuthorized(player, command)) {
+        if (!serverConfiguration.getPermissionsManager().isAuthorized(player, command)) {
             final JSONObject root = Utils.createText("Unauthorized: ", "red");
             final JSONArray extra = new JSONArray();
             extra.add(Utils.createText("You are not authorized to use this command!", "gray"));

@@ -55,14 +55,8 @@ public class BackupsLayout implements Page, StatusHost {
             protected boolean isPathValid(Path path, StringBuilder invalidReason) {
                 System.out.println("RESOLVE: " + Paths.get(System.getProperty("user.dir")).resolve(path));
                 if (path.toString().length() == 0){
-                    invalidReason.append("Path cannot be empty");
                     return false;
                 }
-
-                if (path.toAbsolutePath().toString().contains(".")){
-                    return false;
-                }
-
                 return true;
             }
         });

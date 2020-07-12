@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 public class Preferences {
 
@@ -20,8 +18,6 @@ public class Preferences {
 
     private static final Path PREFERENCES_FILE = MinecraftServerManager.PRIVATE_DIR.resolve("preferences.json");
 
-    private static final String PREF_SERVER_JAR = "server_jar";
-    private static final String PREF_LAUNCH_OPTIONS = "launch_options";
     private static final String PREF_BACKUP_DIR = "backup_directory";
 
     public static void load(){
@@ -33,25 +29,6 @@ public class Preferences {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            //Try to find a server JAR in the current directory
-            try {
-                final Optional<Path> path = Files.walk(Paths.get(System.getProperty("user.dir"))).filter(new Predicate<Path>() {
-                    @Override
-                    public boolean test(Path path) {
-                        //TODO: Check potential server jar for META_INF?
-                        final String name = path.getFileName().toString();
-                        return name.contains("server") && name.endsWith("jar");
-                    }
-                }).findAny();
-
-                path.ifPresent(Preferences::setServerJar);
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-
-            //Set default values
-            setLaunchOptions("");
 
             save();
         }
@@ -76,24 +53,6 @@ public class Preferences {
 
     public static JSONObject getPreferences() {
         return preferences;
-    }
-
-    public static Path getServerJar(){
-        final String string = (String) preferences.get(PREF_SERVER_JAR);
-        if (string == null) return null;
-        return Paths.get(string);
-    }
-
-    public static void setServerJar(final Path path){
-        preferences.put(PREF_SERVER_JAR, path.toString());
-    }
-
-    public static String[] getLaunchOptions(){
-        return ((String) preferences.get(PREF_LAUNCH_OPTIONS)).split(" ");
-    }
-
-    public static void setLaunchOptions(final String string){
-        preferences.put(PREF_LAUNCH_OPTIONS, string);
     }
 
     public static Path getBackupDirectory(){

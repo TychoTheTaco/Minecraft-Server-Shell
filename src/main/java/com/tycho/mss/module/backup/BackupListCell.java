@@ -1,6 +1,5 @@
 package com.tycho.mss.module.backup;
 
-import com.tycho.mss.MinecraftServerManager;
 import com.tycho.mss.util.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -60,7 +59,8 @@ public class BackupListCell extends ListCell<Path> {
                 alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to restore the backup created on " + lastModified + " ?", ButtonType.YES, ButtonType.NO);
                 alert.showAndWait();
                 if (alert.getResult() == ButtonType.YES) {
-                    MinecraftServerManager.getServerShell().restore(getItem());
+                    //MinecraftServerManager.getServerShell().restore(getItem());
+                    throw new RuntimeException("Not implemented!");
                 }
             });
 

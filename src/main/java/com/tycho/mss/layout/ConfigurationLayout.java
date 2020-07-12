@@ -1,7 +1,6 @@
 package com.tycho.mss.layout;
 
 import com.tycho.mss.*;
-import com.tycho.mss.util.Preferences;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -33,14 +32,16 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     private JSONObject initialConfiguration;
 
     private final StatusContainer statusContainer = new StatusContainer();
-    private final ServerShellContainer serverShellContainer = new ServerShellContainer();
+    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
+        @Override
+        public void setServerShell(ServerShell serverShell) {
+            super.setServerShell(serverShell);
+            System.out.println("SET SERVER SHELL");
+        }
+    };
 
     @FXML
     private void initialize() {
-        //Load the saved configuration
-        setDefaults();
-        initialConfiguration = getConfiguration();
-
         //Server JAR
         server_jar_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
             @Override
@@ -72,11 +73,13 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
 
         save_button.setOnAction(event -> {
             save_button.setDisable(true);
-            Preferences.setServerJar(server_jar_input.getPath());
-            MinecraftServerManager.refresh();
+
+            //TODO: Save to server configuration
+            //Preferences.setServerJar(server_jar_input.getPath());
+            //MinecraftServerManager.refresh();
+            //Preferences.setLaunchOptions(launch_options_text_field.getText());
+
             statusContainer.setStatus(StatusContainer.Status.OK);
-            Preferences.setLaunchOptions(launch_options_text_field.getText());
-            Preferences.save();
             initialConfiguration = getConfiguration();
             setDirty(false);
         });
@@ -103,13 +106,11 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
             }
         });*/
         //server_properties_table_view.getColumns().add(valueColumn);
-
-        statusContainer.setStatus(server_jar_input.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
     }
 
     private boolean isDirty() {
         final Path path = server_jar_input.getPath();
-        return !(path != null && initialConfiguration.get("server_jar").toString().equals(server_jar_input.getPath().toString()) && initialConfiguration.get("launch_options").toString().equals(launch_options_text_field.getText()));
+        return !(path != null && initialConfiguration.get("server_jar").equals(server_jar_input.getPath()) && initialConfiguration.get("launch_options").toString().equals(launch_options_text_field.getText()));
     }
 
     private void setDirty(final boolean dirty) {
@@ -125,20 +126,23 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     }
 
     private void setDefaults() {
-        server_jar_input.setPath(Preferences.getServerJar());
-        launch_options_text_field.setText(String.join(" ", Preferences.getLaunchOptions()));
+        server_jar_input.setPath(serverShellContainer.getServerShell().getServerJar());
+        launch_options_text_field.setText(serverShellContainer.getServerShell().getServerConfiguration().getLaunchOptions());
     }
 
     private JSONObject getConfiguration() {
         final JSONObject root = new JSONObject();
-        root.put("server_jar", server_jar_input.getPath().toString());
+        root.put("server_jar", server_jar_input.getPath() == null ? "" : server_jar_input.getPath().toString());
         root.put("launch_options", launch_options_text_field.getText().trim());
         return root;
     }
 
     @Override
     public void onPageSelected() {
-
+        //Load the saved configuration
+        initialConfiguration = getServerShellContainer().getServerShell().getServerConfiguration().toJson();
+        setDefaults();
+        statusContainer.setStatus(server_jar_input.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
     }
 
     @Override

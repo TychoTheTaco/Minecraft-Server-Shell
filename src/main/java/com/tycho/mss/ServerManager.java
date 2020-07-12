@@ -21,6 +21,8 @@ public class ServerManager {
 
     private static final Map<UUID, ServerConfiguration> configurations = new HashMap<>();
 
+    private static final Map<UUID, ServerShell> shells = new HashMap<>();
+
     public static void init(){
         try {
             final String string = new String(Files.readAllBytes(SAVE_PATH));
@@ -63,5 +65,24 @@ public class ServerManager {
 
     public static Map<UUID, ServerConfiguration> getConfigurations() {
         return configurations;
+    }
+
+    public static Map<UUID, ServerShell> getShells() {
+        return shells;
+    }
+
+    public static ServerShell getOrCreate(ServerConfiguration configuration){
+        if (shells.containsKey(configuration.getId())){
+            return shells.get(configuration.getId());
+        }
+        final ServerShell shell = new ServerShell(configuration);
+        shells.put(configuration.getId(), shell);
+        return shell;
+    }
+
+    public static void stopAll(){
+        for (ServerShell shell : shells.values()){
+            shell.stop();
+        }
     }
 }

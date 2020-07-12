@@ -1,6 +1,7 @@
 package com.tycho.mss.command;
 
 import com.tycho.mss.Context;
+import com.tycho.mss.ServerManager;
 import com.tycho.mss.module.permission.Role;
 import com.tycho.mss.util.Utils;
 
@@ -74,10 +75,10 @@ public class PermissionCommand extends Command {
 
             if ("add".equals(parameters[2])){
                 role.getCommands().add(command.getClass());
-                context.getPermissionsManager().save();
+                ServerManager.save();
             }else if ("remove".equals(parameters[2])){
                 role.getCommands().remove(command.getClass());
-                context.getPermissionsManager().save();
+                ServerManager.save();
             }else{
                 throw new InvalidParametersException();
             }

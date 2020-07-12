@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.nio.file.Files;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -32,8 +32,6 @@ public class MinecraftServerManager extends Application{
      * Directory where application files are stored (such as user preferences).
      */
     public static final Path PRIVATE_DIR = Paths.get(System.getProperty("user.dir")).resolve(".mss");
-
-    private static ServerShell serverShell;
 
     private static MainLayout mainLayoutController;
     private static ServerListLayout serverListLayoutController;
@@ -65,13 +63,8 @@ public class MinecraftServerManager extends Application{
         stackPane.setPrefWidth(900);
         stackPane.setPrefHeight(500);
 
-        //Load main layout
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/main_layout.fxml"));
-        mainLayout = loader.load();
-        mainLayoutController = loader.getController();
-
         //Load server list layout
-        loader = new FXMLLoader(getClass().getResource("/layout/server_list_layout.fxml"));
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/server_list_layout.fxml"));
         serverListLayout = loader.load();
         serverListLayoutController = loader.getController();
 
@@ -82,17 +75,27 @@ public class MinecraftServerManager extends Application{
 
         setPage("server_list");
 
-        //Attempt to create a server shell
-        serverShell = createServerShell();
-        mainLayoutController.setServerShell(serverShell);
-
         //Show the main stage
         primaryStage.sizeToScene();
         primaryStage.show();
         primaryStage.setOnHidden(event -> {
-            if (serverShell != null && serverShell.getState() != ServerShell.State.OFFLINE) serverShell.stop();
+            ServerManager.stopAll();
             mainLayoutController.onHidden();
         });
+    }
+
+    public static void setServer(final ServerConfiguration configuration){
+        if (mainLayout == null){
+            try {
+                final FXMLLoader loader = new FXMLLoader(MinecraftServerManager.class.getResource("/layout/main_layout.fxml"));
+                mainLayout = loader.load();
+                mainLayoutController = loader.getController();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        setPage("main");
+        mainLayoutController.setServerShell(ServerManager.getOrCreate(configuration));
     }
 
     public static void setPage(final String id){
@@ -111,33 +114,5 @@ public class MinecraftServerManager extends Application{
             stackPane.getChildren().add(requestedPage);
             currentPage = requestedPage;
         }
-    }
-
-    public static void refresh(){
-        if (serverShell == null || serverShell.getState() == ServerShell.State.OFFLINE){
-            serverShell = createServerShell();
-            mainLayoutController.setServerShell(serverShell);
-        }else{
-            System.out.println("Server must be offline to apply changes!");
-        }
-    }
-
-    private static ServerShell createServerShell(){
-        //Validate server jar
-        final Path serverJar = Preferences.getServerJar();
-        if (serverShell == null || serverShell.getServerJar() != serverJar){
-            if (serverJar == null || !Files.exists(serverJar)){
-                System.out.println("INVALID SERVER JAR");
-                return null;
-            }
-
-            //Create new server with the updated JAR
-            return new ServerShell(serverJar);
-        }
-        return null;
-    }
-
-    public static ServerShell getServerShell() {
-        return serverShell;
     }
 }

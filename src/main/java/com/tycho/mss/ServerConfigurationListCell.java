@@ -7,11 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.nio.file.Files;
 
 public class ServerConfigurationListCell extends GridPane {
-
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy   hh:mm:ss a");
 
     @FXML
     private Label server_name_label;
@@ -36,7 +34,14 @@ public class ServerConfigurationListCell extends GridPane {
         this.serverConfiguration = serverConfiguration;
         Platform.runLater(() -> {
             server_name_label.setText(serverConfiguration.getName());
-            server_version_label.setText("1.16.1");
+
+            //Get Minecraft version from JAR
+            if (Files.exists(serverConfiguration.getJar())){
+                server_version_label.setText("1.16.1");
+            }else{
+                setStyle("-fx-background-color: -red;");
+                server_version_label.setText("Server JAR not found!");
+            }
         });
     }
 }
