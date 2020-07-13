@@ -6,35 +6,32 @@
 <?import javafx.scene.text.Font?>
 <?import com.tycho.mss.layout.FileInputLayout?>
 <?import com.tycho.mss.layout.JarInputField?>
-<GridPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.tycho.mss.layout.ConfigurationLayout">
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.tycho.mss.layout.ConfigurationLayout">
+
+    <padding>
+        <Insets top="8" right="8" bottom="8" left="8"/>
+    </padding>
 
     <!-- Server Configuration -->
-    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Configuration" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
+    <VBox spacing="4">
+        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Configuration" style="-fx-font-weight: bold;">
             <padding>
-                <Insets top="6" right="8" bottom="6" left="8"/>
+                <Insets bottom="4"/>
             </padding>
         </Label>
 
         <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="10" alignment="CENTER_LEFT">
-            <padding>
-                <Insets right="8" left="8"/>
-            </padding>
             <Label text="Server JAR:"/>
             <JarInputField fx:id="server_jar_input" HBox.hgrow="ALWAYS"/>
         </HBox>
 
         <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" spacing="10" alignment="CENTER_LEFT">
-            <padding>
-                <Insets top="8" right="8" left="8"/>
-            </padding>
             <Label text="Launch Options:"/>
             <TextField fx:id="launch_options_text_field" HBox.hgrow="ALWAYS"/>
         </HBox>
-
-    </GridPane>
+    </VBox>
 
     <!-- Server Properties -->
     <!--<GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
@@ -46,14 +43,21 @@
         <TableView fx:id="server_properties_table_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS"/>
     </GridPane>-->
 
-    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" alignment="CENTER">
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10" alignment="BOTTOM_CENTER">
+    <VBox>
+        <Label text="Misc." style="-fx-font-weight: bold;">
             <padding>
-                <Insets top="8" right="8" bottom="8" left="8"/>
+                <Insets top="16" bottom="4"/>
             </padding>
-            <!--<Button fx:id="revert_button" text="Revert" visible="false" managed="false"/>-->
-            <Button fx:id="save_button" text="Save"/>
-        </HBox>
-    </GridPane>
+        </Label>
+        <Button fx:id="delete_server_button" text="Delete Server" style="-fx-background-color: -red;"/>
+    </VBox>
 
-</GridPane>
+    <HBox spacing="10" alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets top="8" />
+        </padding>
+        <!--<Button fx:id="revert_button" text="Revert" visible="false" managed="false"/>-->
+        <Button fx:id="save_button" text="Save"/>
+    </HBox>
+
+</VBox>

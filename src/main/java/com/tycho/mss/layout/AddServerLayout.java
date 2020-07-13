@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +22,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -133,27 +133,17 @@ public class AddServerLayout extends VBox {
 
                 final boolean autoAcceptEula = true;
 
+                final MultiStepProgressView multiStepProgressView = new MultiStepProgressView();
+
                 //Download server JAR if we have to
-                if (auto_download_jar_button.isSelected()){
-
-                    //Show progress dialog
-                    final Stage stage = (Stage) getScene().getWindow();
-                    stage.setResizable(false);
-                    stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                        @Override
-                        public void handle(WindowEvent event) {
-                            event.consume();
-                        }
-                    });
-
-                    final MultiStepProgressView multiStepProgressView = new MultiStepProgressView();
-                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Downloading server JAR"){
+                if (auto_download_jar_button.isSelected()) {
+                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Downloading server JAR") {
                         @Override
                         public void run() {
                             final String versionCode = minecraft_version_input.getValue();
                             Path serverJarPath = null;
-                            for (Object object : versions){
-                                if (((JSONObject) object).get("id").equals(versionCode)){
+                            for (Object object : versions) {
+                                if (((JSONObject) object).get("id").equals(versionCode)) {
                                     final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"));
                                     serverJarPath = Paths.get(System.getProperty("user.dir")).resolve(server_directory_input.getPath()).resolve("server.jar");
                                     final DownloadJarTask downloadJarTask = new DownloadJarTask((String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url"), serverJarPath);
@@ -162,13 +152,13 @@ public class AddServerLayout extends VBox {
                                 }
                             }
 
-                            if (serverJarPath == null){
+                            if (serverJarPath == null) {
                                 System.err.println("ERROR DOWNLOADING JAR!");
                             }
                             setObject(serverJarPath);
                         }
                     });
-                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Generating server properties"){
+                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Generating server properties") {
                         @Override
                         public void run() {
                             //Save server configuration
@@ -176,7 +166,7 @@ public class AddServerLayout extends VBox {
                             ServerManager.add(serverConfiguration);
                             ServerManager.save();
 
-                            if (autoAcceptEula){
+                            if (autoAcceptEula) {
                                 try {
                                     //Decline EULA so that the server will stop after creating server.properties
                                     createAndSetEula(server_directory_input.getPath(), false);
@@ -193,40 +183,48 @@ public class AddServerLayout extends VBox {
                             }
                         }
                     });
+                } else if (custom_jar_button.isSelected()) {
+                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Generating server properties") {
+                        @Override
+                        public void run() {
+                            //Save server configuration
+                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText(), custom_jar_input.getPath());
+                            ServerManager.add(serverConfiguration);
+                            ServerManager.save();
 
-                    final Scene scene = new Scene(multiStepProgressView);
-                    scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
-                    stage.setScene(scene);
-                    stage.sizeToScene();
-                    stage.centerOnScreen();
+                            if (autoAcceptEula) {
+                                final Path serverDirectory = custom_jar_input.getPath().getParent();
+                                try {
+                                    //Decline EULA so that the server will stop after creating server.properties
+                                    createAndSetEula(serverDirectory, false);
 
-                    //Start download
-                    multiStepProgressView.start(() -> Platform.runLater(stage::close));
-                }else if (custom_jar_button.isSelected()){
-                    //Save server configuration
-                    final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText(), custom_jar_input.getPath());
-                    ServerManager.add(serverConfiguration);
-                    ServerManager.save();
+                                    //Start server to generate properties
+                                    final ServerShell serverShell = new ServerShell(serverConfiguration);
+                                    serverShell.start();
 
-                    if (autoAcceptEula){
-                        try {
-                            //Decline EULA so that the server will stop after creating server.properties
-                            createAndSetEula(server_directory_input.getPath(), false);
-
-                            //Start server to generate properties
-                            final ServerShell serverShell = new ServerShell(serverConfiguration);
-                            serverShell.start();
-
-                            //Accept EULA
-                            createAndSetEula(server_directory_input.getPath(), true);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                                    //Accept EULA
+                                    createAndSetEula(serverDirectory, true);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
-                    }
-
-                    //Close window
-                    ((Stage) create_server_button.getScene().getWindow()).close();
+                    });
                 }
+
+                //Show progress dialog
+                final Stage stage = (Stage) getScene().getWindow();
+                stage.setResizable(false);
+                stage.setOnCloseRequest(Event::consume);
+
+                final Scene scene = new Scene(multiStepProgressView);
+                scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
+                stage.setScene(scene);
+                stage.sizeToScene();
+                stage.centerOnScreen();
+
+                //Start
+                multiStepProgressView.start(() -> Platform.runLater(stage::close));
             }
         });
 
@@ -258,9 +256,9 @@ public class AddServerLayout extends VBox {
             protected boolean isPathValid(Path path, StringBuilder invalidReason) {
                 System.out.println(path.toAbsolutePath() + " VS " + Paths.get(System.getProperty("user.dir")));
 
-                if (Files.exists(path) && Files.isDirectory(path)){
+                if (Files.exists(path) && Files.isDirectory(path)) {
                     try {
-                        if (Files.list(path).count() > 0){
+                        if (Files.list(path).count() > 0) {
                             invalidReason.append("Directory must be empty!");
                             return false;
                         }
@@ -363,26 +361,26 @@ public class AddServerLayout extends VBox {
         return null;
     }
 
-    private interface Valid{
+    private interface Valid {
         boolean isValid();
     }
 
-    private class AndValidGroup implements Valid{
+    private class AndValidGroup implements Valid {
 
         private final List<Valid> items = new ArrayList<>();
 
-        public void add(final Valid item){
+        public void add(final Valid item) {
             if (!items.contains(item)) items.add(item);
         }
 
-        public void remove(final Valid item){
+        public void remove(final Valid item) {
             items.remove(item);
         }
 
         @Override
         public boolean isValid() {
-            for (Valid item : items){
-                if (!item.isValid()){
+            for (Valid item : items) {
+                if (!item.isValid()) {
                     return false;
                 }
             }
@@ -390,22 +388,22 @@ public class AddServerLayout extends VBox {
         }
     }
 
-    private class OrValidGroup implements Valid{
+    private class OrValidGroup implements Valid {
 
         private final List<Valid> items = new ArrayList<>();
 
-        public void add(final Valid item){
+        public void add(final Valid item) {
             if (!items.contains(item)) items.add(item);
         }
 
-        public void remove(final Valid item){
+        public void remove(final Valid item) {
             items.remove(item);
         }
 
         @Override
         public boolean isValid() {
-            for (Valid item : items){
-                if (item.isValid()){
+            for (Valid item : items) {
+                if (item.isValid()) {
                     return true;
                 }
             }
@@ -413,13 +411,13 @@ public class AddServerLayout extends VBox {
         }
     }
 
-    private class DownloadJarTask extends Task{
+    private class DownloadJarTask extends Task {
 
         private final String url;
 
         private final Path destination;
 
-        public DownloadJarTask(final String url, final Path destination){
+        public DownloadJarTask(final String url, final Path destination) {
             this.url = url;
             this.destination = destination;
             System.out.println("DESTINATION: " + destination);
@@ -437,7 +435,7 @@ public class AddServerLayout extends VBox {
 
                     try {
                         Files.createDirectories(destination.getParent());
-                    }catch (IOException e){
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
 

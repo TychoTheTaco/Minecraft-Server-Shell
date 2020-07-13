@@ -7,6 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import com.tycho.mss.layout.MiniDashboard?>
+<?import javafx.scene.control.Button?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.tycho.mss.layout.MainLayout">
@@ -18,15 +19,11 @@
                 <Insets top="8" bottom="8" right="8"/>
             </padding>
 
-            <StackPane fx:id="icon" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2">
+            <Button fx:id="icon" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2" styleClass="image_button" style="-fx-background-image: url('/icons/arrow_back.png');">
                 <padding>
-                    <Insets top="8" left="12" bottom="8" right="12"/>
+                    <Insets top="8" left="24" bottom="8" right="24"/>
                 </padding>
-
-                <ImageView>
-                    <Image url="/icons/round_folder_black_24dp.png" backgroundLoading="true"/>
-                </ImageView>
-            </StackPane>
+            </Button>
 
             <Label fx:id="server_name_label" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
             <Label fx:id="server_version_label" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-font-size: 0.8em;"/>

@@ -29,7 +29,7 @@ public class ServerListLayout implements Page {
 
     @Override
     public void onPageSelected() {
-
+        refreshServerList();
     }
 
     @Override

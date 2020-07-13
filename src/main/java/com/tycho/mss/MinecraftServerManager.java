@@ -114,6 +114,9 @@ public class MinecraftServerManager extends Application{
 
             stackPane.getChildren().add(requestedPage);
             currentPage = requestedPage;
+            if (id.equals("server_list")){
+                serverListLayoutController.onPageSelected();
+            }
         }
     }
 }

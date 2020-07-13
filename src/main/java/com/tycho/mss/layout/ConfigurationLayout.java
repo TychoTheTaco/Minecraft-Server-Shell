@@ -4,7 +4,9 @@ import com.tycho.mss.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import org.json.simple.JSONObject;
 
@@ -18,14 +20,14 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     @FXML
     private TextField launch_options_text_field;
 
+    @FXML
+    private Button delete_server_button;
+
    /* @FXML
     private TableView<Property<?>> server_properties_table_view;*/
 
     @FXML
     private Button save_button;
-
-    //@FXML
-    //private Button revert_button;
 
     //private List<Property<?>> properties = new ArrayList<>();
 
@@ -68,9 +70,15 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
 
         //server_properties_table_view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        /*revert_button.setOnAction(event -> {
-            setDefaults();
-        });*/
+        //Delete server button
+        delete_server_button.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this server? All data including the Minecraft world, player data, and server configuration data will be permanently deleted! Any backups that were created will remain.", ButtonType.YES, ButtonType.CANCEL);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.YES){
+                ServerManager.delete(getServerShellContainer().getServerShell().getServerConfiguration());
+                MinecraftServerManager.setPage("server_list");
+            }
+        });
 
         save_button.setOnAction(event -> {
             save_button.setDisable(true);
@@ -110,6 +118,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     }
 
     private boolean isDirty() {
+        if (initialConfiguration == null) return false;
         final Path path = server_jar_input.getPath();
         return !(path != null && initialConfiguration.get("jar").equals(server_jar_input.getPath()) && initialConfiguration.get("launch_options").toString().equals(launch_options_text_field.getText()));
     }

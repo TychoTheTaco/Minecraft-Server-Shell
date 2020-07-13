@@ -59,6 +59,16 @@ public class ServerManager {
         }
     }
 
+    public static void delete(final ServerConfiguration configuration){
+        //Shut down the server if it is online
+        if (shells.containsKey(configuration.getId())){
+            shells.get(configuration.getId()).stop();
+            shells.remove(configuration.getId());
+        }
+        configurations.remove(configuration.getId());
+        save();
+    }
+
     public static void add(final ServerConfiguration configuration){
         configurations.put(configuration.getId(), configuration);
     }
