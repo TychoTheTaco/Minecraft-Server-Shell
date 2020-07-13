@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Label?>
+<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" spacing="8" style="-fx-background-color: #3d3d3d;">
+
+    <padding>
+        <Insets topRightBottomLeft="8"/>
+    </padding>
+
+
+
+</fx:root>

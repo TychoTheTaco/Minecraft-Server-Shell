@@ -180,7 +180,6 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
             });
             backupTask.startOnNewThread();
         });
-        Platform.runLater(() -> create_backup_button.setPrefWidth(create_backup_button.getWidth()));
     }
 
     @Override

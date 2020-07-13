@@ -81,7 +81,7 @@ public class ServerConfiguration {
             try {
                 final JarURLConnection connection = (JarURLConnection) new URL("jar:file:/" + this.jar.toAbsolutePath().toString() + "!/version.json").openConnection();
                 final JSONObject jsonObject = Utils.readStreamAsJson(connection.getInputStream());
-                minecraftVersion = (String) jsonObject.get("name");
+                minecraftVersion = (String) jsonObject.get("id");
             }catch (IOException | ParseException e){
                 e.printStackTrace();
                 return "Unknown";

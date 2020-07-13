@@ -2,6 +2,7 @@ package com.tycho.mss.layout;
 
 import com.tycho.mss.ServerConfiguration;
 import com.tycho.mss.ServerManager;
+import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Utils;
 import easytasks.Task;
 import javafx.application.Platform;
@@ -11,15 +12,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.RadioButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.json.simple.JSONArray;
@@ -137,19 +137,7 @@ public class AddServerLayout extends VBox {
                 if (auto_download_jar_button.isSelected()){
 
                     //Show progress dialog
-                    final HBox root = new HBox();
-                    root.setAlignment(Pos.CENTER_LEFT);
-                    root.setStyle("-fx-background-color: #3d3d3d;");
-                    root.setSpacing(8);
-                    root.setPadding(new Insets(16));
-                    final ProgressIndicator progressIndicator = new ProgressIndicator();
-                    progressIndicator.setPrefSize(24, 24);
-                    final Label label = new Label("Downloading...");
-                    label.setStyle("-fx-font-size: 1.1em;");
-                    root.getChildren().addAll(progressIndicator, label);
-                    final Stage stage = new Stage();
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.setTitle("Downloading...");
+                    final Stage stage = (Stage) getScene().getWindow();
                     stage.setResizable(false);
                     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                         @Override
@@ -158,58 +146,79 @@ public class AddServerLayout extends VBox {
                         }
                     });
 
-                    final Scene scene = new Scene(root);
-                    scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
-                    stage.setScene(scene);
-                    stage.sizeToScene();
-                    stage.show();
-
-                    //Start download
-                    new Thread(() -> {
-                        final String versionCode = minecraft_version_input.getValue();
-                        Path serverJarPath = null;
-                        for (Object object : versions){
-                            if (((JSONObject) object).get("id").equals(versionCode)){
-                                final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"));
-                                serverJarPath = Paths.get(System.getProperty("user.dir")).resolve(server_directory_input.getPath()).resolve("server.jar");
-                                final DownloadJarTask downloadJarTask = new DownloadJarTask((String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url"), serverJarPath);
-                                downloadJarTask.start();
-                                break;
+                    final MultiStepProgressView multiStepProgressView = new MultiStepProgressView();
+                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Downloading server JAR"){
+                        @Override
+                        public void run() {
+                            final String versionCode = minecraft_version_input.getValue();
+                            Path serverJarPath = null;
+                            for (Object object : versions){
+                                if (((JSONObject) object).get("id").equals(versionCode)){
+                                    final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"));
+                                    serverJarPath = Paths.get(System.getProperty("user.dir")).resolve(server_directory_input.getPath()).resolve("server.jar");
+                                    final DownloadJarTask downloadJarTask = new DownloadJarTask((String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url"), serverJarPath);
+                                    downloadJarTask.start();
+                                    break;
+                                }
                             }
-                        }
 
-                        final Path finalServerJarPath = serverJarPath;
-                        Platform.runLater(() -> {
-                            //Save server configuration
-                            if (finalServerJarPath != null){
-                                ServerManager.add(new ServerConfiguration(server_name_input.getText(), finalServerJarPath));
-                                ServerManager.save();
-                            }else{
+                            if (serverJarPath == null){
                                 System.err.println("ERROR DOWNLOADING JAR!");
                             }
+                            setObject(serverJarPath);
+                        }
+                    });
+                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Generating server properties"){
+                        @Override
+                        public void run() {
+                            //Save server configuration
+                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText(), (Path) getObject());
+                            ServerManager.add(serverConfiguration);
+                            ServerManager.save();
 
                             if (autoAcceptEula){
                                 try {
-                                    createAndAcceptEula(server_directory_input.getPath());
+                                    //Decline EULA so that the server will stop after creating server.properties
+                                    createAndSetEula(server_directory_input.getPath(), false);
+
+                                    //Start server to generate properties
+                                    final ServerShell serverShell = new ServerShell(serverConfiguration);
+                                    serverShell.start();
+
+                                    //Accept EULA
+                                    createAndSetEula(server_directory_input.getPath(), true);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                             }
+                        }
+                    });
 
-                            //Close windows
-                            stage.close();
-                            ((Stage) create_server_button.getScene().getWindow()).close();
-                        });
+                    final Scene scene = new Scene(multiStepProgressView);
+                    scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.sizeToScene();
+                    stage.centerOnScreen();
 
-                    }).start();
+                    //Start download
+                    multiStepProgressView.start(() -> Platform.runLater(stage::close));
                 }else if (custom_jar_button.isSelected()){
                     //Save server configuration
-                    ServerManager.add(new ServerConfiguration(server_name_input.getText(), custom_jar_input.getPath()));
+                    final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText(), custom_jar_input.getPath());
+                    ServerManager.add(serverConfiguration);
                     ServerManager.save();
 
                     if (autoAcceptEula){
                         try {
-                            createAndAcceptEula(custom_jar_input.getPath().toAbsolutePath().getParent());
+                            //Decline EULA so that the server will stop after creating server.properties
+                            createAndSetEula(server_directory_input.getPath(), false);
+
+                            //Start server to generate properties
+                            final ServerShell serverShell = new ServerShell(serverConfiguration);
+                            serverShell.start();
+
+                            //Accept EULA
+                            createAndSetEula(server_directory_input.getPath(), true);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -301,9 +310,9 @@ public class AddServerLayout extends VBox {
 
     }
 
-    private void createAndAcceptEula(final Path serverDirectory) throws IOException {
+    private void createAndSetEula(final Path serverDirectory, final boolean accept) throws IOException {
         final PrintStream printStream = new PrintStream(Files.newOutputStream(serverDirectory.resolve(Paths.get("eula.txt"))));
-        printStream.println("eula=true");
+        printStream.println("eula=" + (accept ? "true" : "false"));
         printStream.close();
     }
 
