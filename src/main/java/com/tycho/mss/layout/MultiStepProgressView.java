@@ -85,7 +85,6 @@ public class MultiStepProgressView extends VBox {
         }
 
         public void setProgress(final float progress){
-            System.out.println("UPDATE: " + this + " " + progress);
             if (progress >= 1){
                 progress_indicator.setVisible(false);
                 progress_indicator.setManaged(false);

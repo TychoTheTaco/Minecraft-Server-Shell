@@ -1,8 +1,6 @@
 package com.tycho.mss.layout;
 
-import com.tycho.mss.Page;
-import com.tycho.mss.StatusContainer;
-import com.tycho.mss.StatusHost;
+import com.tycho.mss.*;
 import com.tycho.mss.module.backup.BackupListCell;
 import com.tycho.mss.module.backup.MoveFilesTask;
 import com.tycho.mss.util.Preferences;
@@ -21,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackupsLayout implements Page, StatusHost {
+public class BackupsLayout implements Page, StatusHost, ServerShellConnection {
 
     @FXML
     private FileInputLayout backup_directory_input;
@@ -40,6 +38,13 @@ public class BackupsLayout implements Page, StatusHost {
 
     private StatusContainer statusContainer = new StatusContainer();
 
+    private final ServerShellContainer serverShellContainer = new ServerShellContainer();
+
+    @Override
+    public ServerShellContainer getServerShellContainer() {
+        return serverShellContainer;
+    }
+
     @FXML
     private void initialize() {
         backup_directory_input.setIsDirectory(true);
@@ -53,7 +58,21 @@ public class BackupsLayout implements Page, StatusHost {
         backup_directory_input.setValidator(new FileInputLayout.PathValidator() {
             @Override
             protected boolean isPathValid(Path path, StringBuilder invalidReason) {
-                System.out.println("RESOLVE: " + Paths.get(System.getProperty("user.dir")).resolve(path));
+                final Path b = Paths.get(System.getProperty("user.dir")).resolve(path);
+
+                final Path s = serverShellContainer.getServerShell() == null ? null : serverShellContainer.getServerShell().getServerJar().getParent();
+
+                System.out.println("B: " + b);
+                System.out.println("S: " + s);
+
+                System.out.println("BN: " + b.normalize());
+                if (s != null) System.out.println("SN: " + s.normalize());
+
+                if (b.equals(s)){
+                    invalidReason.append("Backup directory cannot be the same as the server directory!");
+                    return false;
+                }
+
                 if (path.toString().length() == 0){
                     return false;
                 }
