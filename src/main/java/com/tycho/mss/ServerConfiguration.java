@@ -83,7 +83,6 @@ public class ServerConfiguration {
                 final JSONObject jsonObject = Utils.readStreamAsJson(connection.getInputStream());
                 minecraftVersion = (String) jsonObject.get("id");
             }catch (IOException | ParseException e){
-                e.printStackTrace();
                 return "Unknown";
             }
         }

@@ -11,6 +11,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -161,13 +162,23 @@ public class ServerShell implements Context{
         if (this.state != State.OFFLINE) {
             throw new RuntimeException("Server is already started!");
         }
+        verifyConfiguration();
         final Thread thread = new Thread(this::start);
         thread.start();
         return thread;
     }
 
+    private void verifyConfiguration(){
+        //Make sure server JAR exists
+        if (!Files.exists(serverJar)){
+            throw new RuntimeException("Server JAR does not exist!");
+        }
+    }
+
     public void start() {
         this.onServerStarting();
+
+        verifyConfiguration();
 
         final List<String> command = new ArrayList<>();
         command.add("java");
@@ -197,13 +208,7 @@ public class ServerShell implements Context{
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         System.out.println(line);
-                        break;
                     }
-
-                    /*Platform.runLater(() -> {
-                        final Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to start server. Launch options may be invalid.", ButtonType.OK);
-                        alert.showAndWait();
-                    });*/
                 }catch (IOException e){
                     e.printStackTrace();
                 }

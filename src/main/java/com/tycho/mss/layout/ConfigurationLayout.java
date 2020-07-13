@@ -36,7 +36,8 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
         @Override
         public void setServerShell(ServerShell serverShell) {
             super.setServerShell(serverShell);
-            System.out.println("SET SERVER SHELL");
+            setDefaults();
+            statusContainer.setStatus(server_jar_input.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
         }
     };
 
@@ -139,8 +140,6 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
 
     @Override
     public void onPageSelected() {
-        System.out.println("ON PAGE SELECTED");
-
         //Load the saved configuration
         initialConfiguration = getServerShellContainer().getServerShell().getServerConfiguration().toJson();
         setDefaults();

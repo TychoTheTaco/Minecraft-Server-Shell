@@ -124,7 +124,12 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
         //Set up "start/stop" button
         start_stop_button.setOnAction(event -> {
             if (serverShellContainer.getServerShell() == null || serverShellContainer.getServerShell().getState() == ServerShell.State.OFFLINE){
-                serverShellContainer.getServerShell().startOnNewThread();
+                try {
+                    serverShellContainer.getServerShell().startOnNewThread();
+                }catch (RuntimeException e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to start server: " + e.getMessage(), ButtonType.OK);
+                    alert.showAndWait();
+                }
             }else if (serverShellContainer.getServerShell().getState() == ServerShell.State.ONLINE){
                 serverShellContainer.getServerShell().stop();
             }
@@ -222,7 +227,12 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
     }
 
     private void updatePlayerCount(){
-        this.player_count_label.setText(serverShellContainer.getServerShell().getPlayers().size() + " / " + serverShellContainer.getServerShell().getProperties().get("max-players") + " Players");
+        if (serverShellContainer.getServerShell().getProperties().containsKey("max-players")){
+            player_count_label.setVisible(true);
+            this.player_count_label.setText(serverShellContainer.getServerShell().getPlayers().size() + " / " + serverShellContainer.getServerShell().getProperties().get("max-players") + " Players");
+        }else{
+            player_count_label.setVisible(false);
+        }
     }
 
     private void updateUptime(){

@@ -45,21 +45,18 @@ public class MultiStepProgressView extends VBox {
     }
 
     public void start(final Runnable onFinished){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Object next = null;
-                for (Task task : tasks){
-                    task.setProgress(0.01f);
-                    views.get(task).setProgress(task.getProgress());
-                    task.setObject(next);
-                    task.run();
-                    next = task.getObject();
-                    task.setFinished(true);
-                    views.get(task).setProgress(task.getProgress());
-                }
-                onFinished.run();
+        new Thread(() -> {
+            Object next = null;
+            for (Task task : tasks){
+                task.setProgress(0.01f);
+                views.get(task).setProgress(task.getProgress());
+                task.setObject(next);
+                task.run();
+                next = task.getObject();
+                task.setFinished(true);
+                views.get(task).setProgress(task.getProgress());
             }
+            onFinished.run();
         }).start();
     }
 
