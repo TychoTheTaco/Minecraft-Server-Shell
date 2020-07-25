@@ -109,8 +109,12 @@ public class BackupCommand extends Command {
                 return;
             }
             final List<Path> backups = getBackups();
-            for (int i = 0; i < backups.size(); i++){
-                context.tellraw(player, Utils.createText("[" + (i + 1) + "]: " + SIMPLE_DATE_FORMAT.format(new Date(backups.get(i).toFile().lastModified())), "white"));
+            if (backups.isEmpty()){
+                context.tellraw(player, Utils.createText("No backups!", "gray"));
+            }else{
+                for (int i = 0; i < backups.size(); i++){
+                    context.tellraw(player, Utils.createText("[" + (i + 1) + "]: " + SIMPLE_DATE_FORMAT.format(new Date(backups.get(i).toFile().lastModified())), "white"));
+                }
             }
         }else{
             throw new InvalidParametersException();
