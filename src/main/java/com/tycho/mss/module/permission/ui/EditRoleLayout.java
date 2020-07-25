@@ -17,7 +17,7 @@ import java.util.List;
 public class EditRoleLayout {
 
     @FXML
-    private ValidatedTextField roleNameTextFieldController;
+    private ValidatedTextField role_name_text_field;
 
     @FXML
     private ListView<Command> commands_list_view;
@@ -40,7 +40,7 @@ public class EditRoleLayout {
 
         ok_button.setOnAction(event -> ((Stage) ok_button.getScene().getWindow()).close());
 
-        roleNameTextFieldController.setValidator(new ValidatedTextField.Validator(){
+        role_name_text_field.setValidator(new ValidatedTextField.Validator(){
             @Override
             protected boolean isTextValid(String string, StringBuilder invalidReason) {
                 if (string.trim().length() == 0){
@@ -53,7 +53,7 @@ public class EditRoleLayout {
                 return true;
             }
         });
-        roleNameTextFieldController.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
+        role_name_text_field.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
             @Override
             public void onValidStateChange(boolean isValid) {
                 if (isValid){
@@ -76,7 +76,7 @@ public class EditRoleLayout {
     }
 
     public Role getRole(){
-        if (!roleNameTextFieldController.isValid()){
+        if (!role_name_text_field.isValid()){
             return null;
         }
 
@@ -86,19 +86,19 @@ public class EditRoleLayout {
         }
 
         if (role != null){
-            role.setName(roleNameTextFieldController.getText().trim());
+            role.setName(role_name_text_field.getText().trim());
             role.getCommands().clear();
             role.getCommands().addAll(commands);
             role.setAutoAssign(auto_assign_check_boxController.isSelected());
             return role;
         }
 
-        return new Role(roleNameTextFieldController.getText().trim(), commands, auto_assign_check_boxController.isSelected());
+        return new Role(role_name_text_field.getText().trim(), commands, auto_assign_check_boxController.isSelected());
     }
 
     public void setRole(final Role role){
         this.role = role;
-        roleNameTextFieldController.setText(role.getName());
+        role_name_text_field.setText(role.getName());
         for (Command command : commands_list_view.getItems()){
             if (role.getCommands().contains(command.getClass())){
                 commands_list_view.getSelectionModel().select(command);

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.tycho.mss.layout.ValidatedTextField?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.tycho.mss.module.permission.ui.EditRoleLayout" style="-fx-background-color: #505050" alignment="TOP_CENTER">
@@ -16,7 +17,7 @@
             <Insets  bottom="8" />
         </padding>
         <Label text="Role Name:"/>
-        <fx:include fx:id="roleNameTextField" source="validated_text_field.fxml" HBox.hgrow="ALWAYS" />
+        <ValidatedTextField fx:id="role_name_text_field" HBox.hgrow="ALWAYS"/>
     </HBox>
 
     <fx:include source="text_checkbox.fxml" fx:id="auto_assign_check_box"/>
