@@ -7,9 +7,9 @@ import com.tycho.mss.util.Utils;
 import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,14 +20,19 @@ public class GiveRandomItemCommand extends Command {
 
     private final List<String> ids = new ArrayList<>();
 
-    public GiveRandomItemCommand(final File idsFile) throws IOException {
+    public GiveRandomItemCommand() throws IOException {
         super("mcrandom");
-        final BufferedReader bufferedReader = new BufferedReader(new FileReader(idsFile));
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            ids.add(line);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("ids.txt");
+        if (inputStream != null){
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                ids.add(line);
+            }
+            bufferedReader.close();
+        }else{
+            throw new RuntimeException("Failed to load IDs!");
         }
-        bufferedReader.close();
     }
 
     @Override
@@ -60,6 +65,7 @@ public class GiveRandomItemCommand extends Command {
     }
 
     private JSONObject give(final String player, final int maxCount, final Context context) throws IOException {
+        System.out.println("GIVE " + player + " " + maxCount + " " + ids.size());
         final String item = this.ids.get(RANDOM.nextInt(ids.size()));
         final int count = RANDOM.nextInt(maxCount) + 1;
         context.execute("give " + player + " " + item + " " + count);

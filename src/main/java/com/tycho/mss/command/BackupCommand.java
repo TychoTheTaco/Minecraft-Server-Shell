@@ -1,12 +1,14 @@
 package com.tycho.mss.command;
 
-import com.tycho.mss.*;
+import com.tycho.mss.Colors;
+import com.tycho.mss.Context;
 import com.tycho.mss.module.backup.BackupTask;
 import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.File;
@@ -47,7 +49,7 @@ public class BackupCommand extends Command {
             context.awaitResult("save-all flush", Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: Saved the game$"));
             context.tellraw("@a", Utils.createText("Creating backup...", Colors.STATUS_MESSAGE_COLOR));
 
-            final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile().toPath(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").toPath());
+            final BackupTask backupTask = new BackupTask(context.getServerJar().getParent(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").toPath());
             final UiUpdater progressUpdater = new UiUpdater(3000) {
 
                 private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##%");
@@ -76,6 +78,14 @@ public class BackupCommand extends Command {
                         root = Utils.createText("Backup successful!", "green");
                     } else {
                         root = Utils.createText("Backup failed!", "red");
+                        if (!backupTask.getFailed().isEmpty()){
+                            final JSONArray extras = new JSONArray();
+                            for (Path path : backupTask.getFailed()){
+                                extras.add(Utils.createText("\nFailed to copy: ", "red"));
+                                extras.add(Utils.createText("\"" + backupTask.getSource().relativize(path).toString() + "\"", "gray"));
+                            }
+                            root.put("extra", extras);
+                        }
                     }
                     context.tellraw(player, root);
                 }
@@ -85,7 +95,7 @@ public class BackupCommand extends Command {
             if (parameters.length < 2) throw new InvalidParametersException();
 
             try {
-                final int index = Integer.parseInt(parameters[1]);
+                final int index = Integer.parseInt(parameters[1]) - 1;
                 final Path backup = getBackups().get(index);
 
                 //serverShell.tellraw(player, Utils.createText("Are you sure you want to restore the backup from " + backup.toFile().getName() + "?","white"));
@@ -100,7 +110,7 @@ public class BackupCommand extends Command {
             }
             final List<Path> backups = getBackups();
             for (int i = 0; i < backups.size(); i++){
-                context.tellraw(player, Utils.createText("[" + i + "]: " + SIMPLE_DATE_FORMAT.format(new Date(backups.get(i).toFile().lastModified())), "white"));
+                context.tellraw(player, Utils.createText("[" + (i + 1) + "]: " + SIMPLE_DATE_FORMAT.format(new Date(backups.get(i).toFile().lastModified())), "white"));
             }
         }else{
             throw new InvalidParametersException();

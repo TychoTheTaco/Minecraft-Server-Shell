@@ -43,7 +43,7 @@ public class ServerConfiguration {
         this.id = UUID.fromString((String) json.get("id"));
         this.name = (String) json.get("name");
         this.jar = Paths.get((String) json.get("jar"));
-        this.permissionsManager = new PermissionsManager(json);
+        this.permissionsManager = new PermissionsManager((JSONObject) json.get("permissions"));
     }
 
     public JSONObject toJson(){
@@ -52,6 +52,7 @@ public class ServerConfiguration {
         root.put("name", name);
         root.put("jar", jar.toString());
         root.put("launch_options", launchOptions);
+        root.put("permissions", permissionsManager.toJson());
         return root;
     }
 

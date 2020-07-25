@@ -61,4 +61,6 @@ public interface Context {
     PermissionsManager getPermissionsManager();
 
     PlayerDatabaseManager getPlayerDatabaseManager();
+
+    Path getServerJar();
 }

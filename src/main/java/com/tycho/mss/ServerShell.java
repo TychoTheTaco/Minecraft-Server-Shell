@@ -126,14 +126,11 @@ public class ServerShell implements Context{
         addCustomCommand(new BackupCommand());
         addCustomCommand(new PermissionCommand());
         try {
-            addCustomCommand(new GiveRandomItemCommand(new File("ids.txt")));
+            addCustomCommand(new GiveRandomItemCommand());
         } catch (IOException e) {
+            System.err.println("Failed to load command: " + GiveRandomItemCommand.class.getSimpleName());
             e.printStackTrace();
         }
-    }
-
-    public Path getServerJar() {
-        return serverJar;
     }
 
     public Path getDirectory() {
@@ -508,7 +505,10 @@ public class ServerShell implements Context{
         return playerDatabaseManager;
     }
 
-
+    @Override
+    public Path getServerJar() {
+        return serverJar;
+    }
 
     /*********************************************************************************************************************************
      * Misc.

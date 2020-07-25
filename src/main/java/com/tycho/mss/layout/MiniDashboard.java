@@ -154,7 +154,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
             }
 
             //Create backup task and UI updater for button
-            final BackupTask backupTask = new BackupTask(new File((String) Preferences.getPreferences().get("server_jar")).getParentFile().toPath(), new File(backupDirectory + File.separator + System.currentTimeMillis() + ".zip").toPath());
+            final BackupTask backupTask = new BackupTask(getServerShellContainer().getServerShell().getServerJar().getParent(), new File(backupDirectory + File.separator + System.currentTimeMillis() + ".zip").toPath());
             final UiUpdater backupButtonUpdater = new UiUpdater(250) {
 
                 private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##%");

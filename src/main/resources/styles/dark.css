@@ -396,8 +396,7 @@
 /* ------------------------------------------------------------------------------- Server List Item ----------------------------------------------------------------------------- */
 
 .server_list{
-    -fx-background-color: #222222, #737373;
-    -fx-background-insets: 0, 1;
+    -fx-background-color: #737373;
     -fx-text-fill: white;
     -fx-background-radius: 4;
 }

@@ -1,5 +1,6 @@
 package com.tycho.mss.module.permission;
 
+import com.tycho.mss.ServerManager;
 import com.tycho.mss.command.Command;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -39,6 +40,7 @@ public class PermissionsManager {
             return;
         }
         this.permissions.put(role, new HashSet<>());
+        ServerManager.save();
     }
 
     private boolean isUnique(final Role role){
@@ -99,10 +101,12 @@ public class PermissionsManager {
         }
         permissions.computeIfAbsent(role, k -> new HashSet<>());
         permissions.get(role).add(player);
+        ServerManager.save();
     }
 
     public void unassign(final String player, final Role role) {
         permissions.computeIfAbsent(role, k -> new HashSet<>());
         permissions.get(role).remove(player);
+        ServerManager.save();
     }
 }

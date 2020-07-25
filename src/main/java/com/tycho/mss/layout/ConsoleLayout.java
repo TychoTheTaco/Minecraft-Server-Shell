@@ -22,6 +22,17 @@ public class ConsoleLayout implements ServerShellConnection, Page {
     @FXML
     private Region offline_overlay;
 
+    private static final String DISABLED_MESSAGE = "Console input is disabled until the server has started.";
+
+    private void setConsoleEnabled(final boolean enabled){
+        console_input.setDisable(!enabled);
+        if (enabled){
+            console_input.setText("");
+        }else{
+            console_input.setText(DISABLED_MESSAGE);
+        }
+    }
+
     private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
         @Override
         public void setServerShell(ServerShell serverShell) {
@@ -48,6 +59,7 @@ public class ConsoleLayout implements ServerShellConnection, Page {
                     public void onServerStopping() {
                         Platform.runLater(() -> {
                             console_input.setDisable(true);
+                            console_input.setText("Console input is disabled while the server is stopping.");
                         });
                     }
 
@@ -69,7 +81,7 @@ public class ConsoleLayout implements ServerShellConnection, Page {
             }
 
             //Console input
-            console_input.setDisable(serverShell == null || serverShell.getState() != ServerShell.State.ONLINE);
+            setConsoleEnabled(serverShell != null && serverShell.getState() == ServerShell.State.ONLINE);
         }
     };
 

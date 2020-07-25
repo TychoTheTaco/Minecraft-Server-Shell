@@ -5,6 +5,7 @@ import easytasks.Task;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -17,6 +18,8 @@ public class BackupTask extends Task {
     private final Path destination;
 
     private boolean isSuccessful = false;
+
+    final List<Path> failed = new ArrayList<>();
 
     public BackupTask(final Path source, final Path destination) {
         this.source = source;
@@ -39,20 +42,33 @@ public class BackupTask extends Task {
                     Files.copy(files.get(i), zipOutputStream);
                     zipOutputStream.closeEntry();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    failed.add(files.get(i));
+                    System.err.println("FAILED TO COPY: " + files.get(i) + " REASON: " + e.getMessage());
                 }
                 setProgress((float) (i + 1) / files.size());
             }
             zipOutputStream.close();
 
-            this.isSuccessful = true;
+            this.isSuccessful = failed.isEmpty();
             System.out.println("Saved backup to " + destination.toAbsolutePath());
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
+    public Path getSource() {
+        return source;
+    }
+
+    public Path getDestination() {
+        return destination;
+    }
+
     public boolean isSuccessful() {
         return isSuccessful;
+    }
+
+    public List<Path> getFailed() {
+        return failed;
     }
 }
