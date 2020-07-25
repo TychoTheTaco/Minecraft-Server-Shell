@@ -5,9 +5,9 @@ import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 
-public class AddNewListItem extends GridPane {
+public class AddNewServerListItem extends GridPane {
 
-    public AddNewListItem() {
+    public AddNewServerListItem() {
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/add_new_list_item.fxml"));
         loader.setController(this);
         loader.setRoot(this);

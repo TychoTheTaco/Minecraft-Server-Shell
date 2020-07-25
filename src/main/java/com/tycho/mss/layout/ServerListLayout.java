@@ -38,6 +38,8 @@ public class ServerListLayout implements Page {
     }
 
     private void refreshServerList(){
+        //TODO: Instead of refreshing everything, only add/remove/update items that have changed
+
         servers_tile_pane.getChildren().clear();
         for (UUID uuid : ServerManager.getConfigurations().keySet()){
             final ServerConfigurationListCell cell = new ServerConfigurationListCell();
@@ -51,8 +53,8 @@ public class ServerListLayout implements Page {
         }
 
         //Add server item
-        final AddNewListItem addNewListItem = new AddNewListItem();
-        addNewListItem.setOnMouseClicked(event -> {
+        final AddNewServerListItem addNewServerListItem = new AddNewServerListItem();
+        addNewServerListItem.setOnMouseClicked(event -> {
             final AddServerLayout addServerLayout = new AddServerLayout();
             final Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -65,6 +67,6 @@ public class ServerListLayout implements Page {
 
             refreshServerList();
         });
-        servers_tile_pane.getChildren().add(addNewListItem);
+        servers_tile_pane.getChildren().add(addNewServerListItem);
     }
 }

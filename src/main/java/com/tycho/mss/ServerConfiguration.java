@@ -28,6 +28,8 @@ public class ServerConfiguration {
 
     private String minecraftVersion = null;
 
+    private Path backupDirectory = null;
+
     public ServerConfiguration(final UUID id, final String name, final Path jar){
         this.id = id;
         this.name = name;
@@ -44,6 +46,13 @@ public class ServerConfiguration {
         this.name = (String) json.get("name");
         this.jar = Paths.get((String) json.get("jar"));
         this.permissionsManager = new PermissionsManager((JSONObject) json.get("permissions"));
+
+        try {
+            this.backupDirectory = Paths.get((String) json.get("backupDirectory"));
+        }catch (Exception e){
+            System.err.println("Failed to get preference: backupDirectory");
+            this.backupDirectory = null;
+        }
     }
 
     public JSONObject toJson(){
@@ -53,6 +62,7 @@ public class ServerConfiguration {
         root.put("jar", jar.toString());
         root.put("launch_options", launchOptions);
         root.put("permissions", permissionsManager.toJson());
+        if (backupDirectory != null) root.put("backupDirectory", backupDirectory.toString());
         return root;
     }
 
