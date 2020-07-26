@@ -43,7 +43,7 @@ public class GuideCommand extends Command {
         //If there is only 1 parameter it might be a player or the index of a saved location
         if (parameters.length == 1){
             try {
-                final int index = Integer.parseInt(parameters[0]);
+                final int index = Integer.parseInt(parameters[0]) - 1;
                 final SavedLocation savedLocation = context.getPlayer(player).getSavedLocations().get(index);
                 final int dx = savedLocation.getX();
                 final int dy = savedLocation.getY();

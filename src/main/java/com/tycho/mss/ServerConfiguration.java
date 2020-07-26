@@ -99,4 +99,12 @@ public class ServerConfiguration {
         }
         return minecraftVersion;
     }
+
+    public void setBackupDirectory(Path backupDirectory) {
+        this.backupDirectory = backupDirectory;
+    }
+
+    public Path getBackupDirectory() {
+        return backupDirectory;
+    }
 }

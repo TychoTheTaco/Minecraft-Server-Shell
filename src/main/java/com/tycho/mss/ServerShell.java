@@ -506,17 +506,13 @@ public class ServerShell implements Context{
     }
 
     @Override
-    public Path getServerJar() {
-        return serverJar;
+    public ServerConfiguration getServerConfiguration() {
+        return serverConfiguration;
     }
 
     /*********************************************************************************************************************************
      * Misc.
      ********************************************************************************************************************************/
-
-    public ServerConfiguration getServerConfiguration() {
-        return serverConfiguration;
-    }
 
     private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
         //Make sure the player is authorized to use this command

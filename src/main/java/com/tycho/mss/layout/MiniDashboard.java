@@ -2,7 +2,6 @@ package com.tycho.mss.layout;
 
 import com.tycho.mss.*;
 import com.tycho.mss.module.backup.BackupTask;
-import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
@@ -144,7 +143,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
             create_backup_button.setText("0 %");
 
             //Make sure a backup directory is specified in the settings
-            final Path backupDirectory = Preferences.getBackupDirectory();
+            final Path backupDirectory = serverShellContainer.getServerShell().getServerConfiguration().getBackupDirectory();
             if (backupDirectory == null){
                 final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Please specify a backup directory in the settings!", ButtonType.OK);
                 alert.show();
@@ -154,7 +153,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
             }
 
             //Create backup task and UI updater for button
-            final BackupTask backupTask = new BackupTask(getServerShellContainer().getServerShell().getServerJar().getParent(), new File(backupDirectory + File.separator + System.currentTimeMillis() + ".zip").toPath());
+            final BackupTask backupTask = new BackupTask(getServerShellContainer().getServerShell().getServerConfiguration().getJar().getParent(), new File(backupDirectory + File.separator + System.currentTimeMillis() + ".zip").toPath());
             final UiUpdater backupButtonUpdater = new UiUpdater(250) {
 
                 private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##%");

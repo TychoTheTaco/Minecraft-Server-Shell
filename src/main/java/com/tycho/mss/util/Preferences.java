@@ -10,15 +10,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Preferences {
 
     private static JSONObject preferences = new JSONObject();
 
     private static final Path PREFERENCES_FILE = MinecraftServerManager.PRIVATE_DIR.resolve("preferences.json");
-
-    private static final String PREF_BACKUP_DIR = "backup_directory";
 
     public static void load(){
         if (Files.notExists(PREFERENCES_FILE)){
@@ -53,15 +50,5 @@ public class Preferences {
 
     public static JSONObject getPreferences() {
         return preferences;
-    }
-
-    public static Path getBackupDirectory(){
-        final String string = (String) preferences.get(PREF_BACKUP_DIR);
-        if (string == null) return null;
-        return Paths.get(string);
-    }
-
-    public static void setBackupDirectory(final Path directory){
-        preferences.put(PREF_BACKUP_DIR, directory.toString());
     }
 }

@@ -3,7 +3,6 @@ package com.tycho.mss.command;
 import com.tycho.mss.Colors;
 import com.tycho.mss.Context;
 import com.tycho.mss.module.backup.BackupTask;
-import com.tycho.mss.util.Preferences;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
@@ -17,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +38,7 @@ public class BackupCommand extends Command {
         }
 
         if ("create".equals(parameters[0])) {
-            if (Preferences.getBackupDirectory() == null){
+            if (context.getServerConfiguration().getBackupDirectory() == null){
                 final JSONObject root = Utils.createText("Cannot create backup: No backup directory is specified in the settings!", "red");
                 context.tellraw(player, root);
                 return;
@@ -49,7 +49,7 @@ public class BackupCommand extends Command {
             context.awaitResult("save-all flush", Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: Saved the game$"));
             context.tellraw("@a", Utils.createText("Creating backup...", Colors.STATUS_MESSAGE_COLOR));
 
-            final BackupTask backupTask = new BackupTask(context.getServerJar().getParent(), new File(Preferences.getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").toPath());
+            final BackupTask backupTask = new BackupTask(context.getServerConfiguration().getJar().getParent(), new File(context.getServerConfiguration().getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").toPath());
             final UiUpdater progressUpdater = new UiUpdater(3000) {
 
                 private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##%");
@@ -96,7 +96,7 @@ public class BackupCommand extends Command {
 
             try {
                 final int index = Integer.parseInt(parameters[1]) - 1;
-                final Path backup = getBackups().get(index);
+                final Path backup = getBackups(context).get(index);
 
                 //serverShell.tellraw(player, Utils.createText("Are you sure you want to restore the backup from " + backup.toFile().getName() + "?","white"));
                 context.restore(backup);
@@ -104,11 +104,7 @@ public class BackupCommand extends Command {
                 e.printStackTrace();
             }
         }else if ("list".equals(parameters[0])){
-            final Path backupsDirectory = Preferences.getBackupDirectory();
-            if (backupsDirectory == null){
-                return;
-            }
-            final List<Path> backups = getBackups();
+            final List<Path> backups = getBackups(context);
             if (backups.isEmpty()){
                 context.tellraw(player, Utils.createText("No backups!", "gray"));
             }else{
@@ -131,7 +127,11 @@ public class BackupCommand extends Command {
         return "Create or restore a backup of the server.";
     }
 
-    private List<Path> getBackups() throws IOException {
-        return Files.walk(Preferences.getBackupDirectory()).filter(Files::isRegularFile).sorted(Comparator.comparing(a -> ((Path) a).toFile().getName()).reversed()).collect(Collectors.toList());
+    private List<Path> getBackups(final Context context) throws IOException {
+        final Path backupsDirectory = context.getServerConfiguration().getBackupDirectory();
+        if (backupsDirectory == null){
+            return new ArrayList<>();
+        }
+        return Files.walk(backupsDirectory).filter(Files::isRegularFile).sorted(Comparator.comparing(a -> ((Path) a).toFile().getName()).reversed()).collect(Collectors.toList());
     }
 }

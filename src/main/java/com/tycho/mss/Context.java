@@ -62,5 +62,5 @@ public interface Context {
 
     PlayerDatabaseManager getPlayerDatabaseManager();
 
-    Path getServerJar();
+    ServerConfiguration getServerConfiguration();
 }

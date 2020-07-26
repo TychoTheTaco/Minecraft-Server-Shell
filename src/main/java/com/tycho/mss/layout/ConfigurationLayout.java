@@ -136,7 +136,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     }
 
     private void setDefaults() {
-        server_jar_input.setPath(serverShellContainer.getServerShell().getServerJar());
+        server_jar_input.setPath(serverShellContainer.getServerShell().getServerConfiguration().getJar());
         launch_options_text_field.setText(serverShellContainer.getServerShell().getServerConfiguration().getLaunchOptions());
     }
 
