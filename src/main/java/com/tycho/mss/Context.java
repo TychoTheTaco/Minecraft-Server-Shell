@@ -1,7 +1,6 @@
 package com.tycho.mss;
 
 import com.tycho.mss.command.Command;
-import com.tycho.mss.module.permission.PermissionsManager;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
@@ -57,8 +56,6 @@ public interface Context {
     Player getPlayer(final String username);
 
     List<Command> getCustomCommands();
-
-    PermissionsManager getPermissionsManager();
 
     PlayerDatabaseManager getPlayerDatabaseManager();
 

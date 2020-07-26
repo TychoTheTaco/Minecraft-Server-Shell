@@ -20,7 +20,7 @@ public class PermissionCommand extends Command {
         }
 
         if ("list".equals(parameters[0])){
-            final List<Role> roles = context.getPermissionsManager().getRoles();
+            final List<Role> roles = context.getServerConfiguration().getPermissionsManager().getRoles();
             if (roles.isEmpty()){
                 context.tellraw(player, Utils.createText("You haven't created any roles yet!", "white"));
             }else{
@@ -42,7 +42,7 @@ public class PermissionCommand extends Command {
                     }
 
                     //List players
-                    final List<String> players = context.getPermissionsManager().getPlayers(role);
+                    final List<String> players = context.getServerConfiguration().getPermissionsManager().getPlayers(role);
                     if (players.isEmpty()){
                         context.tellraw(player, Utils.createText("<No Players>", "white"));
                     }else{
@@ -58,10 +58,10 @@ public class PermissionCommand extends Command {
             }
         }else if ("create".equals(parameters[0])){
             if (parameters.length < 2) throw new InvalidParametersException();
-            context.getPermissionsManager().addRole(new Role(parameters[1]));
+            context.getServerConfiguration().getPermissionsManager().addRole(new Role(parameters[1]));
         }else if ("delete".equals(parameters[0])){
             if (parameters.length < 2) throw new InvalidParametersException();
-            context.getPermissionsManager().removeRole(findRole(context, parameters[1]));
+            context.getServerConfiguration().getPermissionsManager().removeRole(findRole(context, parameters[1]));
         }else if ("role".equals(parameters[0])){
             if (parameters.length < 4) throw new InvalidParametersException();
 
@@ -86,12 +86,12 @@ public class PermissionCommand extends Command {
             if (parameters.length < 3) throw new InvalidParametersException();
             final Role role = findRole(context, parameters[1]);
             if (role == null) throw new InvalidParametersException();
-            context.getPermissionsManager().assign(parameters[2], role);
+            context.getServerConfiguration().getPermissionsManager().assign(parameters[2], role);
         }else if ("unassign".equals(parameters[0])){
             if (parameters.length < 3) throw new InvalidParametersException();
             final Role role = findRole(context, parameters[1]);
             if (role == null) throw new InvalidParametersException();
-            context.getPermissionsManager().unassign(parameters[2], role);
+            context.getServerConfiguration().getPermissionsManager().unassign(parameters[2], role);
         }else{
             throw new InvalidParametersException();
         }
@@ -122,7 +122,7 @@ public class PermissionCommand extends Command {
     }
 
     private Role findRole(final Context context, final String name){
-        for (Role role : context.getPermissionsManager().getRoles()){
+        for (Role role : context.getServerConfiguration().getPermissionsManager().getRoles()){
             if (role.getName().equals(name)) return role;
         }
         return null;

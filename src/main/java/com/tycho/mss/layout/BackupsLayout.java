@@ -3,7 +3,6 @@ package com.tycho.mss.layout;
 import com.tycho.mss.*;
 import com.tycho.mss.module.backup.BackupListCell;
 import com.tycho.mss.module.backup.MoveFilesTask;
-import com.tycho.mss.util.Preferences;
 import easytasks.ITask;
 import easytasks.Task;
 import easytasks.TaskAdapter;
@@ -113,8 +112,8 @@ public class BackupsLayout implements Page, StatusHost, ServerShellConnection {
 
                 //Update location
                 serverShellContainer.getServerShell().getServerConfiguration().setBackupDirectory(Paths.get(System.getProperty("user.dir")).resolve(backup_directory_input.getPath()));
-                Preferences.save();
                 refreshBackupsList();
+                ServerManager.save();
             }
 
             save_button.setDisable(true);

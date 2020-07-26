@@ -50,6 +50,7 @@ public class ServerManager {
             final JSONObject root = new JSONObject();
             final JSONArray array = new JSONArray();
             for (ServerConfiguration configuration : configurations.values()) {
+                System.out.println("SAVE: " + configuration.getJar());
                 array.add(configuration.toJson());
             }
             root.put("servers", array);

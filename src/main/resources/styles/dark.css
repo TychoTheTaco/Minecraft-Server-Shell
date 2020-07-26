@@ -75,6 +75,16 @@
     -fx-progress-color: white;
 }
 
+.radio-button .radio{
+    -fx-background-insets: 0;
+    -fx-background-color: white;
+}
+
+.radio-button:selected .dot {
+    -fx-background-insets: 0;
+    -fx-background-color: -blue;
+}
+
 /* ------------------------------------------------------------------------------------ BUTTON ---------------------------------------------------------------------------------- */
 
 .button{
@@ -259,10 +269,6 @@
     -fx-text-fill: white;
     -fx-background-radius: 0.0px;
     -fx-focus-color: transparent;
-}
-
-#console_input .content{
-
 }
 
 /* --------------------------------------------------------------------------------- Configuration ------------------------------------------------------------------------------ */

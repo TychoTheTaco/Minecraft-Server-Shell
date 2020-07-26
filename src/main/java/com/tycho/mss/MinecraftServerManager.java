@@ -2,7 +2,6 @@ package com.tycho.mss;
 
 import com.tycho.mss.layout.MainLayout;
 import com.tycho.mss.layout.ServerListLayout;
-import com.tycho.mss.util.Preferences;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -55,12 +54,7 @@ public class MinecraftServerManager extends Application{
         //Improved text anti-aliasing
         System.setProperty("prism.lcdtext", "false");
 
-        //Load user preferences
-        Preferences.load();
         ServerManager.init();
-
-        stackPane.setPrefWidth(900);
-        stackPane.setPrefHeight(500);
 
         //Load main layout
         FXMLLoader loader = new FXMLLoader(MinecraftServerManager.class.getResource("/layout/main_layout.fxml"));
@@ -73,6 +67,8 @@ public class MinecraftServerManager extends Application{
         serverListLayoutController = loader.getController();
 
         //Set up scene
+        stackPane.setPrefWidth(900);
+        stackPane.setPrefHeight(500);
         final Scene scene = new Scene(stackPane);
         scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
         primaryStage.setScene(scene);

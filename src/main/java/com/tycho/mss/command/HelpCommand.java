@@ -65,7 +65,7 @@ public class HelpCommand extends Command {
 
             //List commands and descriptions
             for (Command command : commands){
-                if (context.getPermissionsManager().isAuthorized(player, command)){
+                if (context.getServerConfiguration().getPermissionsManager().isAuthorized(player, command)){
                     extras.add(Utils.createText(command.getCommand(), Colors.COMMAND_COLOR));
                     extras.add(Utils.createText(": " + command.getDescription(), ""));
                     extras.add(Utils.createText("\n", ""));

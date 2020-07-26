@@ -2,7 +2,6 @@ package com.tycho.mss;
 
 import com.tycho.mss.command.*;
 import com.tycho.mss.module.backup.RestoreBackupTask;
-import com.tycho.mss.module.permission.PermissionsManager;
 import com.tycho.mss.module.permission.Role;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
@@ -493,11 +492,6 @@ public class ServerShell implements Context{
     @Override
     public List<Player> getPlayers() {
         return players;
-    }
-
-    @Override
-    public PermissionsManager getPermissionsManager() {
-        return serverConfiguration.getPermissionsManager();
     }
 
     @Override
