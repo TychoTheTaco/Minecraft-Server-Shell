@@ -40,7 +40,6 @@ public class ServerManager {
     }
 
     public static void save(){
-        System.err.println("SAVING SERVERS: " + configurations.size());
         try {
             Files.createDirectories(SAVE_PATH.getParent());
         } catch (IOException e) {
@@ -51,7 +50,6 @@ public class ServerManager {
             final JSONObject root = new JSONObject();
             final JSONArray array = new JSONArray();
             for (ServerConfiguration configuration : configurations.values()) {
-                System.out.println("SAVE: " + configuration.getJar());
                 array.add(configuration.toJson());
             }
             root.put("servers", array);
@@ -62,7 +60,6 @@ public class ServerManager {
     }
 
     public static void delete(final ServerConfiguration configuration){
-        System.err.println("DELETE CONFIG: " + configuration.getJar());
         //Shut down the server if it is online
         if (shells.containsKey(configuration.getId())){
             shells.get(configuration.getId()).stop();
@@ -73,7 +70,6 @@ public class ServerManager {
     }
 
     public static void add(final ServerConfiguration configuration){
-        System.err.println("ADD CONFIG");
         configurations.put(configuration.getId(), configuration);
     }
 

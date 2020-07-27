@@ -5,6 +5,7 @@ import com.tycho.mss.module.backup.BackupTask;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
+import easytasks.Task;
 import easytasks.TaskAdapter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -136,7 +137,12 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
             });
 
             serverShell.addEventListener(this);
-            uiUpdater.startOnNewThread();
+
+            if (uiUpdater.getState() == Task.State.NOT_STARTED){
+                uiUpdater.startOnNewThread();
+            }else{
+                uiUpdater.resume();
+            }
         }
     }
 
@@ -145,6 +151,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
         this.serverShell = null;
         if (serverShell != null){
             serverShell.removeEventListener(this);
+            uiUpdater.pause();
         }
     }
 
