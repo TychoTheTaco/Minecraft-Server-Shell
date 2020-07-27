@@ -21,9 +21,9 @@
                 <Insets top="6"/>
             </padding>
 
-            <Button GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" styleClass="stop_button" fx:id="start_stop_button" text="Stop"/>
+            <Button GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" styleClass="stop_button" fx:id="start_stop_button"/>
 
-            <Button styleClass="default_button" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" fx:id="create_backup_button" text="Create Backup" GridPane.halignment="RIGHT"/>
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" fx:id="create_backup_button" text="CREATE BACKUP" GridPane.halignment="RIGHT"/>
         </GridPane>
     </VBox>
 

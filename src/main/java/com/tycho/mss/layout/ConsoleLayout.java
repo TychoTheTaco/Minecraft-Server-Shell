@@ -178,6 +178,7 @@ public class ConsoleLayout implements ServerShellConnection, Page, ServerShell.E
     public void onServerStopped() {
         Platform.runLater(() -> {
             offline_overlay.setVisible(true);
+            console.clear();
         });
     }
 

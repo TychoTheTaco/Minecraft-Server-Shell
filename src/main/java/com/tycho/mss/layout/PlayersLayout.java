@@ -3,6 +3,7 @@ package com.tycho.mss.layout;
 import com.tycho.mss.*;
 import com.tycho.mss.util.UiUpdater;
 import com.tycho.mss.util.Utils;
+import easytasks.Task;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
@@ -80,7 +81,11 @@ public class PlayersLayout implements Page, ServerShellConnection, ServerShell.E
 
     @Override
     public void onPageSelected() {
-        uiUpdater.startOnNewThread();
+        if (uiUpdater.getState() == Task.State.NOT_STARTED){
+            uiUpdater.startOnNewThread();
+        }else{
+            uiUpdater.resume();
+        }
     }
 
     private class CachedStats{
@@ -95,7 +100,7 @@ public class PlayersLayout implements Page, ServerShellConnection, ServerShell.E
 
     @Override
     public void onPageHidden() {
-        uiUpdater.stop();
+        uiUpdater.pause();
     }
 
     private ServerShell serverShell;

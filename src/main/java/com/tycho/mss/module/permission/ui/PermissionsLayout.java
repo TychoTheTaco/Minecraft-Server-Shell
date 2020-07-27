@@ -62,8 +62,10 @@ public class PermissionsLayout implements Page, ServerShellConnection {
     private void initialize() {
         roles_list_view.setCellFactory(param -> new RoleListCell(serverShell, serverShell.getServerConfiguration().getPermissionsManager()));
         roles_list_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            players_list_view.getItems().clear();
-            players_list_view.getItems().addAll(serverShell.getServerConfiguration().getPermissionsManager().getPlayers(newValue));
+            if (newValue != null){
+                players_list_view.getItems().clear();
+                players_list_view.getItems().addAll(serverShell.getServerConfiguration().getPermissionsManager().getPlayers(newValue));
+            }
         });
 
         players_list_view.setCellFactory(param -> new PlayerListCell(roles_list_view.getSelectionModel().getSelectedItem(), serverShell.getServerConfiguration().getPermissionsManager()));

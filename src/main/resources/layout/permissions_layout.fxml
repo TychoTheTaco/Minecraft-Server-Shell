@@ -18,7 +18,7 @@
                 <Insets top="8" left="8" bottom="8" right="8"/>
             </padding>
             <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Roles" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS"/>
-            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="add_role_button" text="Add Role" />
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="add_role_button" text="ADD ROLE" />
         </GridPane>
         <ListView fx:id="roles_list_view"/>
     </VBox>
@@ -29,7 +29,7 @@
                 <Insets top="8" left="8" bottom="8" right="8"/>
             </padding>
             <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Players" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS"/>
-            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="add_player_button" text="Add Player" />
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="add_player_button" text="ADD PLAYER" />
         </GridPane>
         <ListView fx:id="players_list_view"/>
     </VBox>

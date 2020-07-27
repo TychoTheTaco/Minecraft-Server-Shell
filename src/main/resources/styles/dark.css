@@ -1,7 +1,7 @@
 .root {
     -red: #f44336;
     -light_red: #f44336A0;
-    -green: #45d151;
+    -green: #2DB639;
     -blue: #0093ff;
     -light_blue: #4fb4ff40;
     -fx-font-size: 12pt;
@@ -88,16 +88,18 @@
 /* ------------------------------------------------------------------------------------ BUTTON ---------------------------------------------------------------------------------- */
 
 .button{
-    -fx-background-color: -blue;
+    -fx-background-color: #00000040;
+    -fx-background-radius: 4;
+
     -fx-font-size: 0.9em;
     -fx-font-weight: bold;
     -fx-text-fill: white;
-
+    -fx-font-family: "Segoe UI"
 }
 
 .button:hover{
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, #000000, 10, 0, 0, 0);
+    -fx-background-color: #00000080;
 }
 
 .button:pressed{
@@ -112,6 +114,11 @@
     -fx-background-radius: 0;
     -fx-background-color: transparent;
     -fx-min-width: 24px;
+}
+
+.image_button:hover{
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow(three-pass-box, #000000, 10, 0, 0, 0);
 }
 
 .image_button:pressed{
@@ -231,6 +238,10 @@
 
 .start_button{
     -fx-background-color: -green;
+}
+
+.start_button:hover{
+    -fx-background-color: derive(-green, -30%);
 }
 
 .stop_button{

@@ -39,6 +39,10 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
     @FXML
     private Button create_backup_button;
 
+    private static final String TEXT_CREATE_BACKUP = "CREATE BACKUP";
+    private static final String TEXT_START = "START";
+    private static final String TEXT_STOP = "STOP";
+
     private final UiUpdater uiUpdater = new UiUpdater(1000) {
         @Override
         protected void onUiUpdate() {
@@ -84,7 +88,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
                 final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Please specify a backup directory in the settings!", ButtonType.OK);
                 alert.show();
                 create_backup_button.setDisable(false);
-                create_backup_button.setText("Create Backup");
+                create_backup_button.setText(TEXT_CREATE_BACKUP);
                 return;
             }
 
@@ -210,7 +214,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
         switch (serverShell.getState()){
             case OFFLINE:
                 start_stop_button.setDisable(false);
-                start_stop_button.setText("Start");
+                start_stop_button.setText(TEXT_START);
                 start_stop_button.getStyleClass().remove("stop_button");
                 start_stop_button.getStyleClass().add("start_button");
                 break;
@@ -221,7 +225,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
 
             case ONLINE:
                 start_stop_button.setDisable(false);
-                start_stop_button.setText("Stop");
+                start_stop_button.setText(TEXT_STOP);
                 start_stop_button.getStyleClass().remove("start_button");
                 start_stop_button.getStyleClass().add("stop_button");
                 break;
