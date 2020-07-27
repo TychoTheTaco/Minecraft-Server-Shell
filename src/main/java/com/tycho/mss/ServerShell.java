@@ -124,6 +124,7 @@ public class ServerShell implements Context{
         addCustomCommand(new GuideCommand());
         addCustomCommand(new BackupCommand());
         addCustomCommand(new PermissionCommand());
+        addCustomCommand(new BattleRoyaleCommand());
         try {
             addCustomCommand(new GiveRandomItemCommand());
         } catch (IOException e) {
@@ -251,7 +252,7 @@ public class ServerShell implements Context{
                 final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.process.getInputStream()));
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    System.out.println(line);
+                    //System.out.println(line);
                     notifyOnOutput(line);
 
                     //Check for pending results

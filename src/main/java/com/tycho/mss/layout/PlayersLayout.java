@@ -14,49 +14,13 @@ import javafx.scene.layout.Region;
 
 import java.util.HashMap;
 
-public class PlayersLayout implements Page, ServerShellConnection {
+public class PlayersLayout implements Page, ServerShellConnection, ServerShell.EventListener {
 
     @FXML
     private TableView<Player> players_table_view;
 
     @FXML
     private Region offline_overlay;
-
-    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
-        @Override
-        public void setServerShell(ServerShell serverShell) {
-            super.setServerShell(serverShell);
-            if (serverShell != null){
-                serverShell.addEventListener(new ServerShell.EventAdapter() {
-
-                    @Override
-                    public void onServerStarted() {
-                        Platform.runLater(() -> {
-                            offline_overlay.setVisible(false);
-                        });
-                    }
-
-                    @Override
-                    public void onServerStopped() {
-                        Platform.runLater(() -> {
-                            players_table_view.getItems().clear();
-                            offline_overlay.setVisible(true);
-                        });
-                    }
-
-                    @Override
-                    public void onPlayerConnected(Player player) {
-                        Platform.runLater(() -> players_table_view.getItems().add(player));
-                    }
-
-                    @Override
-                    public void onPlayerDisconnected(Player player) {
-                        Platform.runLater(() -> players_table_view.getItems().remove(player));
-                    }
-                });
-            }
-        }
-    };
 
     private final UiUpdater uiUpdater = new UiUpdater(1000) {
         @Override
@@ -134,8 +98,66 @@ public class PlayersLayout implements Page, ServerShellConnection {
         uiUpdater.stop();
     }
 
+    private ServerShell serverShell;
+
     @Override
-    public ServerShellContainer getServerShellContainer() {
-        return serverShellContainer;
+    public void attach(ServerShell serverShell) {
+        this.serverShell = serverShell;
+        if (serverShell != null){
+            serverShell.addEventListener(this);
+        }
+    }
+
+    @Override
+    public void detach(ServerShell serverShell) {
+        this.serverShell = null;
+        if (serverShell != null){
+            serverShell.removeEventListener(this);
+        }
+    }
+
+    @Override
+    public void onServerStarting() {
+
+    }
+
+    @Override
+    public void onServerIoReady() {
+
+    }
+
+    @Override
+    public void onServerStarted() {
+        Platform.runLater(() -> {
+            offline_overlay.setVisible(false);
+        });
+    }
+
+    @Override
+    public void onServerStopping() {
+
+    }
+
+    @Override
+    public void onServerStopped() {
+        Platform.runLater(() -> {
+            players_table_view.getItems().clear();
+            offline_overlay.setVisible(true);
+        });
+    }
+
+    @Override
+    public void onPlayerConnected(Player player) {
+        Platform.runLater(() -> players_table_view.getItems().add(player));
+    }
+
+    @Override
+    public void onPlayerDisconnected(Player player) {
+        Platform.runLater(() -> players_table_view.getItems().remove(player));
+    }
+
+    @Override
+    public void onOutput(String message) {
+
     }
 }

@@ -34,14 +34,6 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     private JSONObject initialConfiguration;
 
     private final StatusContainer statusContainer = new StatusContainer();
-    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
-        @Override
-        public void setServerShell(ServerShell serverShell) {
-            super.setServerShell(serverShell);
-            setDefaults();
-            statusContainer.setStatus(server_jar_input.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
-        }
-    };
 
     @FXML
     private void initialize() {
@@ -75,7 +67,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
             Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this server? All data including the Minecraft world, player data, and server configuration data will be permanently deleted! Any backups that were created will remain.", ButtonType.YES, ButtonType.CANCEL);
             alert.showAndWait();
             if (alert.getResult() == ButtonType.YES){
-                ServerManager.delete(getServerShellContainer().getServerShell().getServerConfiguration());
+                ServerManager.delete(serverShell.getServerConfiguration());
                 MinecraftServerManager.setPage("server_list");
             }
         });
@@ -136,8 +128,8 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     }
 
     private void setDefaults() {
-        server_jar_input.setPath(serverShellContainer.getServerShell().getServerConfiguration().getJar());
-        launch_options_text_field.setText(serverShellContainer.getServerShell().getServerConfiguration().getLaunchOptions());
+        server_jar_input.setPath(serverShell.getServerConfiguration().getJar());
+        launch_options_text_field.setText(serverShell.getServerConfiguration().getLaunchOptions());
     }
 
     private JSONObject getConfiguration() {
@@ -150,7 +142,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     @Override
     public void onPageSelected() {
         //Load the saved configuration
-        initialConfiguration = getServerShellContainer().getServerShell().getServerConfiguration().toJson();
+        initialConfiguration = serverShell.getServerConfiguration().toJson();
         setDefaults();
         statusContainer.setStatus(server_jar_input.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
     }
@@ -160,9 +152,19 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
 
     }
 
+    private ServerShell serverShell;
+
     @Override
-    public ServerShellContainer getServerShellContainer() {
-        return serverShellContainer;
+    public void attach(ServerShell serverShell) {
+        this.serverShell = serverShell;
+
+        setDefaults();
+        statusContainer.setStatus(server_jar_input.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
+    }
+
+    @Override
+    public void detach(ServerShell serverShell) {
+        this.serverShell = null;
     }
 
     @Override

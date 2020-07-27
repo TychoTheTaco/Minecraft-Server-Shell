@@ -3,7 +3,6 @@ package com.tycho.mss.layout;
 import com.tycho.mss.Page;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.ServerShellConnection;
-import com.tycho.mss.ServerShellContainer;
 import com.tycho.mss.command.Command;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
@@ -14,19 +13,6 @@ public class CustomCommandsLayout implements Page, ServerShellConnection {
 
     @FXML
     private TableView<Command> custom_commands_table_view;
-
-    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
-        @Override
-        public void setServerShell(ServerShell serverShell) {
-            super.setServerShell(serverShell);
-            custom_commands_table_view.getItems().clear();
-            if (serverShell != null){
-                for (Command command : serverShell.getCustomCommands()){
-                    custom_commands_table_view.getItems().add(command);
-                }
-            }
-        }
-    };
 
     @FXML
     private void initialize() {
@@ -62,8 +48,22 @@ public class CustomCommandsLayout implements Page, ServerShellConnection {
 
     }
 
+    private ServerShell serverShell;
+
     @Override
-    public ServerShellContainer getServerShellContainer() {
-        return serverShellContainer;
+    public void attach(ServerShell serverShell) {
+        this.serverShell = serverShell;
+
+        custom_commands_table_view.getItems().clear();
+        if (serverShell != null){
+            for (Command command : serverShell.getCustomCommands()){
+                custom_commands_table_view.getItems().add(command);
+            }
+        }
+    }
+
+    @Override
+    public void detach(ServerShell serverShell) {
+        this.serverShell = null;
     }
 }

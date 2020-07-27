@@ -37,19 +37,19 @@ public class BackupsLayout implements Page, StatusHost, ServerShellConnection {
 
     private StatusContainer statusContainer = new StatusContainer();
 
-    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
-        @Override
-        public void setServerShell(ServerShell serverShell) {
-            super.setServerShell(serverShell);
-            Platform.runLater(() -> {
-                backup_directory_input.setPath(serverShell.getServerConfiguration().getBackupDirectory());
-            });
-        }
-    };
+    private ServerShell serverShell;
 
     @Override
-    public ServerShellContainer getServerShellContainer() {
-        return serverShellContainer;
+    public void attach(ServerShell serverShell) {
+        this.serverShell = serverShell;
+        Platform.runLater(() -> {
+            backup_directory_input.setPath(serverShell.getServerConfiguration().getBackupDirectory());
+        });
+    }
+
+    @Override
+    public void detach(ServerShell serverShell) {
+        this.serverShell = null;
     }
 
     @FXML
@@ -67,7 +67,7 @@ public class BackupsLayout implements Page, StatusHost, ServerShellConnection {
             protected boolean isPathValid(Path path, StringBuilder invalidReason) {
                 final Path b = Paths.get(System.getProperty("user.dir")).resolve(path);
 
-                final Path s = serverShellContainer.getServerShell() == null ? null : serverShellContainer.getServerShell().getServerConfiguration().getJar().getParent();
+                final Path s = serverShell == null ? null : serverShell.getServerConfiguration().getJar().getParent();
 
                 System.out.println("B: " + b);
                 System.out.println("S: " + s);
@@ -100,7 +100,7 @@ public class BackupsLayout implements Page, StatusHost, ServerShellConnection {
         save_button.setDisable(true);
         save_button.setOnAction(event -> {
             //If this is a different backup directory we need to move existing backups to the new location
-            final Path oldBackupDirectory = serverShellContainer.getServerShell().getServerConfiguration().getBackupDirectory();
+            final Path oldBackupDirectory = serverShell.getServerConfiguration().getBackupDirectory();
             if (!backup_directory_input.getPath().equals(oldBackupDirectory)) {
                 if (oldBackupDirectory != null && Files.exists(oldBackupDirectory) && oldBackupDirectory.iterator().hasNext()) {
                     final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to move all existing backups to the new location?", ButtonType.YES, ButtonType.NO);
@@ -111,7 +111,7 @@ public class BackupsLayout implements Page, StatusHost, ServerShellConnection {
                 }
 
                 //Update location
-                serverShellContainer.getServerShell().getServerConfiguration().setBackupDirectory(Paths.get(System.getProperty("user.dir")).resolve(backup_directory_input.getPath()));
+                serverShell.getServerConfiguration().setBackupDirectory(Paths.get(System.getProperty("user.dir")).resolve(backup_directory_input.getPath()));
                 refreshBackupsList();
                 ServerManager.save();
             }
@@ -155,14 +155,14 @@ public class BackupsLayout implements Page, StatusHost, ServerShellConnection {
     }
 
     private void refreshBackupsList() {
-        if (serverShellContainer.getServerShell() == null){
+        if (serverShell == null){
             return;
         }
         loading_label.setVisible(true);
         no_backups_found_label.setVisible(false);
         backups_list_view.getItems().clear();
         new Thread(() -> {
-            final Path backupsDirectory = serverShellContainer.getServerShell().getServerConfiguration().getBackupDirectory();
+            final Path backupsDirectory = serverShell.getServerConfiguration().getBackupDirectory();
             final List<Path> backups = new ArrayList<>();
             if (backupsDirectory != null && Files.exists(backupsDirectory)) {
                 try {

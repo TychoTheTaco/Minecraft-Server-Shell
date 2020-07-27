@@ -47,9 +47,16 @@ public class PermissionsLayout implements Page, ServerShellConnection {
 
     }
 
+    private ServerShell serverShell;
+
     @Override
-    public ServerShellContainer getServerShellContainer() {
-        return serverShellContainer;
+    public void attach(ServerShell serverShell) {
+        this.serverShell = serverShell;
+    }
+
+    @Override
+    public void detach(ServerShell serverShell) {
+        this.serverShell = null;
     }
 
     @FXML

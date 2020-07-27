@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 
-public class MiniDashboard extends GridPane implements Page, ServerShellConnection {
+public class MiniDashboard extends GridPane implements Page, ServerShellConnection, ServerShell.EventListener {
 
     @FXML
     private Label status_label;
@@ -37,71 +37,6 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
 
     @FXML
     private Button create_backup_button;
-
-    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
-
-        @Override
-        public void setServerShell(ServerShell serverShell) {
-            super.setServerShell(serverShell);
-            if (serverShell != null) {
-                Platform.runLater(() -> {
-                    updateStatus();
-                    updateUptime();
-                    updatePlayerCount();
-                    updateStartStopButton();
-                });
-
-                serverShell.addEventListener(new ServerShell.EventAdapter() {
-                    @Override
-                    public void onServerStarting() {
-                        Platform.runLater(() -> {
-                            updateStatus();
-                            updateStartStopButton();
-                        });
-                    }
-
-                    @Override
-                    public void onServerStarted() {
-                        Platform.runLater(() -> {
-                            updateStatus();
-                            updateStartStopButton();
-                            updateUptime();
-                        });
-                    }
-
-                    @Override
-                    public void onServerStopping() {
-                        Platform.runLater(() -> {
-                            updateStatus();
-                            updateUptime();
-                            updateStartStopButton();
-                        });
-                    }
-
-                    @Override
-                    public void onServerStopped() {
-                        Platform.runLater(() -> {
-                            updateStatus();
-                            updatePlayerCount();
-                            updateUptime();
-                            updateStartStopButton();
-                        });
-                    }
-
-                    @Override
-                    public void onPlayerConnected(Player player) {
-                        Platform.runLater(() -> updatePlayerCount());
-                    }
-
-                    @Override
-                    public void onPlayerDisconnected(Player player) {
-                        Platform.runLater(() -> updatePlayerCount());
-                    }
-                });
-                uiUpdater.startOnNewThread();
-            }
-        }
-    };
 
     private final UiUpdater uiUpdater = new UiUpdater(1000) {
         @Override
@@ -122,15 +57,15 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
 
         //Set up "start/stop" button
         start_stop_button.setOnAction(event -> {
-            if (serverShellContainer.getServerShell() == null || serverShellContainer.getServerShell().getState() == ServerShell.State.OFFLINE){
+            if (serverShell == null || serverShell.getState() == ServerShell.State.OFFLINE){
                 try {
-                    serverShellContainer.getServerShell().startOnNewThread();
+                    serverShell.startOnNewThread();
                 }catch (RuntimeException e){
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to start server: " + e.getMessage(), ButtonType.OK);
                     alert.showAndWait();
                 }
-            }else if (serverShellContainer.getServerShell().getState() == ServerShell.State.ONLINE){
-                serverShellContainer.getServerShell().stop();
+            }else if (serverShell.getState() == ServerShell.State.ONLINE){
+                serverShell.stop();
             }
         });
 
@@ -143,7 +78,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
             create_backup_button.setText("0 %");
 
             //Make sure a backup directory is specified in the settings
-            final Path backupDirectory = serverShellContainer.getServerShell().getServerConfiguration().getBackupDirectory();
+            final Path backupDirectory = serverShell.getServerConfiguration().getBackupDirectory();
             if (backupDirectory == null){
                 final Alert alert = new Alert(Alert.AlertType.INFORMATION, "Please specify a backup directory in the settings!", ButtonType.OK);
                 alert.show();
@@ -153,7 +88,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
             }
 
             //Create backup task and UI updater for button
-            final BackupTask backupTask = new BackupTask(getServerShellContainer().getServerShell().getServerConfiguration().getJar().getParent(), new File(backupDirectory + File.separator + System.currentTimeMillis() + ".zip").toPath());
+            final BackupTask backupTask = new BackupTask(serverShell.getServerConfiguration().getJar().getParent(), new File(backupDirectory + File.separator + System.currentTimeMillis() + ".zip").toPath());
             final UiUpdater backupButtonUpdater = new UiUpdater(250) {
 
                 private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##%");
@@ -186,9 +121,31 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
         });
     }
 
+    private ServerShell serverShell;
+
     @Override
-    public ServerShellContainer getServerShellContainer() {
-        return serverShellContainer;
+    public void attach(ServerShell serverShell) {
+        this.serverShell = serverShell;
+
+        if (serverShell != null) {
+            Platform.runLater(() -> {
+                updateStatus();
+                updateUptime();
+                updatePlayerCount();
+                updateStartStopButton();
+            });
+
+            serverShell.addEventListener(this);
+            uiUpdater.startOnNewThread();
+        }
+    }
+
+    @Override
+    public void detach(ServerShell serverShell) {
+        this.serverShell = null;
+        if (serverShell != null){
+            serverShell.removeEventListener(this);
+        }
     }
 
     @Override
@@ -202,7 +159,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
     }
 
     private void updateStatus(){
-        switch (serverShellContainer.getServerShell().getState()){
+        switch (serverShell.getState()){
             case STARTING:
                 this.status_label.setText("Starting Server...");
                 this.status_label.setTextFill(Paint.valueOf("white"));
@@ -226,24 +183,24 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
     }
 
     private void updatePlayerCount(){
-        if (serverShellContainer.getServerShell().getProperties().containsKey("max-players")){
+        if (serverShell.getProperties().containsKey("max-players")){
             player_count_label.setVisible(true);
-            this.player_count_label.setText(serverShellContainer.getServerShell().getPlayers().size() + " / " + serverShellContainer.getServerShell().getProperties().get("max-players") + " Players");
+            this.player_count_label.setText(serverShell.getPlayers().size() + " / " + serverShell.getProperties().get("max-players") + " Players");
         }else{
             player_count_label.setVisible(false);
         }
     }
 
     private void updateUptime(){
-        if (serverShellContainer.getServerShell().getState() == ServerShell.State.ONLINE){
-            uptime_label.setText(Utils.formatTimeStopwatch(serverShellContainer.getServerShell().getUptime(), 3));
+        if (serverShell.getState() == ServerShell.State.ONLINE){
+            uptime_label.setText(Utils.formatTimeStopwatch(serverShell.getUptime(), 3));
         }else{
             uptime_label.setText("");
         }
     }
 
     private void updateStartStopButton(){
-        switch (serverShellContainer.getServerShell().getState()){
+        switch (serverShell.getState()){
             case OFFLINE:
                 start_stop_button.setDisable(false);
                 start_stop_button.setText("Start");
@@ -266,5 +223,61 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
                 start_stop_button.setDisable(true);
                 break;
         }
+    }
+
+    @Override
+    public void onServerStarting() {
+        Platform.runLater(() -> {
+            updateStatus();
+            updateStartStopButton();
+        });
+    }
+
+    @Override
+    public void onServerIoReady() {
+
+    }
+
+    @Override
+    public void onServerStarted() {
+        Platform.runLater(() -> {
+            updateStatus();
+            updateStartStopButton();
+            updateUptime();
+        });
+    }
+
+    @Override
+    public void onServerStopping() {
+        Platform.runLater(() -> {
+            updateStatus();
+            updateUptime();
+            updateStartStopButton();
+        });
+    }
+
+    @Override
+    public void onServerStopped() {
+        Platform.runLater(() -> {
+            updateStatus();
+            updatePlayerCount();
+            updateUptime();
+            updateStartStopButton();
+        });
+    }
+
+    @Override
+    public void onPlayerConnected(Player player) {
+        Platform.runLater(() -> updatePlayerCount());
+    }
+
+    @Override
+    public void onPlayerDisconnected(Player player) {
+        Platform.runLater(() -> updatePlayerCount());
+    }
+
+    @Override
+    public void onOutput(String message) {
+
     }
 }

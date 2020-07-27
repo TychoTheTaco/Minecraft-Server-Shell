@@ -1,5 +1,6 @@
 package com.tycho.mss;
 
 public interface ServerShellConnection {
-    ServerShellContainer getServerShellContainer();
+    void attach(ServerShell serverShell);
+    void detach(ServerShell serverShell);
 }

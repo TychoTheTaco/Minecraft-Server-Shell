@@ -27,7 +27,7 @@ public class PermissionsManager {
                     addRole(role);
                 }else{
                     for (Object playerObject : playersArray){
-                        assign((String) playerObject, role);
+                        assignNoSave((String) playerObject, role);
                     }
                 }
             }
@@ -94,13 +94,17 @@ public class PermissionsManager {
         return new ArrayList<>(this.permissions.getOrDefault(role, new HashSet<>()));
     }
 
-    public void assign(final String player, final Role role) {
+    private void assignNoSave(final String player, final Role role) {
         if (!permissions.containsKey(role) && !isUnique(role)){
             //System.out.println("ROLE IS NOT UNIQUE: " + role);
             return;
         }
         permissions.computeIfAbsent(role, k -> new HashSet<>());
         permissions.get(role).add(player);
+    }
+
+    public void assign(final String player, final Role role){
+        assignNoSave(player, role);
         ServerManager.save();
     }
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConsoleLayout implements ServerShellConnection, Page {
+public class ConsoleLayout implements ServerShellConnection, Page, ServerShell.EventListener {
 
     @FXML
     private TextArea console;
@@ -24,6 +24,8 @@ public class ConsoleLayout implements ServerShellConnection, Page {
 
     private static final String DISABLED_MESSAGE = "Console input is disabled until the server has started.";
 
+    private ServerShell serverShell;
+
     private void setConsoleEnabled(final boolean enabled){
         console_input.setDisable(!enabled);
         if (enabled){
@@ -33,57 +35,24 @@ public class ConsoleLayout implements ServerShellConnection, Page {
         }
     }
 
-    private final ServerShellContainer serverShellContainer = new ServerShellContainer(){
-        @Override
-        public void setServerShell(ServerShell serverShell) {
-            super.setServerShell(serverShell);
-            if (serverShell != null){
-                serverShell.addEventListener(new ServerShell.EventAdapter() {
-
-                    @Override
-                    public void onServerStarting() {
-                        Platform.runLater(() -> {
-                            offline_overlay.setVisible(false);
-                        });
-                    }
-
-                    @Override
-                    public void onServerStarted() {
-                        Platform.runLater(() -> {
-                            console_input.setDisable(false);
-                            console_input.setText("");
-                        });
-                    }
-
-                    @Override
-                    public void onServerStopping() {
-                        Platform.runLater(() -> {
-                            console_input.setDisable(true);
-                            console_input.setText("Console input is disabled while the server is stopping.");
-                        });
-                    }
-
-                    @Override
-                    public void onServerStopped() {
-                        Platform.runLater(() -> {
-                            offline_overlay.setVisible(true);
-                        });
-                    }
-
-                    @Override
-                    public void onOutput(String message) {
-                        Platform.runLater(() -> {
-                            console.appendText(message);
-                            console.appendText("\n");
-                        });
-                    }
-                });
-            }
+    @Override
+    public void attach(ServerShell serverShell) {
+        this.serverShell = serverShell;
+        if (serverShell != null){
+            serverShell.addEventListener(this);
 
             //Console input
-            setConsoleEnabled(serverShell != null && serverShell.getState() == ServerShell.State.ONLINE);
+            setConsoleEnabled(serverShell.getState() == ServerShell.State.ONLINE);
         }
-    };
+    }
+
+    @Override
+    public void detach(ServerShell serverShell) {
+        this.serverShell = serverShell;
+        if (serverShell != null){
+            serverShell.removeEventListener(this);
+        }
+    }
 
     private static final List<String> dictionary = new ArrayList<>();
     static{
@@ -101,14 +70,14 @@ public class ConsoleLayout implements ServerShellConnection, Page {
 
         //Console input
         console_input.setOnAction(event -> {
-            if (serverShellContainer.getServerShell() != null) {
+            if (serverShell != null) {
                 try {
                     //Add command to history
                     commandHistory.add(console_input.getText());
                     commandHistoryIndex = commandHistory.size();
 
                     //Execute command
-                    serverShellContainer.getServerShell().execute(console_input.getText());
+                    serverShell.execute(console_input.getText());
                     console_input.clear();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -160,8 +129,8 @@ public class ConsoleLayout implements ServerShellConnection, Page {
     private String autocomplete(final String input){
         if (input.length() <= 0) return "";
 
-        if (serverShellContainer.getServerShell() != null){
-            for (Player player : serverShellContainer.getServerShell().getPlayers()){
+        if (serverShell != null){
+            for (Player player : serverShell.getPlayers()){
                 if (player.getUsername().startsWith(input)){
                     return player.getUsername().replaceFirst(input, "");
                 }
@@ -178,7 +147,56 @@ public class ConsoleLayout implements ServerShellConnection, Page {
     }
 
     @Override
-    public ServerShellContainer getServerShellContainer() {
-        return serverShellContainer;
+    public void onServerStarting() {
+        Platform.runLater(() -> {
+            offline_overlay.setVisible(false);
+        });
     }
+
+    @Override
+    public void onServerIoReady() {
+
+    }
+
+    @Override
+    public void onServerStarted() {
+        Platform.runLater(() -> {
+            console_input.setDisable(false);
+            console_input.setText("");
+        });
+    }
+
+    @Override
+    public void onServerStopping() {
+        Platform.runLater(() -> {
+            console_input.setDisable(true);
+            console_input.setText("Console input is disabled while the server is stopping.");
+        });
+    }
+
+    @Override
+    public void onServerStopped() {
+        Platform.runLater(() -> {
+            offline_overlay.setVisible(true);
+        });
+    }
+
+    @Override
+    public void onPlayerConnected(Player player) {
+
+    }
+
+    @Override
+    public void onPlayerDisconnected(Player player) {
+
+    }
+
+    @Override
+    public void onOutput(String message) {
+        Platform.runLater(() -> {
+            console.appendText(message);
+            console.appendText("\n");
+        });
+    }
+
 }

@@ -43,6 +43,12 @@ public class MainLayout {
         icon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                for (MenuItem menuItem : menu_items_list_view.getItems()){
+                    if (menuItem.getLoader().getController() instanceof ServerShellConnection){
+                        ((ServerShellConnection) menuItem.getLoader().getController()).detach(serverShell);
+                    }
+                }
+                mini_dashboard.detach(serverShell);
                 MinecraftServerManager.setPage("server_list");
             }
         });
@@ -104,11 +110,15 @@ public class MainLayout {
         return -1;
     }
 
+    private ServerShell serverShell;
+
     public void setServerShell(ServerShell serverShell) {
+        this.serverShell = serverShell;
+
         //Update modules
         for (MenuItem menuItem : menu_items_list_view.getItems()){
             if (menuItem.getLoader().getController() instanceof ServerShellConnection){
-                ((ServerShellConnection) menuItem.getLoader().getController()).getServerShellContainer().setServerShell(serverShell);
+                ((ServerShellConnection) menuItem.getLoader().getController()).attach(serverShell);
             }
         }
 
@@ -118,7 +128,7 @@ public class MainLayout {
         }else{
             mini_dashboard.setVisible(true);
         }
-        mini_dashboard.getServerShellContainer().setServerShell(serverShell);
+        mini_dashboard.attach(serverShell);
 
         //Update top left
         if (serverShell != null){
