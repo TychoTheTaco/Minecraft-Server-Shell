@@ -2,9 +2,7 @@ package com.tycho.mss.command;
 
 import com.tycho.mss.Context;
 import com.tycho.mss.util.Utils;
-import easytasks.ITask;
 import easytasks.Task;
-import easytasks.TaskAdapter;
 
 import java.io.IOException;
 
@@ -22,9 +20,7 @@ public class BattleRoyaleCommand extends Command{
             throw new InvalidParametersException();
         }
 
-        if ("prepare".equals(parameters[0])){
-
-        }else if ("start".equals(parameters[0])){
+        if ("start".equals(parameters[0])){
             if (parameters.length < 5){
                 throw new InvalidParametersException();
             }
@@ -43,16 +39,17 @@ public class BattleRoyaleCommand extends Command{
             context.execute("execute at " + player + " run worldborder center ~ ~");
             context.execute("worldborder set " + worldBorderSize);
 
-            //Clear inventory
-            context.execute("clear @a");
+            //Clear inventory TODO: Give players compass
+            //context.execute("clear @a");
 
             //Spread players
             final int minSpreadDistance = Integer.parseInt(parameters[1]) / 2;
-            context.execute("execute at " + player + " run spreadplayers ~ ~ " + minSpreadDistance + " " + parameters[1] + " false @a");
+            context.execute("execute at " + player + " run spreadplayers ~ ~ " + minSpreadDistance + " " + (Integer.parseInt(parameters[1]) / 2) + " false @a");
 
             //Set daytime
             context.execute("time set day");
             context.execute("weather clear");
+            context.execute("gamerule doDaylightCycle true");
 
             //Start timer
             context.execute("scoreboard objectives add TimeRemaining dummy");
@@ -60,29 +57,30 @@ public class BattleRoyaleCommand extends Command{
             final long minutesRemaining = Integer.parseInt(parameters[3]);
             context.execute("scoreboard players set @a TimeRemaining " + minutesRemaining);
             battleRoyaleTimerTask = new BattleRoyaleTimerTask(context, Long.parseLong(parameters[3]) * 60 * 1000, Integer.parseInt(parameters[2]), Long.parseLong(parameters[4]) * 60 * 1000);
-            battleRoyaleTimerTask.addTaskListener(new TaskAdapter(){
-                @Override
-                public void onTaskStopped(ITask task) {
-
-                }
-            });
             battleRoyaleTimerTask.startOnNewThread();
         }else if ("stop".equals(parameters[0])){
             if (battleRoyaleTimerTask != null){
                 battleRoyaleTimerTask.stop();
                 battleRoyaleTimerTask = null;
+
+                context.execute("gamerule doDaylightCycle true");
+                context.execute("effect clear @a");
+                context.execute("worldborder set 60000000");
+                context.tellraw(player, Utils.createText("Battle royale stopped.", "gray"));
             }
+        }else{
+            throw new InvalidParametersException();
         }
     }
 
     @Override
     public String getFormat() {
-        return "prepare | start <start_size> <end_size> <prepare_time> <close_time> | stop";
+        return "start <start_size> <end_size> <prepare_time> <close_time> | stop";
     }
 
     @Override
     public String getDescription() {
-        return "Starts a battle royale!";
+        return "Start a battle royale!";
     }
 
     private class BattleRoyaleTimerTask extends Task{
@@ -174,6 +172,14 @@ public class BattleRoyaleCommand extends Command{
                 return;
             }
 
+            //Make daytime
+            try {
+                context.execute("time set day");
+                context.execute("gamerule doDaylightCycle false");
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
             final long borderClosedTime = System.currentTimeMillis();
             while (isRunning()){
                 final long elapsedTime = System.currentTimeMillis() - borderClosedTime;
@@ -191,6 +197,7 @@ public class BattleRoyaleCommand extends Command{
             //Apply glow effect
             try {
                 context.execute("effect give @a minecraft:glowing " + (60 * 60));
+                context.tellraw("@a", Utils.createText("Player locations revealed!", "aqua"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
