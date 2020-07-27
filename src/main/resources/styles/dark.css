@@ -1,5 +1,5 @@
 .root {
-    -red: #f44336;
+    -red: #f55a4e;
     -light_red: #f44336A0;
     -green: #2DB639;
     -blue: #0093ff;
@@ -315,6 +315,14 @@
 
 #server_properties_table_view .column-header .arrow {
     -fx-background-color: white;
+}
+
+#delete_server_button{
+    -fx-background-color: -red;
+}
+
+#delete_server_button:hover{
+    -fx-background-color: derive(-red, -30%);
 }
 
 /* ---------------------------------------------------------------------------------- Permissions ------------------------------------------------------------------------------- */

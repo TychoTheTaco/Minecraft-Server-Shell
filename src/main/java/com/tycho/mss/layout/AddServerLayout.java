@@ -4,7 +4,9 @@ import com.tycho.mss.ServerConfiguration;
 import com.tycho.mss.ServerManager;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Utils;
+import easytasks.ITask;
 import easytasks.Task;
+import easytasks.TaskAdapter;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,10 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -137,7 +136,7 @@ public class AddServerLayout extends VBox {
 
                 //Download server JAR if we have to
                 if (auto_download_jar_button.isSelected()) {
-                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Downloading server JAR") {
+                    final MultiStepProgressView.MultipartTask.Task downloadServerJarTask = new MultiStepProgressView.MultipartTask.Task("Downloading server JAR") {
                         @Override
                         public void run() {
                             final String versionCode = minecraft_version_input.getValue();
@@ -155,14 +154,24 @@ public class AddServerLayout extends VBox {
                             if (serverJarPath == null) {
                                 System.err.println("ERROR DOWNLOADING JAR!");
                             }
-                            setObject(serverJarPath);
+                            setOutput(serverJarPath);
+                        }
+                    };
+                    downloadServerJarTask.addTaskListener(new TaskAdapter(){
+                        @Override
+                        public void onTaskFailed(ITask task, Exception exception) {
+                            Platform.runLater(() -> {
+                                final Alert alert = new Alert(Alert.AlertType.ERROR, "Could not find a server JAR for this version of Minecraft! Please try a different version.", ButtonType.OK);
+                                alert.showAndWait();
+                            });
                         }
                     });
-                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Generating server properties") {
+                    multiStepProgressView.addTask(downloadServerJarTask);
+                    multiStepProgressView.addTask(new MultiStepProgressView.MultipartTask.Task("Generating server properties") {
                         @Override
                         public void run() {
                             //Save server configuration
-                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText(), (Path) getObject());
+                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText(), (Path) getInput());
                             ServerManager.add(serverConfiguration);
                             ServerManager.save();
 
@@ -184,7 +193,7 @@ public class AddServerLayout extends VBox {
                         }
                     });
                 } else if (custom_jar_button.isSelected()) {
-                    multiStepProgressView.addTask(new MultiStepProgressView.Task("Generating server properties") {
+                    multiStepProgressView.addTask(new MultiStepProgressView.MultipartTask.Task("Generating server properties") {
                         @Override
                         public void run() {
                             //Save server configuration
@@ -289,6 +298,8 @@ public class AddServerLayout extends VBox {
         //Download official Minecraft version manifest
         new Thread(() -> {
             final JSONObject result = sendRequest("https://launchermeta.mojang.com/mc/game/version_manifest.json");
+
+            System.out.println("RESULT: " + result);
 
             final List<String> versionCodes = new ArrayList<>();
             versions = (JSONArray) result.get("versions");

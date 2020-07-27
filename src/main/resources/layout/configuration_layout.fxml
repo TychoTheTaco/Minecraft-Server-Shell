@@ -49,7 +49,7 @@
                 <Insets top="16" bottom="4"/>
             </padding>
         </Label>
-        <Button fx:id="delete_server_button" text="Delete Server" style="-fx-background-color: -red;"/>
+        <Button fx:id="delete_server_button" text="DELETE SERVER"/>
     </VBox>
 
     <HBox spacing="10" alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">

@@ -1,5 +1,7 @@
 package com.tycho.mss.layout;
 
+import easytasks.ITask;
+import easytasks.TaskAdapter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -21,9 +23,9 @@ import java.util.Map;
 
 public class MultiStepProgressView extends VBox {
 
-    private final List<Task> tasks = new ArrayList<>();
+    private final MultipartTask multipartTask = new MultipartTask();
 
-    private final Map<Task, TaskView> views = new HashMap<>();
+    private final Map<MultipartTask.Task, TaskView> views = new HashMap<>();
 
     public MultiStepProgressView(){
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/progress_view.fxml"));
@@ -36,8 +38,19 @@ public class MultiStepProgressView extends VBox {
         }
     }
 
-    public void addTask(final Task task){
-        this.tasks.add(task);
+    public void addTask(final MultipartTask.Task task){
+        task.addTaskListener(new TaskAdapter(){
+            @Override
+            public void onTaskStarted(ITask itask) {
+                views.get(task).setProgress(0.01f);
+            }
+
+            @Override
+            public void onTaskStopped(ITask itask) {
+                views.get(task).setProgress(task.getProgress());
+            }
+        });
+        multipartTask.add(task);
         final TaskView taskView = new TaskView(task.getDescription());
         taskView.setProgress(0);
         this.views.put(task, taskView);
@@ -46,16 +59,7 @@ public class MultiStepProgressView extends VBox {
 
     public void start(final Runnable onFinished){
         new Thread(() -> {
-            Object next = null;
-            for (Task task : tasks){
-                task.setProgress(0.01f);
-                views.get(task).setProgress(task.getProgress());
-                task.setObject(next);
-                task.run();
-                next = task.getObject();
-                task.setFinished(true);
-                views.get(task).setProgress(task.getProgress());
-            }
+            multipartTask.start();
             onFinished.run();
         }).start();
     }
@@ -126,51 +130,61 @@ public class MultiStepProgressView extends VBox {
         }
     }
 
-    public static abstract class Task implements Runnable{
+    public static class MultipartTask extends easytasks.Task{
 
-        private boolean isFinished = false;
+        private final List<Task> tasks = new ArrayList<>();
 
-        private String description;
-
-        private Object object;
-
-        private float progress = 0;
-
-        public void setProgress(float progress) {
-            this.progress = progress;
-        }
-
-        public float getProgress() {
-            return progress;
-        }
-
-        public Task(String description) {
-            this.description = description;
-        }
-
-        public void setFinished(boolean finished) {
-            isFinished = finished;
-            if (isFinished){
-                progress = 1;
-            }else{
-                progress = 0;
+        @Override
+        protected void run() throws Exception {
+            Object object = null;
+            for (Task task : tasks){
+                task.setInput(object);
+                task.start();
+                object = task.getOutput();
             }
         }
 
-        public boolean isFinished() {
-            return isFinished;
+        public void add(final Task task){
+            task.addTaskListener(new TaskAdapter(){
+                @Override
+                public void onTaskFailed(ITask task, Exception exception) {
+                    throw new RuntimeException(exception);
+                }
+            });
+            this.tasks.add(task);
         }
 
-        public String getDescription() {
-            return description;
-        }
+        public static abstract class Task extends easytasks.Task{
 
-        public void setObject(Object object) {
-            this.object = object;
-        }
+            private Object input = null;
 
-        public Object getObject() {
-            return object;
+            private Object output = null;
+
+            private final String description;
+
+            public Task(final String description){
+                this.description = description;
+            }
+
+            public void setInput(Object input) {
+                this.input = input;
+            }
+
+            protected Object getInput() {
+                return input;
+            }
+
+            protected void setOutput(final Object output){
+                this.output = output;
+            }
+
+            public Object getOutput() {
+                return output;
+            }
+
+            public String getDescription() {
+                return description;
+            }
         }
     }
 }
