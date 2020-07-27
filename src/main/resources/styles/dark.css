@@ -135,6 +135,11 @@
     -fx-background-color: transparent;
 }
 
+.folder_button:hover{
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow(three-pass-box, #000000, 10, 0, 0, 0);
+}
+
 .folder_button:pressed{
     -fx-background-color: transparent;
 }
