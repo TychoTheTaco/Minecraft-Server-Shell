@@ -553,7 +553,7 @@ public class ServerShell implements Context{
         Matcher matcher;
     }
 
-    abstract class PendingResult {
+    abstract static class PendingResult {
         private final String command;
         private final Pattern pattern;
 

@@ -33,6 +33,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -298,21 +300,38 @@ public class AddServerLayout extends VBox {
         //Download official Minecraft version manifest
         new Thread(() -> {
             final JSONObject result = sendRequest("https://launchermeta.mojang.com/mc/game/version_manifest.json");
+            if (result != null){
+                final List<String> versionCodes = new ArrayList<>();
+                versions = (JSONArray) result.get("versions");
+                if (versions != null){
+                    for (Object object : versions) {
+                        try{
+                            //Ignore Minecraft versions 1.2.4 and below because they don't have a server JAR available for download.
+                            final LocalDateTime CUTOFF_RELEASE_DATE = LocalDateTime.parse("2012-03-29T22:00:00+00:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                            final String releaseTimeString = (String) ((JSONObject) object).get("releaseTime");
+                            final LocalDateTime localDateTime = LocalDateTime.parse(releaseTimeString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                            if (localDateTime.isBefore(CUTOFF_RELEASE_DATE)){
+                                continue;
+                            }
 
-            System.out.println("RESULT: " + result);
+                            versionCodes.add((String) ((JSONObject) object).get("id"));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
 
-            final List<String> versionCodes = new ArrayList<>();
-            versions = (JSONArray) result.get("versions");
-            for (Object object : versions) {
-                versionCodes.add((String) ((JSONObject) object).get("id"));
+                    Platform.runLater(() -> {
+                        minecraft_version_input.getItems().addAll(versionCodes);
+                        minecraft_version_input.getSelectionModel().selectFirst();
+                        progress_indicator.setVisible(false);
+                        progress_indicator.setManaged(false);
+                    });
+                }else{
+                    //TODO: Error condition
+                }
+            }else{
+                //TODO: Error condition
             }
-
-            Platform.runLater(() -> {
-                minecraft_version_input.getItems().addAll(versionCodes);
-                minecraft_version_input.getSelectionModel().selectFirst();
-                progress_indicator.setVisible(false);
-                progress_indicator.setManaged(false);
-            });
         }).start();
 
         create_server_button.setDisable(true);
