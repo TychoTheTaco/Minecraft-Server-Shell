@@ -106,7 +106,7 @@ public class GuideCommand extends Command {
             while (isRunning()){
                 try {
                     //Get player position
-                    Matcher matcher = context.awaitResult("data get entity " + player + " Pos", POSITION_PATTERN);
+                    Matcher matcher = context.awaitMatch("data get entity " + player + " Pos", POSITION_PATTERN).requiresPlayersOnline(player).waitFor();
                     final double x = Double.parseDouble(matcher.group("x"));
                     final double y = Double.parseDouble(matcher.group("y"));
                     final double z = Double.parseDouble(matcher.group("z"));
@@ -122,7 +122,7 @@ public class GuideCommand extends Command {
                         dz = Integer.parseInt(split[2]);
                     }else{
                         //Get player position
-                        matcher = context.awaitResult("data get entity " + target + " Pos", POSITION_PATTERN);
+                        matcher = context.awaitMatch("data get entity " + target + " Pos", POSITION_PATTERN).requiresPlayersOnline(player, target).waitFor();
                         dx = Integer.parseInt(matcher.group("x"));
                         dy = Integer.parseInt(matcher.group("y"));
                         dz = Integer.parseInt(matcher.group("z"));

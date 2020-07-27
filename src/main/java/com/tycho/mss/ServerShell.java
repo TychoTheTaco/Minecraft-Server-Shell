@@ -14,8 +14,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * This is a custom shell that wraps around the standard Minecraft server. It can read chat messages and execute custom commands.
@@ -90,9 +92,9 @@ public class ServerShell implements Context{
     private final Map<String, UUID> pendingAuthenticatedUsers = new HashMap<>();
 
     /**
-     * After calling {@link #awaitResult(String, Pattern)}, a pending result will be added to this list to keep track of its state.
+     * After calling {@link #awaitMatch(String, Pattern)}, a pending result will be added to this list to keep track of its state.
      */
-    private final List<PendingResult> pendingResults = new ArrayList<>();
+    private final List<PendingPatternMatch> pendingPatternMatches = new ArrayList<>();
 
     /**
      * The current state of the Minecraft server.
@@ -256,20 +258,39 @@ public class ServerShell implements Context{
                     notifyOnOutput(line);
 
                     //Check for pending results
-                    boolean handled = false;
-                    synchronized (pendingResults) {
-                        final Iterator<PendingResult> iterator = pendingResults.iterator();
+                    synchronized (pendingPatternMatches) {
+                        final List<PendingPatternMatch> pendingCancel = new ArrayList<>();
+
+                        final Iterator<PendingPatternMatch> iterator = pendingPatternMatches.iterator();
                         while (iterator.hasNext()) {
-                            final PendingResult pendingResult = iterator.next();
-                            final Matcher matcher = pendingResult.getPattern().matcher(line);
+                            final PendingPatternMatch pendingPatternMatch = iterator.next();
+
+                            //Verify all required players are online
+                            boolean fuck = false;
+                            for (String username : pendingPatternMatch.getRequiredPlayers()){
+                                if (getPlayer(username) == null){
+                                    pendingCancel.add(pendingPatternMatch);
+                                    //pendingPatternMatch.cancel();
+                                    fuck = true;
+                                    break;
+                                }
+                            }
+
+                            if (fuck){
+                                iterator.remove();
+                            }
+
+                            final Matcher matcher = pendingPatternMatch.getPattern().matcher(line);
                             if (matcher.find()) {
-                                handled |= pendingResult.onResult(matcher);
+                                pendingPatternMatch.setResult(matcher);
                                 iterator.remove();
                             }
                         }
-                    }
 
-                    if (handled) continue;
+                        for (PendingPatternMatch pendingPatternMatch : pendingCancel){
+                            pendingPatternMatch.cancel();
+                        }
+                    }
 
                     //Check if a player was authenticated
                     Matcher matcher = PLAYER_AUTHENTICATED_PATTERN.matcher(line);
@@ -367,6 +388,20 @@ public class ServerShell implements Context{
                             playerDatabaseManager.save(player);
                             notifyOnPlayerDisconnected(player);
                             players.remove(player);
+
+                            //Remove pending matches that require this player
+                            synchronized (pendingPatternMatches){
+                                final List<PendingPatternMatch> pendingCancel = pendingPatternMatches.stream().filter(new Predicate<PendingPatternMatch>() {
+                                    @Override
+                                    public boolean test(PendingPatternMatch pendingPatternMatch) {
+                                        return pendingPatternMatch.getRequiredPlayers().contains(player.getUsername());
+                                    }
+                                }).collect(Collectors.toList());
+
+                                for (PendingPatternMatch pendingPatternMatch : pendingCancel){
+                                    pendingPatternMatch.cancel();
+                                }
+                            }
                         }
                     }
                 }
@@ -403,37 +438,27 @@ public class ServerShell implements Context{
     }
 
     @Override
-    public Matcher awaitResult(String command, Pattern pattern) throws InterruptedException {
-        final Object LOCK = new Object();
-        final Container container = new Container();
-
-        //Add pending result
-        synchronized (pendingResults) {
-            pendingResults.add(new PendingResult(command, pattern) {
-                @Override
-                boolean onResult(Matcher matcher) {
-                    System.out.println("RESULT FOUND: " + matcher.group());
-                    container.matcher = matcher;
-                    synchronized (LOCK) {
-                        LOCK.notify();
-                    }
-                    return false;
+    public PendingPatternMatch awaitMatch(final String command, final Pattern pattern){
+        final PendingPatternMatch pendingPatternMatch = new PendingPatternMatch(pattern){
+            @Override
+            protected void onCancel() {
+                synchronized (pendingPatternMatches){
+                    pendingPatternMatches.remove(this);
                 }
-            });
-        }
-
-        synchronized (LOCK) {
-            System.out.println("WAITING...");
-            try {
-                execute(command);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-            LOCK.wait();
-        }
-        System.out.println("FINISHED!");
+        };
 
-        return container.matcher;
+        synchronized (pendingPatternMatches) {
+            pendingPatternMatches.add(pendingPatternMatch);
+        }
+
+        try {
+            execute(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return pendingPatternMatch;
     }
 
     @Override
@@ -549,23 +574,57 @@ public class ServerShell implements Context{
         return array;
     }
 
-    static class Container {
-        Matcher matcher;
-    }
-
-    abstract static class PendingResult {
-        private final String command;
+    public static abstract class PendingPatternMatch {
         private final Pattern pattern;
 
-        public PendingResult(String command, Pattern pattern) {
-            this.command = command;
+        private Matcher result = null;
+
+        private final List<String> requiredPlayers = new ArrayList<>();
+
+        public PendingPatternMatch(Pattern pattern) {
             this.pattern = pattern;
         }
 
-        abstract boolean onResult(final Matcher matcher);
+        boolean isResultSet = false;
+        public synchronized void setResult(Matcher result) {
+            if (!isResultSet){
+                this.isResultSet = true;
+                this.result = result;
+                synchronized (this){
+                    notifyAll();
+                }
+            }else{
+                throw new RuntimeException("Result was already set!");
+            }
+        }
 
-        public String getCommand() {
-            return command;
+        public PendingPatternMatch requiresPlayersOnline(final String... players){
+            requiredPlayers.addAll(Arrays.asList(players));
+            return this;
+        }
+
+        public List<String> getRequiredPlayers() {
+            return requiredPlayers;
+        }
+
+        private boolean isCanceled = false;
+
+        public synchronized void cancel(){
+            isCanceled = true;
+            onCancel();
+            notifyAll();
+        }
+
+        protected abstract void onCancel();
+
+        public synchronized Matcher waitFor() throws InterruptedException {
+            if (isCanceled){
+                return null;
+            }
+            if (!isResultSet){
+                wait();
+            }
+            return result;
         }
 
         public Pattern getPattern() {

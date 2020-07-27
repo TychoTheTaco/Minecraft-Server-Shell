@@ -46,7 +46,7 @@ public class BackupCommand extends Command {
 
             //Save the world
             context.tellraw("@a", Utils.createText("Saving world...", Colors.STATUS_MESSAGE_COLOR));
-            context.awaitResult("save-all flush", Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: Saved the game$"));
+            context.awaitMatch("save-all flush", Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: Saved the game$")).waitFor();
             context.tellraw("@a", Utils.createText("Creating backup...", Colors.STATUS_MESSAGE_COLOR));
 
             final BackupTask backupTask = new BackupTask(context.getServerConfiguration().getJar().getParent(), new File(context.getServerConfiguration().getBackupDirectory() + File.separator + System.currentTimeMillis() + ".zip").toPath());

@@ -27,7 +27,7 @@ public class LocationCommand extends Command {
         final String type = parameters[0];
         if ("save".equals(type)){
             //Get player position
-            final Matcher matcher = context.awaitResult("data get entity " + player + " Pos", POSITION_PATTERN);
+            final Matcher matcher = context.awaitMatch("data get entity " + player + " Pos", POSITION_PATTERN).waitFor();
             final int x = Integer.parseInt(matcher.group("x"));
             final int y = Integer.parseInt(matcher.group("y"));
             final int z = Integer.parseInt(matcher.group("z"));

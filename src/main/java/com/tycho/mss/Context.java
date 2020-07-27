@@ -6,7 +6,6 @@ import org.json.simple.JSONObject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public interface Context {
@@ -32,8 +31,10 @@ public interface Context {
      * @param pattern A pattern defining the desired result.
      * @return
      * @throws InterruptedException
-     */
-    Matcher awaitResult(final String command, final Pattern pattern) throws InterruptedException;
+     *//*
+    Matcher awaitResult(final String command, final Pattern pattern) throws InterruptedException;*/
+
+    ServerShell.PendingPatternMatch awaitMatch(final String command, final Pattern pattern);
 
     /**
      * Restore the world from the specified backup. This method will automatically stop and restart the server if it was already running when this method was called.
