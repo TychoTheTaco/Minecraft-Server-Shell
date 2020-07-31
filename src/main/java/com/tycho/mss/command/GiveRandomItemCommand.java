@@ -61,7 +61,7 @@ public class GiveRandomItemCommand extends Command {
 
     @Override
     public String getDescription() {
-        return "Gives <player> up to <maxCount> random items.";
+        return "Gives a player some random items.";
     }
 
     private JSONObject give(final String player, final int maxCount, final Context context) throws IOException {

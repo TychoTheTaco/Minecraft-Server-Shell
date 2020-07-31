@@ -2,8 +2,11 @@ package com.tycho.mss.layout;
 
 import easytasks.ITask;
 import easytasks.TaskAdapter;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.Blend;
@@ -23,6 +26,12 @@ import java.util.Map;
 
 public class MultiStepProgressView extends VBox {
 
+    @FXML
+    private VBox task_view_container;
+
+    @FXML
+    private Button cancel_button;
+
     private final MultipartTask multipartTask = new MultipartTask();
 
     private final Map<MultipartTask.Task, TaskView> views = new HashMap<>();
@@ -36,6 +45,13 @@ public class MultiStepProgressView extends VBox {
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        cancel_button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                multipartTask.cancel();
+            }
+        });
     }
 
     public void addTask(final MultipartTask.Task task){
@@ -54,7 +70,7 @@ public class MultiStepProgressView extends VBox {
         final TaskView taskView = new TaskView(task.getDescription());
         taskView.setProgress(0);
         this.views.put(task, taskView);
-        getChildren().add(taskView);
+        task_view_container.getChildren().add(taskView);
     }
 
     public void start(final Runnable onFinished){
@@ -134,13 +150,27 @@ public class MultiStepProgressView extends VBox {
 
         private final List<Task> tasks = new ArrayList<>();
 
+        private Task currentTask = null;
+
+        private boolean isCanceled = false;
+
         @Override
         protected void run() throws Exception {
             Object object = null;
             for (Task task : tasks){
+                currentTask = task;
                 task.setInput(object);
                 task.start();
                 object = task.getOutput();
+                if (!isRunning()) break;
+            }
+        }
+
+        public synchronized void cancel(){
+            if (!isCanceled) {
+                isCanceled = true;
+                currentTask.stop();
+                stop();
             }
         }
 

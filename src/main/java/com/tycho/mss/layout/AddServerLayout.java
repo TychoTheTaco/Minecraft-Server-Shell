@@ -1,11 +1,11 @@
 package com.tycho.mss.layout;
 
+import com.tycho.mss.DownloadFileTask;
 import com.tycho.mss.ServerConfiguration;
 import com.tycho.mss.ServerManager;
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
-import easytasks.Task;
 import easytasks.TaskAdapter;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -15,9 +15,11 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -32,7 +34,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class AddServerLayout extends VBox {
     ////////////////////////////// Auto download //////////////////////////////
 
     @FXML
-    private ProgressIndicator progress_indicator;
+    private HBox loading_versions_indicator;
 
     @FXML
     private ComboBox<String> minecraft_version_input;
@@ -80,7 +81,7 @@ public class AddServerLayout extends VBox {
     AndValidGroup customJarGroup = new AndValidGroup();
 
     public AddServerLayout() {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/edit_server_layout.fxml"));
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/add_server_layout.fxml"));
         loader.setController(this);
         loader.setRoot(this);
         try {
@@ -89,10 +90,22 @@ public class AddServerLayout extends VBox {
             throw new RuntimeException(e);
         }
 
+        loading_versions_indicator.managedProperty().bind(loading_versions_indicator.visibleProperty());
+        Platform.runLater(() -> {
+            System.out.println("HEIGHT: " + minecraft_version_input.getHeight() + " " + minecraft_version_input.getPrefHeight());
+        });
+        minecraft_version_input.managedProperty().bind(minecraft_version_input.visibleProperty());
+
         downloadJarGroup.add(new Valid() {
             @Override
             public boolean isValid() {
                 return server_directory_input.isValid();
+            }
+        });
+        downloadJarGroup.add(new Valid() {
+            @Override
+            public boolean isValid() {
+                return minecraft_version_input.getSelectionModel().getSelectedIndex() != -1;
             }
         });
 
@@ -139,6 +152,9 @@ public class AddServerLayout extends VBox {
                 //Download server JAR if we have to
                 if (auto_download_jar_button.isSelected()) {
                     final MultiStepProgressView.MultipartTask.Task downloadServerJarTask = new MultiStepProgressView.MultipartTask.Task("Downloading server JAR") {
+
+                        private DownloadFileTask downloadJarTask;
+
                         @Override
                         public void run() {
                             final String versionCode = minecraft_version_input.getValue();
@@ -147,7 +163,7 @@ public class AddServerLayout extends VBox {
                                 if (((JSONObject) object).get("id").equals(versionCode)) {
                                     final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"));
                                     serverJarPath = Paths.get(System.getProperty("user.dir")).resolve(server_directory_input.getPath()).resolve("server.jar");
-                                    final DownloadJarTask downloadJarTask = new DownloadJarTask((String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url"), serverJarPath);
+                                    downloadJarTask = new DownloadFileTask((String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url"), serverJarPath);
                                     downloadJarTask.start();
                                     break;
                                 }
@@ -157,6 +173,13 @@ public class AddServerLayout extends VBox {
                                 System.err.println("ERROR DOWNLOADING JAR!");
                             }
                             setOutput(serverJarPath);
+                        }
+
+                        @Override
+                        public void stop() {
+                            System.out.println("STOPPING DOWNLOAD");
+                            super.stop();
+                            downloadJarTask.stop();
                         }
                     };
                     downloadServerJarTask.addTaskListener(new TaskAdapter(){
@@ -297,6 +320,17 @@ public class AddServerLayout extends VBox {
 
         auto_download_jar_button.setSelected(true);
 
+        //Calculate height required for Minecraft version input
+        final Group group = new Group(getChildrenUnmodifiable());
+        final Scene scene = new Scene(group);
+        scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
+        group.applyCss();
+        group.layout();
+        getChildren().addAll(group.getChildren());
+        loading_versions_indicator.setMinHeight(minecraft_version_input.getHeight());
+        loading_versions_indicator.setPrefHeight(minecraft_version_input.getHeight());
+        minecraft_version_input.setVisible(false);
+
         //Download official Minecraft version manifest
         new Thread(() -> {
             final JSONObject result = sendRequest("https://launchermeta.mojang.com/mc/game/version_manifest.json");
@@ -320,11 +354,18 @@ public class AddServerLayout extends VBox {
                         }
                     }
 
+                    try {
+                        Thread.sleep(5000);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+
                     Platform.runLater(() -> {
                         minecraft_version_input.getItems().addAll(versionCodes);
                         minecraft_version_input.getSelectionModel().selectFirst();
-                        progress_indicator.setVisible(false);
-                        progress_indicator.setManaged(false);
+                        loading_versions_indicator.setVisible(false);
+                        minecraft_version_input.setVisible(true);
+                        create_server_button.setDisable(!form.isValid());
                     });
                 }else{
                     //TODO: Error condition
@@ -438,45 +479,6 @@ public class AddServerLayout extends VBox {
                 }
             }
             return false;
-        }
-    }
-
-    private class DownloadJarTask extends Task {
-
-        private final String url;
-
-        private final Path destination;
-
-        public DownloadJarTask(final String url, final Path destination) {
-            this.url = url;
-            this.destination = destination;
-            System.out.println("DESTINATION: " + destination);
-        }
-
-        @Override
-        protected void run() {
-            try {
-                final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-                connection.setRequestMethod("GET");
-                connection.connect();
-
-                //Get response code
-                if (connection.getResponseCode() == 200) {
-
-                    try {
-                        Files.createDirectories(destination.getParent());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    Files.copy(connection.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
-                    connection.getInputStream().close();
-                } else {
-                    System.out.println("ERROR RESPONSE CODE: " + connection.getResponseCode());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
