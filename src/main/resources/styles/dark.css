@@ -78,11 +78,13 @@
 .radio-button .radio{
     -fx-background-insets: 0;
     -fx-background-color: white;
+    -fx-padding: 3px;
 }
 
 .radio-button:selected .dot {
     -fx-background-insets: 0;
     -fx-background-color: -blue;
+
 }
 
 /* ------------------------------------------------------------------------------------ BUTTON ---------------------------------------------------------------------------------- */

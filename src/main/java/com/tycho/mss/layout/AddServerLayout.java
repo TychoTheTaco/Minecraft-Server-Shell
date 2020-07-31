@@ -91,9 +91,6 @@ public class AddServerLayout extends VBox {
         }
 
         loading_versions_indicator.managedProperty().bind(loading_versions_indicator.visibleProperty());
-        Platform.runLater(() -> {
-            System.out.println("HEIGHT: " + minecraft_version_input.getHeight() + " " + minecraft_version_input.getPrefHeight());
-        });
         minecraft_version_input.managedProperty().bind(minecraft_version_input.visibleProperty());
 
         downloadJarGroup.add(new Valid() {

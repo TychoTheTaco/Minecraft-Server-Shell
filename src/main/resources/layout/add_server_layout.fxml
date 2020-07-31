@@ -21,12 +21,6 @@
         <ValidatedTextField fx:id="server_name_input" HBox.hgrow="ALWAYS"/>
     </HBox>
 
-    <Separator style="-fx-border-color: gray; -fx-border-width: 1 0 0 0;">
-        <VBox.margin>
-            <Insets bottom="8" top="8"/>
-        </VBox.margin>
-    </Separator>
-
     <VBox spacing="4">
         <RadioButton fx:id="auto_download_jar_button" text="Automatically download vanilla Minecraft server JAR">
             <toggleGroup>

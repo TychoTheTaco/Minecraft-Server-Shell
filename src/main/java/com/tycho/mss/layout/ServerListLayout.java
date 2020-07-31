@@ -63,6 +63,7 @@ public class ServerListLayout implements Page {
             final Scene scene = new Scene(addServerLayout);
             scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.showAndWait();
 
             refreshServerList();
