@@ -128,6 +128,13 @@ public class AddServerLayout extends VBox {
                     invalidReason.append("Name cannot be empty!");
                     return false;
                 }
+
+                //Check for duplicate server name
+                if (ServerManager.getConfiguration(server_name_input.getText().trim()) != null){
+                    invalidReason.append("Another server already has this name!");
+                    return false;
+                }
+
                 return super.isTextValid(string, invalidReason);
             }
         });
@@ -193,7 +200,7 @@ public class AddServerLayout extends VBox {
                         @Override
                         public void run() {
                             //Save server configuration
-                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText(), (Path) getInput());
+                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText().trim(), (Path) getInput());
                             ServerManager.add(serverConfiguration);
                             ServerManager.save();
 
@@ -219,7 +226,7 @@ public class AddServerLayout extends VBox {
                         @Override
                         public void run() {
                             //Save server configuration
-                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText(), custom_jar_input.getPath());
+                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText().trim(), custom_jar_input.getPath());
                             ServerManager.add(serverConfiguration);
                             ServerManager.save();
 

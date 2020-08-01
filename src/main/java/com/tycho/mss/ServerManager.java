@@ -69,6 +69,13 @@ public class ServerManager {
         save();
     }
 
+    public static ServerConfiguration getConfiguration(final String name){
+        for (ServerConfiguration configuration : configurations.values()){
+            if (configuration.getName().equals(name)) return configuration;
+        }
+        return null;
+    }
+
     public static void add(final ServerConfiguration configuration){
         configurations.put(configuration.getId(), configuration);
     }

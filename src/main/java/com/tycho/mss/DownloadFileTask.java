@@ -20,6 +20,8 @@ public class DownloadFileTask extends Task {
 
     private HttpURLConnection connection;
 
+    private boolean finished = false;
+
     public DownloadFileTask(final String url, final Path destination) {
         this.url = url;
         this.destination = destination;
@@ -34,8 +36,11 @@ public class DownloadFileTask extends Task {
         //Get response code
         if (connection.getResponseCode() == 200) {
             Files.createDirectories(destination.getParent());
+            System.out.println("A");
             Files.copy(connection.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("B");
             connection.getInputStream().close();
+            finished = true;
         } else {
             throw new IOException("Connection failed with HTTP response code " + connection.getResponseCode());
         }
@@ -45,10 +50,14 @@ public class DownloadFileTask extends Task {
     public void stop() {
         super.stop();
         connection.disconnect();
+        if (!finished){
+            onTaskCancelled();
+        }
     }
 
     @Override
     protected void onTaskCancelled() {
+        System.out.println("CANCELED");
         //Delete any partially downloaded data
         try {
             Files.deleteIfExists(destination);
