@@ -169,8 +169,8 @@ public class MultiStepProgressView extends VBox {
         public synchronized void cancel(){
             if (!isCanceled) {
                 isCanceled = true;
-                currentTask.stop();
                 stop();
+                currentTask.stop();
             }
         }
 
@@ -178,6 +178,10 @@ public class MultiStepProgressView extends VBox {
             task.addTaskListener(new TaskAdapter(){
                 @Override
                 public void onTaskFailed(ITask task, Exception exception) {
+                    if (isCanceled){
+                        System.err.println("Ignoring error due to cancel request");
+                        return;
+                    }
                     throw new RuntimeException(exception);
                 }
             });

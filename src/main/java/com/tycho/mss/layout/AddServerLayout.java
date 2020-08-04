@@ -22,6 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -58,6 +59,12 @@ public class AddServerLayout extends VBox {
 
     @FXML
     private HBox loading_versions_indicator;
+
+    @FXML
+    private Label loading_label;
+
+    @FXML
+    private ProgressIndicator progress_indicator;
 
     @FXML
     private ComboBox<String> minecraft_version_input;
@@ -130,7 +137,7 @@ public class AddServerLayout extends VBox {
                 }
 
                 //Check for duplicate server name
-                if (ServerManager.getConfiguration(server_name_input.getText().trim()) != null){
+                if (ServerManager.getConfiguration(server_name_input.getText().trim()) != null) {
                     invalidReason.append("Another server already has this name!");
                     return false;
                 }
@@ -159,22 +166,41 @@ public class AddServerLayout extends VBox {
 
                         private DownloadFileTask downloadJarTask;
 
+                        private final Object MUTEX = new Object();
+
                         @Override
-                        public void run() {
+                        public void run() throws Exception {
                             final String versionCode = minecraft_version_input.getValue();
                             Path serverJarPath = null;
                             for (Object object : versions) {
                                 if (((JSONObject) object).get("id").equals(versionCode)) {
-                                    final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"));
+                                    final JSONObject result = sendRequest((String) ((JSONObject) object).get("url"), 10 * 1000);
                                     serverJarPath = Paths.get(System.getProperty("user.dir")).resolve(server_directory_input.getPath()).resolve("server.jar");
-                                    downloadJarTask = new DownloadFileTask((String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url"), serverJarPath);
+
+                                    synchronized (MUTEX) {
+                                        System.err.println("SHOULD STOP: " + shouldStop());
+                                        if (shouldStop()) {
+                                            setCanceled(true);
+                                            return;
+                                        }
+                                        downloadJarTask = new DownloadFileTask((String) ((JSONObject) ((JSONObject) result.get("downloads")).get("server")).get("url"), serverJarPath);
+                                    }
+
+                                    downloadJarTask.addTaskListener(new TaskAdapter() {
+                                        @Override
+                                        public void onTaskStarted(ITask task) {
+                                            if (shouldStop()) {
+                                                setCanceled(true);
+                                            }
+                                        }
+                                    });
                                     downloadJarTask.start();
                                     break;
                                 }
                             }
 
                             if (serverJarPath == null) {
-                                System.err.println("ERROR DOWNLOADING JAR!");
+                                throw new RuntimeException("Error downloading Minecraft server JAR for version code " + versionCode);
                             }
                             setOutput(serverJarPath);
                         }
@@ -182,11 +208,13 @@ public class AddServerLayout extends VBox {
                         @Override
                         public void stop() {
                             System.out.println("STOPPING DOWNLOAD");
+                            synchronized (MUTEX) {
+                                if (downloadJarTask != null) downloadJarTask.stop();
+                            }
                             super.stop();
-                            downloadJarTask.stop();
                         }
                     };
-                    downloadServerJarTask.addTaskListener(new TaskAdapter(){
+                    downloadServerJarTask.addTaskListener(new TaskAdapter() {
                         @Override
                         public void onTaskFailed(ITask task, Exception exception) {
                             Platform.runLater(() -> {
@@ -197,6 +225,7 @@ public class AddServerLayout extends VBox {
                     });
                     multiStepProgressView.addTask(downloadServerJarTask);
                     multiStepProgressView.addTask(new MultiStepProgressView.MultipartTask.Task("Generating server properties") {
+
                         @Override
                         public void run() {
                             //Save server configuration
@@ -336,51 +365,73 @@ public class AddServerLayout extends VBox {
         minecraft_version_input.setVisible(false);
 
         //Download official Minecraft version manifest
-        new Thread(() -> {
-            final JSONObject result = sendRequest("https://launchermeta.mojang.com/mc/game/version_manifest.json");
-            if (result != null){
-                final List<String> versionCodes = new ArrayList<>();
-                versions = (JSONArray) result.get("versions");
-                if (versions != null){
-                    for (Object object : versions) {
-                        try{
-                            //Ignore Minecraft versions 1.2.4 and below because they don't have a server JAR available for download.
-                            final LocalDateTime CUTOFF_RELEASE_DATE = LocalDateTime.parse("2012-03-29T22:00:00+00:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-                            final String releaseTimeString = (String) ((JSONObject) object).get("releaseTime");
-                            final LocalDateTime localDateTime = LocalDateTime.parse(releaseTimeString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-                            if (localDateTime.isBefore(CUTOFF_RELEASE_DATE)){
-                                continue;
-                            }
-
-                            versionCodes.add((String) ((JSONObject) object).get("id"));
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-
-                    try {
-                        Thread.sleep(5000);
-                    }catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
-
-                    Platform.runLater(() -> {
-                        minecraft_version_input.getItems().addAll(versionCodes);
-                        minecraft_version_input.getSelectionModel().selectFirst();
-                        loading_versions_indicator.setVisible(false);
-                        minecraft_version_input.setVisible(true);
-                        create_server_button.setDisable(!form.isValid());
-                    });
-                }else{
-                    //TODO: Error condition
-                }
-            }else{
-                //TODO: Error condition
-            }
-        }).start();
+        loadMinecraftVersionsList();
 
         create_server_button.setDisable(true);
 
+    }
+
+    private void loadMinecraftVersionsList() {
+        new Thread(() -> {
+            System.out.println("LOADING");
+
+            Platform.runLater(() -> {
+                minecraft_version_input.setVisible(false);
+                minecraft_version_input.getItems().clear();
+                loading_versions_indicator.setVisible(true);
+                loading_label.setText("Loading...");
+                loading_label.setTextFill(Color.WHITE);
+                progress_indicator.setVisible(true);
+            });
+
+            //Simulate long loading TODO: Remove
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                final JSONObject result = sendRequest("https://launchermeta.mojang.com/mc/game/version_manifest.json", 10 * 1000);
+                if (result == null) {
+                    throw new RuntimeException("Error getting Minecraft version manifest");
+                }
+
+                final List<String> versionCodes = new ArrayList<>();
+                versions = (JSONArray) result.get("versions");
+                if (versions == null) {
+                    throw new RuntimeException("Invalid manifest format");
+                }
+
+                //Ignore Minecraft versions 1.2.4 and below because they don't have a server JAR available for download.
+                final LocalDateTime CUTOFF_RELEASE_DATE = LocalDateTime.parse("2012-03-29T22:00:00+00:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+                for (Object object : versions) {
+                    final String releaseTimeString = (String) ((JSONObject) object).get("releaseTime");
+                    final LocalDateTime localDateTime = LocalDateTime.parse(releaseTimeString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                    if (localDateTime.isBefore(CUTOFF_RELEASE_DATE)) {
+                        continue;
+                    }
+                    versionCodes.add((String) ((JSONObject) object).get("id"));
+                }
+
+                Platform.runLater(() -> {
+                    minecraft_version_input.getItems().setAll(versionCodes);
+                    minecraft_version_input.getSelectionModel().selectFirst();
+                    loading_versions_indicator.setVisible(false);
+                    minecraft_version_input.setVisible(true);
+                    create_server_button.setDisable(!form.isValid());
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    minecraft_version_input.setVisible(false);
+                    loading_versions_indicator.setVisible(true);
+                    loading_label.setText("Connection Error");
+                    loading_label.setTextFill(Color.RED);
+                    progress_indicator.setVisible(false);
+                });
+            }
+        }).start();
     }
 
     private void createAndSetEula(final Path serverDirectory, final boolean accept) throws IOException {
@@ -418,21 +469,20 @@ public class AddServerLayout extends VBox {
         });
     }
 
-    private JSONObject sendRequest(final String url) {
-        try {
-            final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setRequestMethod("GET");
-            connection.connect();
+    private JSONObject sendRequest(final String url, final int timeout) throws IOException, ParseException {
+        final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(timeout);
+        connection.setReadTimeout(timeout);
+        connection.connect();
 
-            //Get response code
-            if (connection.getResponseCode() == 200) {
-                return Utils.readStreamAsJson(connection.getInputStream());
-            } else {
-                System.out.println("ERROR RESPONSE CODE: " + connection.getResponseCode());
-            }
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
+        //Get response code
+        if (connection.getResponseCode() == 200) {
+            return Utils.readStreamAsJson(connection.getInputStream());
+        } else {
+            System.out.println("ERROR RESPONSE CODE: " + connection.getResponseCode());
         }
+
         return null;
     }
 

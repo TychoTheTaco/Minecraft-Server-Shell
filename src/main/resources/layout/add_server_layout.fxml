@@ -10,7 +10,7 @@
          xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #505050" alignment="TOP_CENTER">
 
     <padding>
-        <Insets top="8" right="8" bottom="8" left="8"/>
+        <Insets top="12" right="12" bottom="12" left="12"/>
     </padding>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
@@ -50,8 +50,8 @@
                 <Label text="Minecraft Version:"/>
                 <ComboBox fx:id="minecraft_version_input" HBox.hgrow="ALWAYS"/>
                 <HBox fx:id="loading_versions_indicator" alignment="CENTER_LEFT" spacing="4">
-                    <Label text="Loading versions..."/>
-                    <ProgressIndicator prefWidth="18" prefHeight="18" style="-fx-progress-color: white;"/>
+                    <Label fx:id="loading_label"/>
+                    <ProgressIndicator fx:id="progress_indicator" prefWidth="18" prefHeight="18" style="-fx-progress-color: white;"/>
                 </HBox>
             </HBox>
 
