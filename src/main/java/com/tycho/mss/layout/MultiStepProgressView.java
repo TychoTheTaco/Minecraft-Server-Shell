@@ -2,6 +2,7 @@ package com.tycho.mss.layout;
 
 import easytasks.ITask;
 import easytasks.TaskAdapter;
+import easytasks.TaskListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -35,6 +36,10 @@ public class MultiStepProgressView extends VBox {
     private final MultipartTask multipartTask = new MultipartTask();
 
     private final Map<MultipartTask.Task, TaskView> views = new HashMap<>();
+
+    public void addTaskListener(final TaskListener listener){
+        multipartTask.addTaskListener(listener);
+    }
 
     public MultiStepProgressView(){
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/progress_view.fxml"));
@@ -146,6 +151,10 @@ public class MultiStepProgressView extends VBox {
         }
     }
 
+    public Object getOutput(){
+        return multipartTask.getOutput();
+    }
+
     public static class MultipartTask extends easytasks.Task{
 
         private final List<Task> tasks = new ArrayList<>();
@@ -154,16 +163,24 @@ public class MultiStepProgressView extends VBox {
 
         private boolean isCanceled = false;
 
+        private Object object = null;
+
         @Override
         protected void run() throws Exception {
-            Object object = null;
-            for (Task task : tasks){
-                currentTask = task;
-                task.setInput(object);
-                task.start();
-                object = task.getOutput();
-                if (!isRunning()) break;
+            if (!tasks.isEmpty()){
+                object = tasks.get(0).getInput();
+                for (Task task : tasks){
+                    currentTask = task;
+                    task.setInput(object);
+                    task.start();
+                    object = task.getOutput();
+                    if (!isRunning()) break;
+                }
             }
+        }
+
+        public Object getOutput(){
+            return object;
         }
 
         public synchronized void cancel(){

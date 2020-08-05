@@ -127,6 +127,11 @@ public class PlayersLayout implements Page, ServerShellConnection, ServerShell.E
     }
 
     @Override
+    public void onFailedStart() {
+
+    }
+
+    @Override
     public void onServerIoReady() {
 
     }

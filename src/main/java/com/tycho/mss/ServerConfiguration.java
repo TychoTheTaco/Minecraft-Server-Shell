@@ -94,7 +94,7 @@ public class ServerConfiguration {
                 final JSONObject jsonObject = Utils.readStreamAsJson(connection.getInputStream());
                 minecraftVersion = (String) jsonObject.get("id");
             }catch (IOException | ParseException e){
-                return "Unknown";
+                return null;
             }
         }
         return minecraftVersion;
@@ -106,5 +106,10 @@ public class ServerConfiguration {
 
     public Path getBackupDirectory() {
         return backupDirectory;
+    }
+
+    @Override
+    public String toString() {
+        return toJson().toJSONString();
     }
 }

@@ -35,6 +35,7 @@ public class ServerManager {
         } catch (NoSuchFileException e){
             //Ignore
         } catch (IOException | ParseException e) {
+            System.err.println("Failed to load servers list.");
             e.printStackTrace();
         }
     }

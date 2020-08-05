@@ -6,6 +6,7 @@ import com.tycho.mss.module.permission.Role;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
+import easytasks.TaskListener;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -534,6 +535,23 @@ public class ServerShell implements Context{
      * Misc.
      ********************************************************************************************************************************/
 
+    public PendingPatternMatch listen(final Pattern pattern){
+        final PendingPatternMatch pendingPatternMatch = new PendingPatternMatch(pattern){
+            @Override
+            protected void onCancel() {
+                synchronized (pendingPatternMatches){
+                    pendingPatternMatches.remove(this);
+                }
+            }
+        };
+
+        synchronized (pendingPatternMatches) {
+            pendingPatternMatches.add(pendingPatternMatch);
+        }
+
+        return pendingPatternMatch;
+    }
+
     private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
         //Make sure the player is authorized to use this command
         if (!serverConfiguration.getPermissionsManager().isAuthorized(player, command)) {
@@ -609,6 +627,10 @@ public class ServerShell implements Context{
 
         private boolean isCanceled = false;
 
+        public Matcher getResult() {
+            return result;
+        }
+
         public synchronized void cancel(){
             isCanceled = true;
             onCancel();
@@ -654,6 +676,9 @@ public class ServerShell implements Context{
         return 0;
     }
 
+    //This flag is used to detect a failed start. If the server stops and this flag is still false that meanst the server didnt start correctly.
+    private boolean didServerStart = false;
+
     private void onServerStarting() {
         synchronized (STATE_MUTEX) {
             this.state = State.STARTING;
@@ -663,6 +688,7 @@ public class ServerShell implements Context{
 
     private void onServerStarted() {
         synchronized (STATE_MUTEX) {
+            didServerStart = true;
             this.state = State.ONLINE;
             this.startTime = System.currentTimeMillis();
             notifyOnServerStarted();
@@ -683,6 +709,14 @@ public class ServerShell implements Context{
             this.state = State.OFFLINE;
             STATE_MUTEX.notifyAll();
             notifyOnServerStopped();
+
+            //Check for failed start
+            if (!didServerStart){
+                for (EventListener listener : eventListeners){
+                    listener.onFailedStart();
+                }
+                didServerStart = false;
+            }
         }
     }
 
@@ -692,6 +726,8 @@ public class ServerShell implements Context{
 
     public interface EventListener {
         void onServerStarting();
+
+        void onFailedStart();
 
         void onServerIoReady();
 
@@ -711,6 +747,11 @@ public class ServerShell implements Context{
     public static class EventAdapter implements EventListener {
         @Override
         public void onServerStarting() {
+
+        }
+
+        @Override
+        public void onFailedStart() {
 
         }
 

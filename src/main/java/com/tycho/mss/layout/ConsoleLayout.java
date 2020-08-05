@@ -154,6 +154,11 @@ public class ConsoleLayout implements ServerShellConnection, Page, ServerShell.E
     }
 
     @Override
+    public void onFailedStart() {
+
+    }
+
+    @Override
     public void onServerIoReady() {
 
     }

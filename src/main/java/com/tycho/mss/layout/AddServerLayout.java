@@ -40,6 +40,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 public class AddServerLayout extends VBox {
 
@@ -145,20 +146,104 @@ public class AddServerLayout extends VBox {
                 return super.isTextValid(string, invalidReason);
             }
         });
-        server_name_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
-            @Override
-            public void onValidStateChange(boolean isValid) {
-                create_server_button.setDisable(!form.isValid());
-            }
-        });
+        server_name_input.setOnValidStateChangeListener(isValid -> create_server_button.setDisable(!form.isValid()));
+
+        custom_jar_input.setText("C:\\Users\\Tycho\\IdeaProjects\\Minecraft-Server-Shell\\z\\server.jar");
 
         create_server_button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
-                final boolean autoAcceptEula = true;
-
                 final MultiStepProgressView multiStepProgressView = new MultiStepProgressView();
+                multiStepProgressView.addTaskListener(new TaskAdapter(){
+
+                    private boolean failed = false;
+
+                    @Override
+                    public void onTaskFailed(ITask task, Exception exception) {
+                        failed = true;
+                    }
+
+                    @Override
+                    public void onTaskStopped(ITask task) {
+                        if (!failed){
+                            System.err.println("Saving config");
+                            final ServerConfiguration configuration = (ServerConfiguration) multiStepProgressView.getOutput();
+                            ServerManager.add(configuration);
+                            ServerManager.save();
+                        }
+                    }
+                });
+
+                final MultiStepProgressView.MultipartTask.Task generateServerPropertiesTask = new MultiStepProgressView.MultipartTask.Task("Generating server properties") {
+
+                    private boolean onFailedStart = false;
+
+                    @Override
+                    public void run() throws Exception {
+                        final Path serverJarPath = (Path) getInput();
+
+                        //TODO: Simulate long load. Remove.
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Save server configuration
+                        final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText().trim(), serverJarPath);
+
+                        //If there is already an EULA, decline it so that the server will stop after generating 'server.properties'
+                        if (Files.exists(serverJarPath.getParent().resolve("eula.txt"))){
+                            createAndSetEula(serverJarPath.getParent(), false);
+                        }
+
+                        //Start server to generate properties
+                        final ServerShell serverShell = new ServerShell(serverConfiguration);
+                        final ServerShell.PendingPatternMatch pendingPatternMatch = serverShell.listen(Pattern.compile("."));
+                        serverShell.addEventListener(new ServerShell.EventAdapter() {
+                            @Override
+                            public void onServerStarted() {
+                                System.err.println("SERVER STARTED");
+                                //Server successfully started, turn it off now
+                                serverShell.stop();
+                            }
+
+                            @Override
+                            public void onFailedStart() {
+                                System.err.println("FAILED START");
+                                onFailedStart = true;
+                            }
+                        });
+                        serverShell.start();
+
+                        if (onFailedStart){
+                            System.out.println("RESULT: " + pendingPatternMatch.getResult());
+                            //The server failed to start, check if its due to EULA
+                            if (pendingPatternMatch.getResult() != null) {
+                                createAndSetEula(serverJarPath.getParent(), true);
+                            }
+                        }
+
+                        //Verify that 'server.properties' exists
+                        final Path serverPropertiesPath = serverJarPath.getParent().resolve("server.properties");
+                        if (Files.exists(serverPropertiesPath)){
+                            //TODO: Verify proper format
+                        }else{
+                            throw new RuntimeException("Error generating 'server.properties'");
+                        }
+
+                        setOutput(serverConfiguration);
+                    }
+                };
+                generateServerPropertiesTask.addTaskListener(new TaskAdapter() {
+                    @Override
+                    public void onTaskFailed(ITask task, Exception exception) {
+                        Platform.runLater(() -> {
+                            final Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to generate server properties. The JAR file might be corrupt.", ButtonType.OK);
+                            alert.showAndWait();
+                        });
+                    }
+                });
 
                 //Download server JAR if we have to
                 if (auto_download_jar_button.isSelected()) {
@@ -224,59 +309,9 @@ public class AddServerLayout extends VBox {
                         }
                     });
                     multiStepProgressView.addTask(downloadServerJarTask);
-                    multiStepProgressView.addTask(new MultiStepProgressView.MultipartTask.Task("Generating server properties") {
-
-                        @Override
-                        public void run() {
-                            //Save server configuration
-                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText().trim(), (Path) getInput());
-                            ServerManager.add(serverConfiguration);
-                            ServerManager.save();
-
-                            if (autoAcceptEula) {
-                                try {
-                                    //Decline EULA so that the server will stop after creating server.properties
-                                    createAndSetEula(server_directory_input.getPath(), false);
-
-                                    //Start server to generate properties
-                                    final ServerShell serverShell = new ServerShell(serverConfiguration);
-                                    serverShell.start();
-
-                                    //Accept EULA
-                                    createAndSetEula(server_directory_input.getPath(), true);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
-                } else if (custom_jar_button.isSelected()) {
-                    multiStepProgressView.addTask(new MultiStepProgressView.MultipartTask.Task("Generating server properties") {
-                        @Override
-                        public void run() {
-                            //Save server configuration
-                            final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText().trim(), custom_jar_input.getPath());
-                            ServerManager.add(serverConfiguration);
-                            ServerManager.save();
-
-                            if (autoAcceptEula) {
-                                final Path serverDirectory = custom_jar_input.getPath().getParent();
-                                try {
-                                    //Decline EULA so that the server will stop after creating server.properties
-                                    createAndSetEula(serverDirectory, false);
-
-                                    //Start server to generate properties
-                                    final ServerShell serverShell = new ServerShell(serverConfiguration);
-                                    serverShell.start();
-
-                                    //Accept EULA
-                                    createAndSetEula(serverDirectory, true);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
+                } else {
+                    generateServerPropertiesTask.setInput(custom_jar_input.getPath());
+                    multiStepProgressView.addTask(generateServerPropertiesTask);
                 }
 
                 //Show progress dialog
@@ -295,26 +330,17 @@ public class AddServerLayout extends VBox {
             }
         });
 
-        download_option_container.getChildren().forEach(new Consumer<Node>() {
-            @Override
-            public void accept(Node node) {
-                node.setVisible(false);
-                node.setManaged(false);
-            }
+        download_option_container.getChildren().forEach(node -> {
+            node.setVisible(false);
+            node.setManaged(false);
         });
 
-        auto_download_jar_button.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) setOption("download");
-            }
+        auto_download_jar_button.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) setOption("download");
         });
 
-        custom_jar_button.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) setOption("custom");
-            }
+        custom_jar_button.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) setOption("custom");
         });
 
         server_directory_input.setIsDirectory(true);
@@ -337,19 +363,9 @@ public class AddServerLayout extends VBox {
                 return true;
             }
         });
-        server_directory_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
-            @Override
-            public void onValidStateChange(boolean isValid) {
-                create_server_button.setDisable(!form.isValid());
-            }
-        });
+        server_directory_input.setOnValidStateChangeListener(isValid -> create_server_button.setDisable(!form.isValid()));
 
-        custom_jar_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
-            @Override
-            public void onValidStateChange(boolean isValid) {
-                create_server_button.setDisable(!form.isValid());
-            }
-        });
+        custom_jar_input.setOnValidStateChangeListener(isValid -> create_server_button.setDisable(!form.isValid()));
 
         auto_download_jar_button.setSelected(true);
 
@@ -368,13 +384,10 @@ public class AddServerLayout extends VBox {
         loadMinecraftVersionsList();
 
         create_server_button.setDisable(true);
-
     }
 
     private void loadMinecraftVersionsList() {
         new Thread(() -> {
-            System.out.println("LOADING");
-
             Platform.runLater(() -> {
                 minecraft_version_input.setVisible(false);
                 minecraft_version_input.getItems().clear();
@@ -386,7 +399,7 @@ public class AddServerLayout extends VBox {
 
             //Simulate long loading TODO: Remove
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -436,6 +449,7 @@ public class AddServerLayout extends VBox {
 
     private void createAndSetEula(final Path serverDirectory, final boolean accept) throws IOException {
         final PrintStream printStream = new PrintStream(Files.newOutputStream(serverDirectory.resolve(Paths.get("eula.txt"))));
+        printStream.println("//Generated by Minecraft Server Manager");
         printStream.println("eula=" + (accept ? "true" : "false"));
         printStream.close();
     }

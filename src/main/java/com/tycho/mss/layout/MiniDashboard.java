@@ -245,6 +245,11 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
     }
 
     @Override
+    public void onFailedStart() {
+
+    }
+
+    @Override
     public void onServerIoReady() {
 
     }
