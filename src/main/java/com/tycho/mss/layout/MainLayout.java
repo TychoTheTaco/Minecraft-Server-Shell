@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Optional;
 
 public class MainLayout {
 
@@ -133,7 +134,8 @@ public class MainLayout {
         //Update top left
         if (serverShell != null){
             server_name_label.setText(serverShell.getServerConfiguration().getName());
-            server_version_label.setText(serverShell.getServerConfiguration().getMinecraftVersion());
+            final String version = serverShell.getServerConfiguration().getMinecraftVersion();
+            server_version_label.setText(version == null ? "Unknown version" : version);
         }
     }
 }

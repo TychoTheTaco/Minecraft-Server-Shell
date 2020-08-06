@@ -4,12 +4,13 @@ import com.tycho.mss.DownloadFileTask;
 import com.tycho.mss.ServerConfiguration;
 import com.tycho.mss.ServerManager;
 import com.tycho.mss.ServerShell;
+import com.tycho.mss.form.AndGroup;
+import com.tycho.mss.form.FormGroup;
+import com.tycho.mss.form.OrGroup;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -28,8 +29,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -83,10 +83,12 @@ public class AddServerLayout extends VBox {
 
     private Node currentNode;
 
-    private AndValidGroup form = new AndValidGroup();
-    AndValidGroup downloadJarGroup = new AndValidGroup();
-    OrValidGroup radio = new OrValidGroup();
-    AndValidGroup customJarGroup = new AndValidGroup();
+    private JSONArray versions;
+
+    private AndGroup form = new AndGroup();
+    AndGroup downloadJarGroup = new AndGroup();
+    OrGroup radio = new OrGroup();
+    AndGroup customJarGroup = new AndGroup();
 
     public AddServerLayout() {
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/add_server_layout.fxml"));
@@ -101,27 +103,27 @@ public class AddServerLayout extends VBox {
         loading_versions_indicator.managedProperty().bind(loading_versions_indicator.visibleProperty());
         minecraft_version_input.managedProperty().bind(minecraft_version_input.visibleProperty());
 
-        downloadJarGroup.add(new Valid() {
+        downloadJarGroup.add(new FormGroup() {
             @Override
             public boolean isValid() {
                 return server_directory_input.isValid();
             }
         });
-        downloadJarGroup.add(new Valid() {
+        downloadJarGroup.add(new FormGroup() {
             @Override
             public boolean isValid() {
                 return minecraft_version_input.getSelectionModel().getSelectedIndex() != -1;
             }
         });
 
-        customJarGroup.add(new Valid() {
+        customJarGroup.add(new FormGroup() {
             @Override
             public boolean isValid() {
                 return custom_jar_input.isValid();
             }
         });
         form.add(radio);
-        form.add(new Valid() {
+        form.add(new FormGroup() {
             @Override
             public boolean isValid() {
                 return server_name_input.isValid();
@@ -148,6 +150,7 @@ public class AddServerLayout extends VBox {
         });
         server_name_input.setOnValidStateChangeListener(isValid -> create_server_button.setDisable(!form.isValid()));
 
+        //TODO: Remove this
         custom_jar_input.setText("C:\\Users\\Tycho\\IdeaProjects\\Minecraft-Server-Shell\\z\\server.jar");
 
         create_server_button.setOnAction(new EventHandler<ActionEvent>() {
@@ -189,17 +192,15 @@ public class AddServerLayout extends VBox {
                             e.printStackTrace();
                         }
 
-                        //Save server configuration
-                        final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText().trim(), serverJarPath);
-
                         //If there is already an EULA, decline it so that the server will stop after generating 'server.properties'
                         if (Files.exists(serverJarPath.getParent().resolve("eula.txt"))){
                             createAndSetEula(serverJarPath.getParent(), false);
                         }
 
-                        //Start server to generate properties
+                        //Start server to generate 'server.properties'
+                        final ServerConfiguration serverConfiguration = new ServerConfiguration(server_name_input.getText().trim(), serverJarPath);
                         final ServerShell serverShell = new ServerShell(serverConfiguration);
-                        final ServerShell.PendingPatternMatch pendingPatternMatch = serverShell.listen(Pattern.compile("."));
+                        final ServerShell.PendingPatternMatch pendingPatternMatch = serverShell.listen(Pattern.compile("\\[main/INFO\\]: You need to agree to the EULA in order to run the server. Go to eula.txt for more info."));
                         serverShell.addEventListener(new ServerShell.EventAdapter() {
                             @Override
                             public void onServerStarted() {
@@ -226,9 +227,7 @@ public class AddServerLayout extends VBox {
 
                         //Verify that 'server.properties' exists
                         final Path serverPropertiesPath = serverJarPath.getParent().resolve("server.properties");
-                        if (Files.exists(serverPropertiesPath)){
-                            //TODO: Verify proper format
-                        }else{
+                        if (!Files.exists(serverPropertiesPath)){
                             throw new RuntimeException("Error generating 'server.properties'");
                         }
 
@@ -448,13 +447,31 @@ public class AddServerLayout extends VBox {
     }
 
     private void createAndSetEula(final Path serverDirectory, final boolean accept) throws IOException {
+        //TODO: Dont overwrite the pre-generated one
         final PrintStream printStream = new PrintStream(Files.newOutputStream(serverDirectory.resolve(Paths.get("eula.txt"))));
         printStream.println("//Generated by Minecraft Server Manager");
         printStream.println("eula=" + (accept ? "true" : "false"));
         printStream.close();
     }
 
-    private JSONArray versions;
+    //TODO: Fix this
+    private void setEula(final Path serverDirectory, final boolean accept) throws IOException{
+        final Path eulaPath = serverDirectory.resolve("eula.txt");
+        if (Files.exists(eulaPath)){
+            final RandomAccessFile randomAccessFile = new RandomAccessFile(eulaPath.toFile(), "rw");
+            String line;
+            while ((line = randomAccessFile.readLine()) != null){
+                if (line.startsWith("eula=")){
+                    randomAccessFile.writeBytes("eula=" + accept);
+                }
+            }
+        }else{
+            final PrintStream printStream = new PrintStream(Files.newOutputStream(eulaPath));
+            printStream.println("//Generated by Minecraft Server Manager");
+            printStream.println("eula=" + accept);
+            printStream.close();
+        }
+    }
 
     private void setOption(final String option) {
         final String id;
@@ -498,55 +515,5 @@ public class AddServerLayout extends VBox {
         }
 
         return null;
-    }
-
-    private interface Valid {
-        boolean isValid();
-    }
-
-    private class AndValidGroup implements Valid {
-
-        private final List<Valid> items = new ArrayList<>();
-
-        public void add(final Valid item) {
-            if (!items.contains(item)) items.add(item);
-        }
-
-        public void remove(final Valid item) {
-            items.remove(item);
-        }
-
-        @Override
-        public boolean isValid() {
-            for (Valid item : items) {
-                if (!item.isValid()) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
-
-    private class OrValidGroup implements Valid {
-
-        private final List<Valid> items = new ArrayList<>();
-
-        public void add(final Valid item) {
-            if (!items.contains(item)) items.add(item);
-        }
-
-        public void remove(final Valid item) {
-            items.remove(item);
-        }
-
-        @Override
-        public boolean isValid() {
-            for (Valid item : items) {
-                if (item.isValid()) {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }

@@ -246,7 +246,11 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
 
     @Override
     public void onFailedStart() {
-
+        Platform.runLater(() -> {
+            //TODO: Show server console output
+            final Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem starting the server. The JAR file might be corrupt.", ButtonType.OK);
+            alert.showAndWait();
+        });
     }
 
     @Override

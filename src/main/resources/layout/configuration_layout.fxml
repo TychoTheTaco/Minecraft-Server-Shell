@@ -22,12 +22,17 @@
             </padding>
         </Label>
 
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="10" alignment="CENTER_LEFT">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Server Name:"/>
+            <TextField fx:id="server_name_text_field" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
             <Label text="Server JAR:"/>
             <JarInputField fx:id="server_jar_input" HBox.hgrow="ALWAYS"/>
         </HBox>
 
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" spacing="10" alignment="CENTER_LEFT">
+        <HBox spacing="10" alignment="CENTER_LEFT">
             <Label text="Launch Options:"/>
             <TextField fx:id="launch_options_text_field" HBox.hgrow="ALWAYS"/>
         </HBox>

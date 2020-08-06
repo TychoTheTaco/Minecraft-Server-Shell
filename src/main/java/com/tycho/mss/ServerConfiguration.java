@@ -100,6 +100,18 @@ public class ServerConfiguration {
         return minecraftVersion;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setJar(Path jar) {
+        this.jar = jar;
+    }
+
+    public void setLaunchOptions(String launchOptions) {
+        this.launchOptions = launchOptions;
+    }
+
     public void setBackupDirectory(Path backupDirectory) {
         this.backupDirectory = backupDirectory;
     }
