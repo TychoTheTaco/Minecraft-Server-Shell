@@ -22,12 +22,12 @@
     </HBox>
 
     <VBox spacing="4">
-        <RadioButton fx:id="auto_download_jar_button" text="Automatically download vanilla Minecraft server JAR">
+        <RadioButton fx:id="radio_auto_download_jar" text="Automatically download vanilla Minecraft server JAR">
             <toggleGroup>
                 <ToggleGroup fx:id="toggle_group"/>
             </toggleGroup>
         </RadioButton>
-        <RadioButton fx:id="custom_jar_button" text="Custom or pre-downloaded Minecraft server JAR">
+        <RadioButton fx:id="radio_custom_jar" text="Custom or pre-downloaded Minecraft server JAR">
             <toggleGroup>
                 <fx:reference source="toggle_group"/>
             </toggleGroup>

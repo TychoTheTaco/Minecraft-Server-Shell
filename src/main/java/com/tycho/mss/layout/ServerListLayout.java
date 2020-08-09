@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.omg.CORBA.ARG_IN;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ServerListLayout implements Page {
 
@@ -48,6 +49,13 @@ public class ServerListLayout implements Page {
             configurations.add(ServerManager.getConfigurations().get(uuid));
         }
         configurations.sort(Comparator.comparing(ServerConfiguration::getName));
+
+        servers_tile_pane.getChildren().forEach(new Consumer<Node>() {
+            @Override
+            public void accept(Node node) {
+                if (node instanceof ServerConfigurationListCell) ((ServerConfigurationListCell) node).setServerConfiguration(null);
+            }
+        });
 
         servers_tile_pane.getChildren().clear();
         for (ServerConfiguration configuration : configurations){

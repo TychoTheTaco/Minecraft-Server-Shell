@@ -48,10 +48,10 @@ public class AddServerLayout extends VBox {
     private ValidatedTextField server_name_input;
 
     @FXML
-    private RadioButton auto_download_jar_button;
+    private RadioButton radio_auto_download_jar;
 
     @FXML
-    private RadioButton custom_jar_button;
+    private RadioButton radio_custom_jar;
 
     @FXML
     private Pane download_option_container;
@@ -245,7 +245,7 @@ public class AddServerLayout extends VBox {
                 });
 
                 //Download server JAR if we have to
-                if (auto_download_jar_button.isSelected()) {
+                if (radio_auto_download_jar.isSelected()) {
                     final MultiStepProgressView.MultipartTask.Task downloadServerJarTask = new MultiStepProgressView.MultipartTask.Task("Downloading server JAR") {
 
                         private DownloadFileTask downloadJarTask;
@@ -334,11 +334,11 @@ public class AddServerLayout extends VBox {
             node.setManaged(false);
         });
 
-        auto_download_jar_button.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        radio_auto_download_jar.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) setOption("download");
         });
 
-        custom_jar_button.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        radio_custom_jar.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) setOption("custom");
         });
 
@@ -366,7 +366,7 @@ public class AddServerLayout extends VBox {
 
         custom_jar_input.setOnValidStateChangeListener(isValid -> create_server_button.setDisable(!form.isValid()));
 
-        auto_download_jar_button.setSelected(true);
+        radio_auto_download_jar.setSelected(true);
 
         //Calculate height required for Minecraft version input
         final Group group = new Group(getChildrenUnmodifiable());
