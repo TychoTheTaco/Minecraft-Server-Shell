@@ -6,7 +6,6 @@ import com.tycho.mss.module.permission.Role;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;
-import easytasks.TaskListener;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -128,6 +127,7 @@ public class ServerShell implements Context{
         addCustomCommand(new BackupCommand());
         addCustomCommand(new PermissionCommand());
         addCustomCommand(new BattleRoyaleCommand());
+        addCustomCommand(new OpCommand());
         try {
             addCustomCommand(new GiveRandomItemCommand());
         } catch (IOException e) {
