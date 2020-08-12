@@ -40,7 +40,7 @@ public class DownloadFileTask extends Task {
             System.out.println("B: " + bytesCopied);
             connection.getInputStream().close();
 
-            setCanceled(contentLength == bytesCopied);
+            setCanceled(contentLength != bytesCopied);
         } else {
             throw new IOException("Connection failed with HTTP response code " + connection.getResponseCode());
         }

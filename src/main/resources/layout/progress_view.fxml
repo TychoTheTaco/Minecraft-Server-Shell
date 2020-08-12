@@ -7,7 +7,7 @@
 <fx:root spacing="8" style="-fx-background-color: #3d3d3d;" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" alignment="TOP_CENTER">
 
     <padding>
-        <Insets topRightBottomLeft="8" />
+        <Insets topRightBottomLeft="16" />
     </padding>
 
     <VBox fx:id="task_view_container" spacing="8"/>
