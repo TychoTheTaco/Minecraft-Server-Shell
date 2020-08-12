@@ -385,6 +385,7 @@ public class ServerShell implements Context{
                             final String username = matcher.group("player");
                             final String reason = matcher.group("reason");
                             final Player player = getPlayer(username);
+                            System.out.println("PLAYER DISCONNECTED: " + player + " NAME: " + username);
                             playerDatabaseManager.save(player);
                             notifyOnPlayerDisconnected(player);
                             players.remove(player);
