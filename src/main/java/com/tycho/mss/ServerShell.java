@@ -176,6 +176,7 @@ public class ServerShell implements Context{
     }
 
     public void start() {
+        notifyOnOutput("[Minecraft Server Manager] Starting server...");
         this.onServerStarting();
 
         verifyConfiguration();
@@ -229,6 +230,7 @@ public class ServerShell implements Context{
         }
 
         this.onServerStopped();
+        notifyOnOutput("[Minecraft Server Manager] Server stopped.");
     }
 
     public void stop() {
@@ -255,7 +257,6 @@ public class ServerShell implements Context{
                 final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.process.getInputStream()));
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    //System.out.println(line);
                     notifyOnOutput(line);
 
                     //Check for pending results

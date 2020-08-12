@@ -19,21 +19,7 @@ public class ConsoleLayout implements ServerShellConnection, Page, ServerShell.E
     @FXML
     private TextField console_input;
 
-    @FXML
-    private Region offline_overlay;
-
-    private static final String DISABLED_MESSAGE = "Console input is disabled until the server has started.";
-
     private ServerShell serverShell;
-
-    private void setConsoleEnabled(final boolean enabled){
-        console_input.setDisable(!enabled);
-        if (enabled){
-            console_input.setText("");
-        }else{
-            console_input.setText(DISABLED_MESSAGE);
-        }
-    }
 
     @Override
     public void attach(ServerShell serverShell) {
@@ -42,7 +28,23 @@ public class ConsoleLayout implements ServerShellConnection, Page, ServerShell.E
             serverShell.addEventListener(this);
 
             //Console input
-            setConsoleEnabled(serverShell.getState() == ServerShell.State.ONLINE);
+            switch (serverShell.getState()){
+                case STARTING:
+                    onServerStarting();
+                    break;
+
+                case ONLINE:
+                    onServerStarted();
+                    break;
+
+                case STOPPING:
+                    onServerStopping();
+                    break;
+
+                case OFFLINE:
+                    onServerStopped();
+                    break;
+            }
         }
     }
 
@@ -66,8 +68,6 @@ public class ConsoleLayout implements ServerShellConnection, Page, ServerShell.E
 
     @FXML
     private void initialize() {
-        offline_overlay.managedProperty().bind(offline_overlay.visibleProperty());
-
         //Console input
         console_input.setOnAction(event -> {
             if (serverShell != null) {
@@ -149,7 +149,8 @@ public class ConsoleLayout implements ServerShellConnection, Page, ServerShell.E
     @Override
     public void onServerStarting() {
         Platform.runLater(() -> {
-            offline_overlay.setVisible(false);
+            console_input.setDisable(true);
+            console_input.setText("Console input is disabled while the server is starting.");
         });
     }
 
@@ -182,8 +183,8 @@ public class ConsoleLayout implements ServerShellConnection, Page, ServerShell.E
     @Override
     public void onServerStopped() {
         Platform.runLater(() -> {
-            offline_overlay.setVisible(true);
-            console.clear();
+            console_input.setDisable(true);
+            console_input.setText("Console input is disabled while the server is offline.");
         });
     }
 
@@ -200,6 +201,11 @@ public class ConsoleLayout implements ServerShellConnection, Page, ServerShell.E
     @Override
     public void onOutput(String message) {
         Platform.runLater(() -> {
+            //Clear console if this is a new start
+            //TODO: Make this a user controlled option
+            if (message.equals("[Minecraft Server Manager] Starting server...")){
+                console.clear();
+            }
             console.appendText(message);
             console.appendText("\n");
         });
