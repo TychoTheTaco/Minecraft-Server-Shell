@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.io.File;
@@ -170,6 +171,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
     }
 
     private void updateStatus(){
+        //TODO: setTextFill doesn't work when this gets called from attach()
         switch (serverShell.getState()){
             case STARTING:
                 this.status_label.setText("Starting Server...");
@@ -178,7 +180,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
 
             case ONLINE:
                 this.status_label.setText("Server Online");
-                this.status_label.setTextFill(Paint.valueOf("#45d151"));
+                this.status_label.setTextFill(CustomColor.GREEN);
                 break;
 
             case STOPPING:
@@ -247,8 +249,7 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
     @Override
     public void onFailedStart() {
         Platform.runLater(() -> {
-            //TODO: Show server console output
-            final Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem starting the server. The JAR file might be corrupt.", ButtonType.OK);
+            final Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem starting the server. The JAR file might be corrupt. Check console tab for more details.", ButtonType.OK);
             alert.showAndWait();
         });
     }
@@ -288,12 +289,12 @@ public class MiniDashboard extends GridPane implements Page, ServerShellConnecti
 
     @Override
     public void onPlayerConnected(Player player) {
-        Platform.runLater(() -> updatePlayerCount());
+        Platform.runLater(this::updatePlayerCount);
     }
 
     @Override
     public void onPlayerDisconnected(Player player) {
-        Platform.runLater(() -> updatePlayerCount());
+        Platform.runLater(this::updatePlayerCount);
     }
 
     @Override
