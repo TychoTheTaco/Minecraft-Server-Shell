@@ -151,7 +151,7 @@ public class GuideCommand extends Command {
 
                     //Spawn particles
                     for (int i = 1; i < Math.min((int) distance, PARTICLE_COUNT); i++){
-                        context.execute("execute positioned " + x + " " + y + " " + z + " run particle composter"
+                        context.execute("execute at " + player + " run particle minecraft:composter"
                                 + " ~" + String.format("%.2f", i * Math.cos(direction))
                                 + " ~" + String.format("%.2f", i * Math.tan(angle) + VERTICAL_OFFSET)
                                 + " ~" + String.format("%.2f", i * Math.sin(direction))
