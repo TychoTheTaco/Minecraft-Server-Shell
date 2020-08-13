@@ -408,6 +408,7 @@ public class ServerShell implements Context{
                     }
                 }
             } catch (Exception e) {
+                System.out.println("SHELL CRASHED");
                 e.printStackTrace();
                 tellraw("@a", Utils.createText("Shell crashed!", "red"));
                 run();
@@ -609,9 +610,7 @@ public class ServerShell implements Context{
             if (!isResultSet){
                 this.isResultSet = true;
                 this.result = result;
-                synchronized (this){
-                    notifyAll();
-                }
+                notifyAll();
             }else{
                 throw new RuntimeException("Result was already set!");
             }

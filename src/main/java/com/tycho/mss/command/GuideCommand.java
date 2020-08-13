@@ -2,7 +2,9 @@ package com.tycho.mss.command;
 
 import com.tycho.mss.Context;
 import com.tycho.mss.util.Utils;
+import easytasks.ITask;
 import easytasks.Task;
+import easytasks.TaskAdapter;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
@@ -49,26 +51,21 @@ public class GuideCommand extends Command {
                 final int dy = savedLocation.getY();
                 final int dz = savedLocation.getZ();
 
-                if (tasks.get(player) != null) tasks.get(player).stop();
-                final GuideTask guideTask = new GuideTask(player, dx + " " + dy + " " + dz, context);
-                this.tasks.put(player, guideTask);
-                guideTask.startOnNewThread();
+                startGuideTaskForPlayer(player, new GuideTask(player, dx + " " + dy + " " + dz, context));
             }catch (NumberFormatException e){
-                if (tasks.get(player) != null) tasks.get(player).stop();
-                final GuideTask guideTask = new GuideTask(player, parameters[0], context);
-                this.tasks.put(player, guideTask);
-                guideTask.startOnNewThread();
+                startGuideTaskForPlayer(player, new GuideTask(player, parameters[0], context));
             }
-        }else if (parameters.length == 3){
+        }else if (parameters.length == 2){ //If there are 2 parameters, assume they are 2D coordinates
+            final int dx = Integer.parseInt(parameters[0]);
+            final int dz = Integer.parseInt(parameters[1]);
+            startGuideTaskForPlayer(player, new GuideTask(player, dx + " " + dz, context));
+        } else if (parameters.length == 3){ //If there are 3 parameters, assume they are 3D coordinates
             try {
                 final int dx = Integer.parseInt(parameters[0]);
                 final int dy = Integer.parseInt(parameters[1]);
                 final int dz = Integer.parseInt(parameters[2]);
 
-                if (tasks.get(player) != null) tasks.get(player).stop();
-                final GuideTask guideTask = new GuideTask(player, dx + " " + dy + " " + dz, context);
-                this.tasks.put(player, guideTask);
-                guideTask.startOnNewThread();
+                startGuideTaskForPlayer(player, new GuideTask(player, dx + " " + dy + " " + dz, context));
             }catch (NumberFormatException e){
                 throw new InvalidParametersException();
             }
@@ -87,6 +84,12 @@ public class GuideCommand extends Command {
         return "Guides you to another player or location.";
     }
 
+    private void startGuideTaskForPlayer(final String username, final GuideTask guideTask){
+        if (tasks.get(username) != null) tasks.get(username).stop();
+        tasks.put(username, guideTask);
+        guideTask.startOnNewThread();
+    }
+
     private static class GuideTask extends Task {
 
         private final String player;
@@ -102,7 +105,7 @@ public class GuideCommand extends Command {
         }
 
         @Override
-        protected void run() {
+        protected void run(){
             while (isRunning()){
                 try {
                     //Get player position
@@ -112,20 +115,27 @@ public class GuideCommand extends Command {
                     final double z = Double.parseDouble(matcher.group("z"));
 
                     //Determine destination
-                    final int dx;
-                    final int dy;
-                    final int dz;
+                    final double dx;
+                    final double dy;
+                    final double dz;
                     final String[] split = target.split(" ");
-                    if (split.length == 3){
-                        dx = Integer.parseInt(split[0]);
-                        dy = Integer.parseInt(split[1]);
-                        dz = Integer.parseInt(split[2]);
+                    if (split.length == 2){
+                        dx = Double.parseDouble(split[0]);
+                        dz = Double.parseDouble(split[1]);
+
+                        //Use the player's elevation for target elevation
+                        matcher = context.awaitMatch("data get entity " + player + " Pos", POSITION_PATTERN).requiresPlayersOnline(player).waitFor();
+                        dy = Double.parseDouble(matcher.group("y"));
+                    }else if (split.length == 3){
+                        dx = Double.parseDouble(split[0]);
+                        dy = Double.parseDouble(split[1]);
+                        dz = Double.parseDouble(split[2]);
                     }else{
                         //Get player position
                         matcher = context.awaitMatch("data get entity " + target + " Pos", POSITION_PATTERN).requiresPlayersOnline(player, target).waitFor();
-                        dx = Integer.parseInt(matcher.group("x"));
-                        dy = Integer.parseInt(matcher.group("y"));
-                        dz = Integer.parseInt(matcher.group("z"));
+                        dx = Double.parseDouble(matcher.group("x"));
+                        dy = Double.parseDouble(matcher.group("y"));
+                        dz = Double.parseDouble(matcher.group("z"));
                     }
 
                     //Calculate direction

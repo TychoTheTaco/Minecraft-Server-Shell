@@ -311,6 +311,7 @@ public class AddServerLayout extends VBox {
                             synchronized (MUTEX) {
                                 if (downloadJarTask != null) downloadJarTask.stop();
                             }
+                            setCanceled(true);
                             super.stop();
                         }
                     };
@@ -402,13 +403,6 @@ public class AddServerLayout extends VBox {
                 loading_label.setTextFill(Color.WHITE);
                 progress_indicator.setVisible(true);
             });
-
-            //Simulate long loading TODO: Remove
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
             try {
                 final JSONObject result = sendRequest("https://launchermeta.mojang.com/mc/game/version_manifest.json", 10 * 1000);

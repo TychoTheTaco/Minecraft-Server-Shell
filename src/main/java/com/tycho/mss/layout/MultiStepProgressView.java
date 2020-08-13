@@ -213,6 +213,8 @@ public class MultiStepProgressView extends VBox {
 
             private final String description;
 
+            private boolean isCancelled = false;
+
             public Task(final String description){
                 this.description = description;
             }
@@ -235,6 +237,16 @@ public class MultiStepProgressView extends VBox {
 
             public String getDescription() {
                 return description;
+            }
+
+            @Override
+            protected void onTaskCancelled() {
+                super.onTaskCancelled();
+                this.isCancelled = true;
+            }
+
+            public boolean isCancelled() {
+                return isCancelled;
             }
         }
     }
