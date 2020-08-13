@@ -554,7 +554,7 @@ public class ServerShell implements Context{
         return pendingPatternMatch;
     }
 
-    private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
+    private void onCommand(final String player, final Command command, final String... parameters) {
         //Make sure the player is authorized to use this command
         if (!serverConfiguration.getPermissionsManager().isAuthorized(player, command)) {
             final JSONObject root = Utils.createText("Unauthorized: ", "red");

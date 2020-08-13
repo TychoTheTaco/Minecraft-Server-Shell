@@ -27,7 +27,7 @@ public abstract class Command {
      * @param player The player that is executing the command. This will be {@code null} if the server is executing it directly.
      * @param context The context in which this command is being executed. This provides access to all of the server interactions.
      * @param parameters The parameters for this command.
-     * @throws Exception Commands may throw any exceptions to indicate an error. The error message will be whispered to the user who executed this command.
+     * @throws Exception Commands may throw any exceptions to indicate an error. If an exception occurs, the error message will be whispered to the user who executed this command.
      */
     public abstract void execute(final String player, final Context context, final String... parameters) throws Exception;
 
