@@ -13,12 +13,7 @@
     <!-- Console and Chat Area -->
     <GridPane prefWidth="800" prefHeight="500">
         <TextArea fx:id="console" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" editable="false"/>
-        <TextField fx:id="console_input" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" disable="true" text="Console input is disabled until the server has started."/>
+        <TextField fx:id="console_input" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" disable="true" text="Console input is disabled while the server is offline."/>
     </GridPane>
-
-    <!-- Server offline overlay -->
-    <StackPane fx:id="offline_overlay" style="-fx-background-color: #171717">
-        <Label text="The console is unavailable when the server is offline."/>
-    </StackPane>
 
 </StackPane>

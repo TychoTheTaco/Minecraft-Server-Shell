@@ -12,7 +12,8 @@
         <Insets top="8" left="8" bottom="8" right="8"/>
     </padding>
 
-    <HBox spacing="4" alignment="CENTER_LEFT">
+    <HBox spacing="4" alignment="CENTER_LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.columnIndex="0">
+        <Label fx:id="server_name_label" style="-fx-font-weight: bold;" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
         <ImageView
                 fx:id="state_icon"
                 fitHeight="20"
@@ -20,9 +21,7 @@
                 preserveRatio="true">
             <Image url="/icons/circle_white.png"/>
         </ImageView>
-
-        <Label fx:id="server_name_label" style="-fx-font-weight: bold;"/>
     </HBox>
 
-    <Label fx:id="server_version_label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <Label fx:id="server_version_label" style="-fx-font-size: 0.9em;" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
 </fx:root>

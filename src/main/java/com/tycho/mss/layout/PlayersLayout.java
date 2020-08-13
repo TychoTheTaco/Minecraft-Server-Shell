@@ -110,19 +110,42 @@ public class PlayersLayout implements Page, ServerShellConnection, ServerShell.E
         this.serverShell = serverShell;
         if (serverShell != null){
             serverShell.addEventListener(this);
+            switch (serverShell.getState()){
+                case STARTING:
+                    onServerStarting();
+                    break;
+
+                case ONLINE:
+                    onServerStarted();
+                    break;
+
+                case STOPPING:
+                    onServerStopping();
+                    break;
+
+                case OFFLINE:
+                    onServerStopped();
+                    break;
+
+            }
         }
     }
 
     @Override
     public void detach(ServerShell serverShell) {
-        this.serverShell = null;
         if (serverShell != null){
             serverShell.removeEventListener(this);
         }
+        this.serverShell = null;
     }
 
     @Override
     public void onServerStarting() {
+
+    }
+
+    @Override
+    public void onFailedStart() {
 
     }
 

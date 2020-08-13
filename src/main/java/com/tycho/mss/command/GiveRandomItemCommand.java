@@ -39,33 +39,47 @@ public class GiveRandomItemCommand extends Command {
     public void execute(String player, Context context, String... parameters) throws Exception {
         if (parameters.length < 2) throw new InvalidParametersException();
 
+        //Determine repeat count
+        int repeatCount = 1;
+        if (parameters.length == 4){
+            if ("repeat".equals(parameters[2])){
+                repeatCount = Integer.parseInt(parameters[3]);
+                if (repeatCount < 1){
+                    throw new InvalidParametersException();
+                }
+            }else{
+                throw new InvalidParametersException();
+            }
+        }
+
         final String targetPlayer = parameters[0];
         final int maxCount = Integer.parseInt(parameters[1]);
 
-        //Check for player selectors
-        if (targetPlayer.equals("@a")) {
-            final List<Player> players = context.getPlayers();
-            for (Player p : players) {
-                context.tellraw("@a", give(p.getUsername(), maxCount, context));
+        for (int i = 0; i < repeatCount; i++){
+            //Check for player selectors
+            if (targetPlayer.equals("@a")) {
+                final List<Player> players = context.getPlayers();
+                for (Player p : players) {
+                    context.tellraw("@a", give(p.getUsername(), maxCount, context));
+                }
+                continue;
             }
-            return;
-        }
 
-        context.tellraw("@a", give(targetPlayer, maxCount, context));
+            context.tellraw("@a", give(targetPlayer, maxCount, context));
+        }
     }
 
     @Override
     public String getFormat() {
-        return "<player> <maxCount>";
+        return "<player> <maxCount> [(repeat <count>)]";
     }
 
     @Override
     public String getDescription() {
-        return "Gives <player> up to <maxCount> random items.";
+        return "Gives a player some random items.";
     }
 
     private JSONObject give(final String player, final int maxCount, final Context context) throws IOException {
-        System.out.println("GIVE " + player + " " + maxCount + " " + ids.size());
         final String item = this.ids.get(RANDOM.nextInt(ids.size()));
         final int count = RANDOM.nextInt(maxCount) + 1;
         context.execute("give " + player + " " + item + " " + count);

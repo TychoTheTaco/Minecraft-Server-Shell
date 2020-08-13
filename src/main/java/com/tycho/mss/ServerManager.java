@@ -35,6 +35,7 @@ public class ServerManager {
         } catch (NoSuchFileException e){
             //Ignore
         } catch (IOException | ParseException e) {
+            System.err.println("Failed to load servers list.");
             e.printStackTrace();
         }
     }
@@ -67,6 +68,13 @@ public class ServerManager {
         }
         configurations.remove(configuration.getId());
         save();
+    }
+
+    public static ServerConfiguration getConfiguration(final String name){
+        for (ServerConfiguration configuration : configurations.values()){
+            if (configuration.getName().equals(name)) return configuration;
+        }
+        return null;
     }
 
     public static void add(final ServerConfiguration configuration){

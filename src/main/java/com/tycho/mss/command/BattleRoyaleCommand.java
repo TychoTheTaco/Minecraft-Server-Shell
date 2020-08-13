@@ -111,6 +111,8 @@ public class BattleRoyaleCommand extends Command{
         protected void run() {
             int notificationIndex = 0;
 
+            context.tellraw("@a", Utils.createText("Start!", "aqua"));
+
             while (isRunning()){
                 final long elapsedTime = System.currentTimeMillis() - getStartTime();
                 if (elapsedTime >= prepareTime){
@@ -150,6 +152,7 @@ public class BattleRoyaleCommand extends Command{
             final long combatStartTime = System.currentTimeMillis();
             try {
                 context.execute("worldborder set " + endSize + " " + (closeTime / 1000));
+                context.execute("team modify Everyone friendlyFire true");
             } catch (IOException e) {
                 e.printStackTrace();
             }

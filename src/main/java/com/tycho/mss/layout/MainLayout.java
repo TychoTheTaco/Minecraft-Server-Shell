@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Optional;
 
 public class MainLayout {
 
@@ -113,27 +114,35 @@ public class MainLayout {
     private ServerShell serverShell;
 
     public void setServerShell(ServerShell serverShell) {
+        //Detach from old server shell
+        if (this.serverShell != null){
+            for (MenuItem menuItem : menu_items_list_view.getItems()){
+                if (menuItem.getLoader().getController() instanceof ServerShellConnection){
+                    ((ServerShellConnection) menuItem.getLoader().getController()).detach(serverShell);
+                }
+            }
+        }
+
         this.serverShell = serverShell;
 
-        //Update modules
-        for (MenuItem menuItem : menu_items_list_view.getItems()){
-            if (menuItem.getLoader().getController() instanceof ServerShellConnection){
-                ((ServerShellConnection) menuItem.getLoader().getController()).attach(serverShell);
+        //Attach to new server shell
+        if (this.serverShell != null){
+            for (MenuItem menuItem : menu_items_list_view.getItems()){
+                if (menuItem.getLoader().getController() instanceof ServerShellConnection){
+                    ((ServerShellConnection) menuItem.getLoader().getController()).attach(serverShell);
+                }
             }
         }
 
         //Update mini dashboard
-        if (serverShell == null){
-            mini_dashboard.setVisible(false);
-        }else{
-            mini_dashboard.setVisible(true);
-        }
+        mini_dashboard.setVisible(serverShell != null);
         mini_dashboard.attach(serverShell);
 
         //Update top left
         if (serverShell != null){
             server_name_label.setText(serverShell.getServerConfiguration().getName());
-            server_version_label.setText(serverShell.getServerConfiguration().getMinecraftVersion());
+            final String version = serverShell.getServerConfiguration().getMinecraftVersion();
+            server_version_label.setText(version == null ? "Unknown version" : version);
         }
     }
 }

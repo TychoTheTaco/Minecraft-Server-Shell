@@ -2,8 +2,12 @@ package com.tycho.mss.layout;
 
 import easytasks.ITask;
 import easytasks.TaskAdapter;
+import easytasks.TaskListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.Blend;
@@ -23,9 +27,19 @@ import java.util.Map;
 
 public class MultiStepProgressView extends VBox {
 
+    @FXML
+    private VBox task_view_container;
+
+    @FXML
+    private Button cancel_button;
+
     private final MultipartTask multipartTask = new MultipartTask();
 
     private final Map<MultipartTask.Task, TaskView> views = new HashMap<>();
+
+    public void addTaskListener(final TaskListener listener){
+        multipartTask.addTaskListener(listener);
+    }
 
     public MultiStepProgressView(){
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/progress_view.fxml"));
@@ -36,6 +50,13 @@ public class MultiStepProgressView extends VBox {
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        cancel_button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                multipartTask.cancel();
+            }
+        });
     }
 
     public void addTask(final MultipartTask.Task task){
@@ -54,7 +75,7 @@ public class MultiStepProgressView extends VBox {
         final TaskView taskView = new TaskView(task.getDescription());
         taskView.setProgress(0);
         this.views.put(task, taskView);
-        getChildren().add(taskView);
+        task_view_container.getChildren().add(taskView);
     }
 
     public void start(final Runnable onFinished){
@@ -130,17 +151,43 @@ public class MultiStepProgressView extends VBox {
         }
     }
 
+    public Object getOutput(){
+        return multipartTask.getOutput();
+    }
+
     public static class MultipartTask extends easytasks.Task{
 
         private final List<Task> tasks = new ArrayList<>();
 
+        private Task currentTask = null;
+
+        private boolean isCanceled = false;
+
+        private Object object = null;
+
         @Override
         protected void run() throws Exception {
-            Object object = null;
-            for (Task task : tasks){
-                task.setInput(object);
-                task.start();
-                object = task.getOutput();
+            if (!tasks.isEmpty()){
+                object = tasks.get(0).getInput();
+                for (Task task : tasks){
+                    currentTask = task;
+                    task.setInput(object);
+                    task.start();
+                    object = task.getOutput();
+                    if (!isRunning()) break;
+                }
+            }
+        }
+
+        public Object getOutput(){
+            return object;
+        }
+
+        public synchronized void cancel(){
+            if (!isCanceled) {
+                isCanceled = true;
+                stop();
+                currentTask.stop();
             }
         }
 
@@ -148,6 +195,10 @@ public class MultiStepProgressView extends VBox {
             task.addTaskListener(new TaskAdapter(){
                 @Override
                 public void onTaskFailed(ITask task, Exception exception) {
+                    if (isCanceled){
+                        System.err.println("Ignoring error due to cancel request");
+                        return;
+                    }
                     throw new RuntimeException(exception);
                 }
             });
@@ -161,6 +212,8 @@ public class MultiStepProgressView extends VBox {
             private Object output = null;
 
             private final String description;
+
+            private boolean isCancelled = false;
 
             public Task(final String description){
                 this.description = description;
@@ -184,6 +237,16 @@ public class MultiStepProgressView extends VBox {
 
             public String getDescription() {
                 return description;
+            }
+
+            @Override
+            protected void onTaskCancelled() {
+                super.onTaskCancelled();
+                this.isCancelled = true;
+            }
+
+            public boolean isCancelled() {
+                return isCancelled;
             }
         }
     }

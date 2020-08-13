@@ -127,6 +127,7 @@ public class ServerShell implements Context{
         addCustomCommand(new BackupCommand());
         addCustomCommand(new PermissionCommand());
         addCustomCommand(new BattleRoyaleCommand());
+        addCustomCommand(new OpCommand());
         try {
             addCustomCommand(new GiveRandomItemCommand());
         } catch (IOException e) {
@@ -175,6 +176,7 @@ public class ServerShell implements Context{
     }
 
     public void start() {
+        notifyOnOutput("[Minecraft Server Manager] Starting server...");
         this.onServerStarting();
 
         verifyConfiguration();
@@ -228,6 +230,7 @@ public class ServerShell implements Context{
         }
 
         this.onServerStopped();
+        notifyOnOutput("[Minecraft Server Manager] Server stopped.");
     }
 
     public void stop() {
@@ -254,7 +257,6 @@ public class ServerShell implements Context{
                 final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.process.getInputStream()));
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    //System.out.println(line);
                     notifyOnOutput(line);
 
                     //Check for pending results
@@ -407,6 +409,7 @@ public class ServerShell implements Context{
                     }
                 }
             } catch (Exception e) {
+                System.out.println("SHELL CRASHED");
                 e.printStackTrace();
                 tellraw("@a", Utils.createText("Shell crashed!", "red"));
                 run();
@@ -535,7 +538,24 @@ public class ServerShell implements Context{
      * Misc.
      ********************************************************************************************************************************/
 
-    private void onCommand(final String player, final Command command, final String... parameters) throws IOException {
+    public PendingPatternMatch listen(final Pattern pattern){
+        final PendingPatternMatch pendingPatternMatch = new PendingPatternMatch(pattern){
+            @Override
+            protected void onCancel() {
+                synchronized (pendingPatternMatches){
+                    pendingPatternMatches.remove(this);
+                }
+            }
+        };
+
+        synchronized (pendingPatternMatches) {
+            pendingPatternMatches.add(pendingPatternMatch);
+        }
+
+        return pendingPatternMatch;
+    }
+
+    private void onCommand(final String player, final Command command, final String... parameters) {
         //Make sure the player is authorized to use this command
         if (!serverConfiguration.getPermissionsManager().isAuthorized(player, command)) {
             final JSONObject root = Utils.createText("Unauthorized: ", "red");
@@ -591,9 +611,7 @@ public class ServerShell implements Context{
             if (!isResultSet){
                 this.isResultSet = true;
                 this.result = result;
-                synchronized (this){
-                    notifyAll();
-                }
+                notifyAll();
             }else{
                 throw new RuntimeException("Result was already set!");
             }
@@ -609,6 +627,10 @@ public class ServerShell implements Context{
         }
 
         private boolean isCanceled = false;
+
+        public Matcher getResult() {
+            return result;
+        }
 
         public synchronized void cancel(){
             isCanceled = true;
@@ -655,6 +677,9 @@ public class ServerShell implements Context{
         return 0;
     }
 
+    //This flag is used to detect a failed start. If the server stops and this flag is still false that meanst the server didnt start correctly.
+    private boolean didServerStart = false;
+
     private void onServerStarting() {
         synchronized (STATE_MUTEX) {
             this.state = State.STARTING;
@@ -664,6 +689,7 @@ public class ServerShell implements Context{
 
     private void onServerStarted() {
         synchronized (STATE_MUTEX) {
+            didServerStart = true;
             this.state = State.ONLINE;
             this.startTime = System.currentTimeMillis();
             notifyOnServerStarted();
@@ -684,6 +710,14 @@ public class ServerShell implements Context{
             this.state = State.OFFLINE;
             STATE_MUTEX.notifyAll();
             notifyOnServerStopped();
+
+            //Check for failed start
+            if (!didServerStart){
+                for (EventListener listener : eventListeners){
+                    listener.onFailedStart();
+                }
+                didServerStart = false;
+            }
         }
     }
 
@@ -693,6 +727,8 @@ public class ServerShell implements Context{
 
     public interface EventListener {
         void onServerStarting();
+
+        void onFailedStart();
 
         void onServerIoReady();
 
@@ -712,6 +748,11 @@ public class ServerShell implements Context{
     public static class EventAdapter implements EventListener {
         @Override
         public void onServerStarting() {
+
+        }
+
+        @Override
+        public void onFailedStart() {
 
         }
 

@@ -15,6 +15,9 @@ import java.nio.file.Path;
 public class ConfigurationLayout implements Page, StatusHost, ServerShellConnection {
 
     @FXML
+    private TextField server_name_text_field;
+
+    @FXML
     private FileInputLayout server_jar_input;
 
     @FXML
@@ -31,12 +34,19 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
 
     //private List<Property<?>> properties = new ArrayList<>();
 
-    private JSONObject initialConfiguration;
+    private ServerConfiguration configuration;
 
     private final StatusContainer statusContainer = new StatusContainer();
 
     @FXML
     private void initialize() {
+        server_name_text_field.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                setDirty(isDirty());
+            }
+        });
+
         //Server JAR
         server_jar_input.setOnValidStateChangeListener(new ValidatedTextField.OnValidStateChangeListener() {
             @Override
@@ -66,7 +76,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
         delete_server_button.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this server? All data including the Minecraft world, player data, and server configuration data will be permanently deleted! Any backups that were created will remain.", ButtonType.YES, ButtonType.CANCEL);
             alert.showAndWait();
-            if (alert.getResult() == ButtonType.YES){
+            if (alert.getResult() == ButtonType.YES) {
                 ServerManager.delete(serverShell.getServerConfiguration());
                 MinecraftServerManager.setPage("server_list");
             }
@@ -75,14 +85,19 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
         save_button.setOnAction(event -> {
             save_button.setDisable(true);
 
+            configuration.setName(server_name_text_field.getText().trim());
+            configuration.setJar(server_jar_input.getPath());
+            configuration.setLaunchOptions(launch_options_text_field.getText().trim());
+            ServerManager.save();
+
             //TODO: Save to server configuration
             //Preferences.setServerJar(server_jar_input.getPath());
             //MinecraftServerManager.refresh();
             //Preferences.setLaunchOptions(launch_options_text_field.getText());
 
             statusContainer.setStatus(StatusContainer.Status.OK);
-            initialConfiguration = getConfiguration();
-            setDirty(false);
+            //initialConfiguration = getConfiguration();
+            //setDirty(false);
         });
 
         //Key
@@ -110,9 +125,9 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     }
 
     private boolean isDirty() {
-        if (initialConfiguration == null) return false;
+        if (configuration == null) return false;
         final Path path = server_jar_input.getPath();
-        return !(path != null && initialConfiguration.get("jar").equals(server_jar_input.getPath()) && initialConfiguration.get("launch_options").toString().equals(launch_options_text_field.getText()));
+        return !(path != null && configuration.getJar().equals(server_jar_input.getPath()) && configuration.getLaunchOptions().equals(launch_options_text_field.getText()) && configuration.getName().equals(server_name_text_field.getText().trim()));
     }
 
     private void setDirty(final boolean dirty) {
@@ -127,23 +142,16 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
         }
     }
 
-    private void setDefaults() {
-        server_jar_input.setPath(serverShell.getServerConfiguration().getJar());
-        launch_options_text_field.setText(serverShell.getServerConfiguration().getLaunchOptions());
-    }
-
-    private JSONObject getConfiguration() {
-        final JSONObject root = new JSONObject();
-        root.put("server_jar", server_jar_input.getPath() == null ? "" : server_jar_input.getPath().toString());
-        root.put("launch_options", launch_options_text_field.getText().trim());
-        return root;
+    private void setConfiguration(final ServerConfiguration configuration) {
+        this.configuration = configuration;
+        this.server_name_text_field.setText(configuration.getName());
+        server_jar_input.setPath(configuration.getJar());
+        launch_options_text_field.setText(configuration.getLaunchOptions());
     }
 
     @Override
     public void onPageSelected() {
-        //Load the saved configuration
-        initialConfiguration = serverShell.getServerConfiguration().toJson();
-        setDefaults();
+        setConfiguration(configuration);
         statusContainer.setStatus(server_jar_input.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
     }
 
@@ -158,7 +166,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
     public void attach(ServerShell serverShell) {
         this.serverShell = serverShell;
 
-        setDefaults();
+        setConfiguration(serverShell.getServerConfiguration());
         statusContainer.setStatus(server_jar_input.isValid() ? StatusContainer.Status.OK : StatusContainer.Status.ERROR);
     }
 

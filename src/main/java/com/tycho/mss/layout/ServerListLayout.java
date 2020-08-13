@@ -2,14 +2,17 @@ package com.tycho.mss.layout;
 
 import com.tycho.mss.*;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.omg.CORBA.ARG_IN;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class ServerListLayout implements Page {
 
@@ -40,13 +43,27 @@ public class ServerListLayout implements Page {
     private void refreshServerList(){
         //TODO: Instead of refreshing everything, only add/remove/update items that have changed
 
-        servers_tile_pane.getChildren().clear();
+        //Sort configurations
+        final List<ServerConfiguration> configurations = new ArrayList<>();
         for (UUID uuid : ServerManager.getConfigurations().keySet()){
+            configurations.add(ServerManager.getConfigurations().get(uuid));
+        }
+        configurations.sort(Comparator.comparing(ServerConfiguration::getName));
+
+        servers_tile_pane.getChildren().forEach(new Consumer<Node>() {
+            @Override
+            public void accept(Node node) {
+                if (node instanceof ServerConfigurationListCell) ((ServerConfigurationListCell) node).setServerConfiguration(null);
+            }
+        });
+
+        servers_tile_pane.getChildren().clear();
+        for (ServerConfiguration configuration : configurations){
             final ServerConfigurationListCell cell = new ServerConfigurationListCell();
-            cell.setServerConfiguration(ServerManager.getConfigurations().get(uuid));
+            cell.setServerConfiguration(configuration);
             cell.setOnMouseClicked(event -> {
                 if (event.getButton() == MouseButton.PRIMARY){
-                    MinecraftServerManager.setServer(ServerManager.getConfigurations().get(uuid));
+                    MinecraftServerManager.setServer(configuration);
                 }
             });
             servers_tile_pane.getChildren().add(cell);

@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.Label?>
-<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" spacing="8" style="-fx-background-color: #3d3d3d;">
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root spacing="12" style="-fx-background-color: #3d3d3d;" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" alignment="TOP_CENTER">
 
     <padding>
-        <Insets topRightBottomLeft="8"/>
+        <Insets topRightBottomLeft="12" />
     </padding>
 
+    <VBox fx:id="task_view_container" spacing="8"/>
 
-
+    <Button fx:id="cancel_button" text="CANCEL" />
 </fx:root>
