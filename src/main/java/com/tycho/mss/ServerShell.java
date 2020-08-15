@@ -84,7 +84,7 @@ public class ServerShell implements Context{
      */
     private final List<Player> players = new ArrayList<>();
 
-    private final PlayerDatabaseManager playerDatabaseManager;
+    private final PlayerDatabase playerDatabase;
 
     /**
      * Authentication messages arrive before the player actually connects to the server. This list keeps track of those players who have been authenticated, but not connected yet.
@@ -117,7 +117,7 @@ public class ServerShell implements Context{
         this.serverConfiguration = serverConfiguration;
         this.serverJar = serverConfiguration.getJar();
 
-        playerDatabaseManager = new PlayerDatabaseManager(getDirectory());
+        playerDatabase = new PlayerDatabase(getDirectory());
 
         //Add custom commands
         addCustomCommand(new HereCommand());
@@ -322,9 +322,6 @@ public class ServerShell implements Context{
                                 }
                             }
 
-                            //TODO: Remove
-                            if (cmd.equals("crash")) throw new RuntimeException("Crashed by user");
-
                             //Not a valid command, show an error message
                             if (!isValidCommand) {
                                 tellraw(player, Utils.createText("Unknown command: ", "red", cmd, "white"));
@@ -361,7 +358,7 @@ public class ServerShell implements Context{
                             pendingAuthenticatedUsers.remove(username);
 
                             final Player player = new Player(id, username, ipAddress);
-                            playerDatabaseManager.get(player);
+                            playerDatabase.load(player);
                             players.add(player);
                             notifyOnPlayerConnected(player);
 
@@ -382,7 +379,7 @@ public class ServerShell implements Context{
                             final String username = matcher.group("player");
                             final String reason = matcher.group("reason");
                             final Player player = getPlayer(username);
-                            playerDatabaseManager.save(player);
+                            playerDatabase.save(player);
                             notifyOnPlayerDisconnected(player);
                             players.remove(player);
 
@@ -519,8 +516,8 @@ public class ServerShell implements Context{
     }
 
     @Override
-    public PlayerDatabaseManager getPlayerDatabaseManager() {
-        return playerDatabaseManager;
+    public PlayerDatabase getPlayerDatabaseManager() {
+        return playerDatabase;
     }
 
     @Override

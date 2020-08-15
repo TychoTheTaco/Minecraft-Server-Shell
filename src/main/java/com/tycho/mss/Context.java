@@ -58,7 +58,7 @@ public interface Context {
 
     List<Command> getCustomCommands();
 
-    PlayerDatabaseManager getPlayerDatabaseManager();
+    PlayerDatabase getPlayerDatabaseManager();
 
     ServerConfiguration getServerConfiguration();
 }
