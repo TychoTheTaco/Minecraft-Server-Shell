@@ -15,8 +15,6 @@ import java.util.regex.Pattern;
 
 public class GuideCommand extends Command {
 
-    private static final Pattern POSITION_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+\\.\\d+)d, (?<y>-?\\d+\\.\\d+)d, (?<z>-?\\d+\\.\\d+)d]");
-
     private final Map<String, GuideTask> tasks = new HashMap<>();
 
     private static final int PARTICLE_COUNT = 7;
@@ -90,6 +88,10 @@ public class GuideCommand extends Command {
         guideTask.startOnNewThread();
     }
 
+    private static Pattern getPositionPattern(final String username){
+        return Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: " + username + " has the following entity data: \\[(?<x>-?\\d+\\.\\d+)d, (?<y>-?\\d+\\.\\d+)d, (?<z>-?\\d+\\.\\d+)d]");
+    }
+
     private static class GuideTask extends Task {
 
         private final String player;
@@ -106,10 +108,11 @@ public class GuideCommand extends Command {
 
         @Override
         protected void run(){
+            final Pattern playerPositionPattern = getPositionPattern(player);
             while (isRunning()){
                 try {
                     //Get player position
-                    Matcher matcher = context.awaitMatch("data get entity " + player + " Pos", POSITION_PATTERN).requiresPlayersOnline(player).waitFor();
+                    Matcher matcher = context.awaitMatch("data get entity " + player + " Pos", playerPositionPattern).requiresPlayersOnline(player).waitFor();
                     final double x = Double.parseDouble(matcher.group("x"));
                     final double y = Double.parseDouble(matcher.group("y"));
                     final double z = Double.parseDouble(matcher.group("z"));
@@ -124,7 +127,7 @@ public class GuideCommand extends Command {
                         dz = Double.parseDouble(split[1]);
 
                         //Use the player's elevation for target elevation
-                        matcher = context.awaitMatch("data get entity " + player + " Pos", POSITION_PATTERN).requiresPlayersOnline(player).waitFor();
+                        matcher = context.awaitMatch("data get entity " + player + " Pos", playerPositionPattern).requiresPlayersOnline(player).waitFor();
                         dy = Double.parseDouble(matcher.group("y"));
                     }else if (split.length == 3){
                         dx = Double.parseDouble(split[0]);
@@ -132,7 +135,7 @@ public class GuideCommand extends Command {
                         dz = Double.parseDouble(split[2]);
                     }else{
                         //Get player position
-                        matcher = context.awaitMatch("data get entity " + target + " Pos", POSITION_PATTERN).requiresPlayersOnline(player, target).waitFor();
+                        matcher = context.awaitMatch("data get entity " + target + " Pos", getPositionPattern(target)).requiresPlayersOnline(player, target).waitFor();
                         dx = Double.parseDouble(matcher.group("x"));
                         dy = Double.parseDouble(matcher.group("y"));
                         dz = Double.parseDouble(matcher.group("z"));
@@ -145,8 +148,7 @@ public class GuideCommand extends Command {
 
                     if (distance <= DEACTIVATE_RANGE){
                         stop();
-                        final JSONObject root = Utils.createText("Destination reached!", "green");
-                        context.tellraw(player, root);
+                        context.tellraw(player, Utils.createText("Destination reached!", "green"));
                     }
 
                     //Spawn particles
@@ -155,7 +157,7 @@ public class GuideCommand extends Command {
                                 + " ~" + String.format("%.2f", i * Math.cos(direction))
                                 + " ~" + String.format("%.2f", i * Math.tan(angle) + VERTICAL_OFFSET)
                                 + " ~" + String.format("%.2f", i * Math.sin(direction))
-                                + " 0 0 0 0 1 normal");
+                                + " 0 0 0 0 1 force " + player);
                         try {
                             Thread.sleep(100);
                         }catch (InterruptedException e){

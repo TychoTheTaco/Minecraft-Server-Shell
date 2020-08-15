@@ -52,13 +52,7 @@ public class Player {
 
         final JSONArray savedLocationsArray = (JSONArray) jsonObject.get("savedLocations");
         for (Object object : savedLocationsArray){
-            final JSONObject location = (JSONObject) object;
-            savedLocations.add(new SavedLocation(
-                    ((Long) location.get("x")).intValue(),
-                    ((Long) location.get("y")).intValue(),
-                    ((Long) location.get("z")).intValue(),
-                    (String) location.get("description"))
-            );
+            savedLocations.add(new SavedLocation((JSONObject) object));
         }
     }
 
@@ -90,12 +84,7 @@ public class Player {
         //Saved locations
         final JSONArray savedLocationsArray = new JSONArray();
         for (SavedLocation savedLocation : this.savedLocations){
-            final JSONObject savedLocationObject = new JSONObject();
-            savedLocationObject.put("x", savedLocation.getX());
-            savedLocationObject.put("y", savedLocation.getY());
-            savedLocationObject.put("z", savedLocation.getZ());
-            savedLocationObject.put("description", savedLocation.getDescription());
-            savedLocationsArray.add(savedLocationObject);
+            savedLocationsArray.add(savedLocation.toJson());
         }
         root.put("savedLocations", savedLocationsArray);
 

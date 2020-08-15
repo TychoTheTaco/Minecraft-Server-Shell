@@ -14,11 +14,11 @@ import java.nio.file.Path;
 
 import static com.tycho.mss.MinecraftServerManager.PRIVATE_DIR;
 
-public class PlayerDatabaseManager {
+public class PlayerDatabase {
 
     private final Path database;
 
-    public PlayerDatabaseManager(final Path directory){
+    public PlayerDatabase(final Path directory){
         this.database = directory.resolve(".mss").resolve("players.json");
     }
 
@@ -48,7 +48,11 @@ public class PlayerDatabaseManager {
         }
     }
 
-    public void get(final Player player){
+    /**
+     * Load player data from the database into this player object
+     * @param player
+     */
+    public void load(final Player player){
         createIfNotExists();
         try {
             final String string = new String(Files.readAllBytes(database));
@@ -59,17 +63,7 @@ public class PlayerDatabaseManager {
             System.out.println("TARGET: " + target);
             if (target == null) return;
 
-            final JSONArray savedLocationsArray = (JSONArray) target.get("savedLocations");
-            for (Object object : savedLocationsArray){
-                final JSONObject location = (JSONObject) object;
-                player.getSavedLocations().add(new SavedLocation(
-                        ((Long) location.get("x")).intValue(),
-                        ((Long) location.get("y")).intValue(),
-                        ((Long) location.get("z")).intValue(),
-                        (String) location.get("description"))
-                );
-            }
-
+            player.load(target);
         }catch (IOException | ParseException e){
             e.printStackTrace();
         }

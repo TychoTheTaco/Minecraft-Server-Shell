@@ -11,8 +11,6 @@ import java.util.regex.Pattern;
 
 public class LocationCommand extends Command {
 
-    private static final Pattern POSITION_PATTERN = Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: (?<player>.+) has the following entity data: \\[(?<x>-?\\d+)\\.\\d+d, (?<y>-?\\d+)\\.\\d+d, (?<z>-?\\d+)\\.\\d+d]");
-
     public LocationCommand(){
         super("location");
     }
@@ -27,10 +25,14 @@ public class LocationCommand extends Command {
         final String type = parameters[0];
         if ("save".equals(type)){
             //Get player position
-            final Matcher matcher = context.awaitMatch("data get entity " + player + " Pos", POSITION_PATTERN).waitFor();
-            final int x = Integer.parseInt(matcher.group("x"));
-            final int y = Integer.parseInt(matcher.group("y"));
-            final int z = Integer.parseInt(matcher.group("z"));
+            Matcher matcher = context.awaitMatch("data get entity " + player + " Pos", getPositionPattern(player)).waitFor();
+            final int x = (int) Double.parseDouble(matcher.group("x"));
+            final int y = (int) Double.parseDouble(matcher.group("y"));
+            final int z = (int) Double.parseDouble(matcher.group("z"));
+
+            //Get player dimension
+            matcher = context.awaitMatch("data get entity " + player + " Dimension", getDimensionPattern(player)).waitFor();
+            final String dimension = matcher.group("dimension");
 
             //Notes
             final StringBuilder stringBuilder = new StringBuilder();
@@ -38,7 +40,10 @@ public class LocationCommand extends Command {
                 stringBuilder.append(parameters[i]).append(' ');
             }
 
-            context.getPlayer(player).getSavedLocations().add(new SavedLocation(x, y, z, stringBuilder.toString().trim()));
+            final SavedLocation savedLocation = new SavedLocation(x, y, z, stringBuilder.toString().trim());
+            savedLocation.setDimension(dimension);
+
+            context.getPlayer(player).getSavedLocations().add(savedLocation);
             context.getPlayerDatabaseManager().save(context.getPlayer(player));
 
             final JSONObject root = Utils.createText("Location saved!", "green");
@@ -51,7 +56,25 @@ public class LocationCommand extends Command {
                 final JSONObject root = Utils.createText("", "white");
                 final JSONArray extra = new JSONArray();
                 for (int i = 0; i < savedLocations.size(); i++){
-                    extra.add("[" + (i + 1) + "]: (");
+                    //Index
+                    extra.add("[" + (i + 1) + "] ");
+
+                    //Dimension
+                    final String dimension = savedLocations.get(i).getDimension();
+                    extra.add("[");
+                    if (dimension == null){
+                        extra.add(Utils.createText("DIM ?", "gray"));
+                    }else if ("overworld".equals(dimension)){
+                        extra.add(Utils.createText("Overworld", "green"));
+                    }else if ("the_nether".equals(dimension)){
+                        extra.add(Utils.createText("Nether", "red"));
+                    }else if ("the_end".equals(dimension)){
+                        extra.add(Utils.createText("End", "yellow"));
+                    }
+                    extra.add("]");
+
+                    //Position
+                    extra.add(" (");
                     extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getX()), "yellow"));
                     extra.add(Utils.createText(", ", "white"));
                     extra.add(Utils.createText(String.valueOf(savedLocations.get(i).getY()), "yellow"));
@@ -92,5 +115,13 @@ public class LocationCommand extends Command {
     @Override
     public String getDescription() {
         return "Saves your current location along with a note so you can find it again later.";
+    }
+
+    private static Pattern getPositionPattern(final String username){
+        return Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: " + username + " has the following entity data: \\[(?<x>-?\\d+\\.\\d+)d, (?<y>-?\\d+\\.\\d+)d, (?<z>-?\\d+\\.\\d+)d]");
+    }
+
+    private static Pattern getDimensionPattern(final String username){
+        return Pattern.compile("^\\[\\d{2}:\\d{2}:\\d{2}] \\[Server thread\\/INFO]: " + username + " has the following entity data: \"\\w+:(?<dimension>\\w+)\"$");
     }
 }
