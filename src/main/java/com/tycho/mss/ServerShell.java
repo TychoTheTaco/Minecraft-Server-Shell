@@ -268,18 +268,13 @@ public class ServerShell implements Context{
                             final PendingPatternMatch pendingPatternMatch = iterator.next();
 
                             //Verify all required players are online
-                            boolean fuck = false;
                             for (String username : pendingPatternMatch.getRequiredPlayers()){
                                 if (getPlayer(username) == null){
                                     pendingCancel.add(pendingPatternMatch);
                                     //pendingPatternMatch.cancel();
-                                    fuck = true;
+                                    iterator.remove();
                                     break;
                                 }
-                            }
-
-                            if (fuck){
-                                iterator.remove();
                             }
 
                             final Matcher matcher = pendingPatternMatch.getPattern().matcher(line);
