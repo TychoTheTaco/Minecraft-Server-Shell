@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Button?>
+<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #575757;">
+
+    <TableView fx:id="properties_table"/>
+
+    <Button text="Save"/>
+
+</fx:root>

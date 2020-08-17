@@ -28,14 +28,6 @@ public class CustomCommandsLayout implements Page, ServerShellConnection {
         descriptionColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getDescription()));
         descriptionColumn.prefWidthProperty().bind(custom_commands_table_view.widthProperty().subtract(commandNameColumn.widthProperty()).subtract(2));
         custom_commands_table_view.getColumns().add(descriptionColumn);
-
-        //IP Address
-        /*final TableColumn<Player, String> ipAddressColumn = new TableColumn<>("IP Address");
-        ipAddressColumn.setCellValueFactory(new PropertyValueFactory<>("ipAddress"));
-        ipAddressColumn.setPrefWidth(130);
-        players_table_view.getColumns().add(ipAddressColumn);
-
-        final HashMap<Player, CachedStats> cache = new HashMap<>();*/
     }
 
     @Override

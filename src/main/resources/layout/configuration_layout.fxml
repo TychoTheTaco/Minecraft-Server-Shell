@@ -15,7 +15,7 @@
     </padding>
 
     <!-- Server Configuration -->
-    <VBox spacing="4">
+    <VBox spacing="8">
         <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Configuration" style="-fx-font-weight: bold;">
             <padding>
                 <Insets bottom="4"/>
@@ -36,6 +36,8 @@
             <Label text="Launch Options:"/>
             <TextField fx:id="launch_options_text_field" HBox.hgrow="ALWAYS"/>
         </HBox>
+
+        <Button fx:id="server_properties_button" text="Server Properties"/>
     </VBox>
 
     <!-- Server Properties -->
@@ -49,7 +51,7 @@
     </GridPane>-->
 
     <VBox>
-        <Label text="Misc." style="-fx-font-weight: bold;">
+        <Label text="Miscellaneous" style="-fx-font-weight: bold;">
             <padding>
                 <Insets top="16" bottom="4"/>
             </padding>
