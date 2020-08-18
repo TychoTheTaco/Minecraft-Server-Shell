@@ -4,8 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import com.tycho.mss.layout.FileInputLayout?>
-<?import com.tycho.mss.layout.JarInputField?>
+<?import com.tycho.mss.ui.FileInputLayout?>
+<?import com.tycho.mss.ui.JarInputField?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.tycho.mss.layout.ConfigurationLayout">

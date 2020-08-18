@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import com.tycho.mss.layout.FileInputLayout?>
+<?import com.tycho.mss.ui.FileInputLayout?>
 <GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.tycho.mss.layout.BackupsLayout">
 
     <padding>

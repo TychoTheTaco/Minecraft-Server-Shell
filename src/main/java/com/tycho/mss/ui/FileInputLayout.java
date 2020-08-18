@@ -1,4 +1,4 @@
-package com.tycho.mss.layout;
+package com.tycho.mss.ui;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;

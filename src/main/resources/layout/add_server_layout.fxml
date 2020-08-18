@@ -3,9 +3,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import com.tycho.mss.layout.ValidatedTextField?>
-<?import com.tycho.mss.layout.FileInputLayout?>
-<?import com.tycho.mss.layout.JarInputField?>
+<?import com.tycho.mss.ui.ValidatedTextField?>
+<?import com.tycho.mss.ui.FileInputLayout?>
+<?import com.tycho.mss.ui.JarInputField?>
 <fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #505050" alignment="TOP_CENTER">
 

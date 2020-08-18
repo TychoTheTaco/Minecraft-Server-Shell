@@ -8,7 +8,7 @@ import java.io.IOException;
 public class AddNewServerListItem extends GridPane {
 
     public AddNewServerListItem() {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/add_new_list_item.fxml"));
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/add_new_server_list_item.fxml"));
         loader.setController(this);
         loader.setRoot(this);
         try {

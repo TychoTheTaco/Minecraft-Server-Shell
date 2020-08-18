@@ -1,4 +1,4 @@
-package com.tycho.mss.layout;
+package com.tycho.mss.ui;
 
 import javafx.stage.FileChooser;
 

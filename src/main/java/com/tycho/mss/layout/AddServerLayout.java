@@ -7,6 +7,8 @@ import com.tycho.mss.ServerShell;
 import com.tycho.mss.form.AndGroup;
 import com.tycho.mss.form.FormGroup;
 import com.tycho.mss.form.OrGroup;
+import com.tycho.mss.ui.FileInputLayout;
+import com.tycho.mss.ui.ValidatedTextField;
 import com.tycho.mss.util.Utils;
 import easytasks.ITask;
 import easytasks.TaskAdapter;

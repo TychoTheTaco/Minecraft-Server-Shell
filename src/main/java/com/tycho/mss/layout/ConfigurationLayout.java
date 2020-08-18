@@ -1,6 +1,8 @@
 package com.tycho.mss.layout;
 
 import com.tycho.mss.*;
+import com.tycho.mss.ui.FileInputLayout;
+import com.tycho.mss.ui.ValidatedTextField;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;

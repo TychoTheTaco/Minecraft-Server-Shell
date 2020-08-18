@@ -1,4 +1,4 @@
-package com.tycho.mss.layout;
+package com.tycho.mss.ui;
 
 import com.tycho.mss.CustomColor;
 import javafx.fxml.FXML;

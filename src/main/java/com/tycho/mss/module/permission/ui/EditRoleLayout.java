@@ -2,8 +2,8 @@ package com.tycho.mss.module.permission.ui;
 
 import com.tycho.mss.ServerShell;
 import com.tycho.mss.command.Command;
-import com.tycho.mss.layout.TextCheckBoxLayout;
-import com.tycho.mss.layout.ValidatedTextField;
+import com.tycho.mss.ui.TextCheckBoxLayout;
+import com.tycho.mss.ui.ValidatedTextField;
 import com.tycho.mss.module.permission.Role;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

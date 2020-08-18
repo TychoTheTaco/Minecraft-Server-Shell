@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.tycho.mss.layout.TextCheckBoxLayout" alignment="CENTER_LEFT">
+      fx:controller="com.tycho.mss.ui.TextCheckBoxLayout" alignment="CENTER_LEFT">
 
     <CheckBox fx:id="check_box" prefWidth="32" prefHeight="32"/>
     <Label fx:id="label" style="-fx-text-fill: lightgray;"/>

@@ -1,4 +1,4 @@
-package com.tycho.mss.layout;
+package com.tycho.mss.ui;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;

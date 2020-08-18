@@ -3,6 +3,8 @@ package com.tycho.mss.layout;
 import com.tycho.mss.*;
 import com.tycho.mss.module.backup.BackupListCell;
 import com.tycho.mss.module.backup.MoveFilesTask;
+import com.tycho.mss.ui.FileInputLayout;
+import com.tycho.mss.ui.ValidatedTextField;
 import easytasks.ITask;
 import easytasks.Task;
 import easytasks.TaskAdapter;
