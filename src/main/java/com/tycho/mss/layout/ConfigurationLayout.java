@@ -87,7 +87,7 @@ public class ConfigurationLayout implements Page, StatusHost, ServerShellConnect
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setTitle("Server Properties");
 
-                final Scene scene = new Scene(serverPropertiesLayout);
+                final Scene scene = new Scene(serverPropertiesLayout, 450, 600);
                 scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
                 stage.setScene(scene);
                 stage.showAndWait();

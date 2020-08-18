@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.TextField?>
 <fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #575757;">
+         xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #575757;" alignment="TOP_CENTER">
 
-    <TableView fx:id="properties_table"/>
+    <TextField fx:id="search_text_field" promptText="Search">
+        <VBox.margin>
+            <Insets topRightBottomLeft="8"/>
+        </VBox.margin>
+    </TextField>
 
-    <Button text="Save"/>
+    <TableView fx:id="properties_table" VBox.vgrow="ALWAYS"/>
+
+    <Button text="Save">
+        <VBox.margin>
+            <Insets topRightBottomLeft="8"/>
+        </VBox.margin>
+    </Button>
 
 </fx:root>

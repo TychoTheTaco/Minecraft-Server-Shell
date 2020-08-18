@@ -5,21 +5,24 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.tycho.mss.layout.FileInputLayout?>
-<GridPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tycho.mss.layout.BackupsLayout">
+<GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.tycho.mss.layout.BackupsLayout">
+
+    <padding>
+        <Insets topRightBottomLeft="12" />
+    </padding>
 
     <HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
-        <padding>
-            <Insets bottom="8" left="8" right="8" top="8" />
-        </padding>
+        <GridPane.margin>
+            <Insets bottom="8" />
+        </GridPane.margin>
         <Label text="Server Backup Directory:"/>
         <FileInputLayout fx:id="backup_directory_input" HBox.hgrow="ALWAYS"/>
         <Button fx:id="save_button" text="Save" />
-
     </HBox>
 
     <Separator style="-fx-border-color: gray; -fx-border-width: 1 0 0 0;" GridPane.columnIndex="0" GridPane.rowIndex="1">
         <GridPane.margin>
-            <Insets bottom="4" left="16" right="16" top="4" />
+            <Insets bottom="4" left="8" right="8" top="4" />
         </GridPane.margin>
     </Separator>
 

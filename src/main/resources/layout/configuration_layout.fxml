@@ -11,17 +11,11 @@
       fx:controller="com.tycho.mss.layout.ConfigurationLayout">
 
     <padding>
-        <Insets top="8" right="8" bottom="8" left="8"/>
+        <Insets topRightBottomLeft="12"/>
     </padding>
 
     <!-- Server Configuration -->
     <VBox spacing="8">
-        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Configuration" style="-fx-font-weight: bold;">
-            <padding>
-                <Insets bottom="4"/>
-            </padding>
-        </Label>
-
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label text="Server Name:"/>
             <TextField fx:id="server_name_text_field" HBox.hgrow="ALWAYS"/>
@@ -39,16 +33,6 @@
 
         <Button fx:id="server_properties_button" text="Server Properties"/>
     </VBox>
-
-    <!-- Server Properties -->
-    <!--<GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Server Properties" style="-fx-font-weight: bold;" GridPane.hgrow="ALWAYS">
-            <padding>
-                <Insets top="6" right="8" bottom="12" left="8"/>
-            </padding>
-        </Label>
-        <TableView fx:id="server_properties_table_view" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS"/>
-    </GridPane>-->
 
     <VBox>
         <Label text="Miscellaneous" style="-fx-font-weight: bold;">

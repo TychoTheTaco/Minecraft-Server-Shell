@@ -13,8 +13,8 @@
           fx:controller="com.tycho.mss.layout.MainLayout">
 
     <!-- Left Pane -->
-    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="220" prefWidth="220" GridPane.vgrow="ALWAYS">
-        <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" style="-fx-background-color: #81c1f040;">
+    <GridPane fx:id="left_pane" GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="220" prefWidth="220" GridPane.vgrow="ALWAYS" style="-fx-background-color: derive(-background_dark, -10%);">
+        <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS">
             <padding>
                 <Insets top="8" bottom="8" right="8"/>
             </padding>

@@ -6,16 +6,20 @@ import com.tycho.mss.property.LongProperty;
 import com.tycho.mss.property.Property;
 import com.tycho.mss.property.StringProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ServerPropertiesLayout extends VBox {
 
@@ -23,6 +27,11 @@ public class ServerPropertiesLayout extends VBox {
 
     @FXML
     private TableView<Property<?>> properties_table;
+
+    @FXML
+    private TextField search_text_field;
+
+    private final List<Property<?>> properties = new ArrayList<>();
 
     public ServerPropertiesLayout(final ServerShell serverShell){
         this.serverShell = serverShell;
@@ -35,6 +44,13 @@ public class ServerPropertiesLayout extends VBox {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        search_text_field.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                filter(newValue);
+            }
+        });
 
         final TableColumn<Property<?>, String> keyColumn = new TableColumn<>("Key");
         keyColumn.setSortable(false);
@@ -56,14 +72,22 @@ public class ServerPropertiesLayout extends VBox {
                 };
             }
         });*/
+        valueColumn.prefWidthProperty().bind(properties_table.widthProperty().subtract(keyColumn.widthProperty()).subtract(12));
         properties_table.getColumns().add(valueColumn);
 
-        properties_table.getItems().addAll(loadProperties());
+        loadProperties();
+        properties_table.getItems().addAll(properties);
     }
 
-    private List<Property<?>> loadProperties() {
-        final List<Property<?>> properties = new ArrayList<>();
+    private void filter(final String query){
+        if (query == null || query.isEmpty()){
+            properties_table.getItems().setAll(properties);
+        }else{
+            properties_table.getItems().setAll(properties.stream().filter(property -> property.getKey().startsWith(query)).collect(Collectors.toList()));
+        }
+    }
 
+    private void loadProperties() {
         final Map<String, String> propertyMap = serverShell.getProperties();
         for (String key : propertyMap.keySet()) {
             switch (key) {
@@ -225,8 +249,6 @@ public class ServerPropertiesLayout extends VBox {
                     break;
             }
         }
-
-        return properties;
     }
 
     /*@FXML
