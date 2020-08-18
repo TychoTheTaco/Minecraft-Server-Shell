@@ -10,7 +10,7 @@
          xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #505050" alignment="TOP_CENTER">
 
     <padding>
-        <Insets top="12" right="12" bottom="12" left="12"/>
+        <Insets topRightBottomLeft="12"/>
     </padding>
 
     <HBox spacing="10" alignment="CENTER_LEFT">

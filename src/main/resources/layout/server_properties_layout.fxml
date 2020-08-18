@@ -15,7 +15,7 @@
         </VBox.margin>
     </TextField>
 
-    <TableView fx:id="properties_table" VBox.vgrow="ALWAYS"/>
+    <TableView fx:id="properties_table" VBox.vgrow="ALWAYS" styleClass="no_table_header"/>
 
     <Button text="Save">
         <VBox.margin>

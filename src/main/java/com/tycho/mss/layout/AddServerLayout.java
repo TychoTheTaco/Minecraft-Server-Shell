@@ -87,7 +87,7 @@ public class AddServerLayout extends VBox {
 
     private JSONArray versions;
 
-    private AndGroup form = new AndGroup();
+    private final AndGroup form = new AndGroup();
     AndGroup downloadJarGroup = new AndGroup();
     OrGroup radio = new OrGroup();
     AndGroup customJarGroup = new AndGroup();

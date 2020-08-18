@@ -72,7 +72,7 @@ public class ServerPropertiesLayout extends VBox {
                 };
             }
         });*/
-        valueColumn.prefWidthProperty().bind(properties_table.widthProperty().subtract(keyColumn.widthProperty()).subtract(12));
+        valueColumn.prefWidthProperty().bind(properties_table.widthProperty().subtract(keyColumn.widthProperty()).subtract(11));
         properties_table.getColumns().add(valueColumn);
 
         loadProperties();
