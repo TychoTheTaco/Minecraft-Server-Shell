@@ -24,6 +24,9 @@ import java.nio.file.Paths;
  */
 public class MinecraftServerManager extends Application{
 
+    /**
+     * The display name for this application.
+     */
     public static final String APP_NAME = "Minecraft Server Manager";
 
     /**

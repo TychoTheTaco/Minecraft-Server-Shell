@@ -23,6 +23,9 @@ public class ServerManager {
 
     private static final Map<UUID, ServerShell> shells = new HashMap<>();
 
+    /**
+     * Load server configurations from save file.
+     */
     public static void init(){
         try {
             final String string = new String(Files.readAllBytes(SAVE_PATH));
