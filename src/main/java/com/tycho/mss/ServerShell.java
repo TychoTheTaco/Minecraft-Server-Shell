@@ -417,7 +417,7 @@ public class ServerShell implements Context{
      ********************************************************************************************************************************/
 
     @Override
-    public void execute(String command) throws IOException {
+    public synchronized void execute(String command) throws IOException {
         this.serverInputWriter.write(command);
         this.serverInputWriter.write("\n");
         this.serverInputWriter.flush();
